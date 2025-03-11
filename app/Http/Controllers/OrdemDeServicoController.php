@@ -8,11 +8,21 @@ use Illuminate\Http\Request;
 
 class OrdemDeServicoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $statusValues = OrdemDeServico::getStatusValues();
         $users = User::all();
-        $ordens = OrdemDeServico::with('user')->get();
+
+        $ordens = OrdemDeServico::with('user')
+            ->when($request->status, function ($query) use ($request) {
+                return $query->where('status', $request->status);
+            })
+            ->when($request->user_id, function ($query) use ($request) {
+                return $query->where('user_id', $request->user_id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(1); // Altere o número para a quantidade desejada por página
+
         return view('ordens_de_servico.index', compact('ordens', 'statusValues', 'users'));
     }
 
