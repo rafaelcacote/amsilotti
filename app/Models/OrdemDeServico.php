@@ -10,7 +10,7 @@ class OrdemDeServico extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['descricao', 'user_id', 'status'];
+    protected $fillable = ['id','descricao', 'user_id', 'status'];
 
     public function user()
     {

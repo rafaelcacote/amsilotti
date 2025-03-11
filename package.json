@@ -18,6 +18,7 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
-        "@coreui/icons": "^3.0.1"
+        "@coreui/icons": "^3.0.1",
+        "@fortawesome/fontawesome-free": "^6.7.2"
     }
 }

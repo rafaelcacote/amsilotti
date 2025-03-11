@@ -21,7 +21,7 @@ class OrdemDeServicoController extends Controller
                 return $query->where('user_id', $request->user_id);
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(1); // Altere o número para a quantidade desejada por página
+            ->paginate(10); // Altere o número para a quantidade desejada por página
 
         return view('ordens_de_servico.index', compact('ordens', 'statusValues', 'users'));
     }
@@ -43,8 +43,7 @@ class OrdemDeServicoController extends Controller
 
         OrdemDeServico::create($request->all());
 
-        return redirect()->route('ordens-de-servico.index')
-            ->with('success', 'Ordem de serviço criada com sucesso.');
+        return redirect()->route('ordens-de-servico.index')->with('success', 'Ordem de serviço criada com sucesso!');
     }
 
     public function show(OrdemDeServico $ordemDeServico)
@@ -55,7 +54,8 @@ class OrdemDeServicoController extends Controller
     public function edit(OrdemDeServico $ordemDeServico)
     {
         $users = User::all();
-        return view('ordens_de_servico.edit', compact('ordemDeServico', 'users'));
+        $statusValues = OrdemDeServico::getStatusValues();
+        return view('ordens_de_servico.edit', compact('ordemDeServico', 'users', 'statusValues'));
     }
 
     public function update(Request $request, OrdemDeServico $ordemDeServico)
@@ -68,8 +68,7 @@ class OrdemDeServicoController extends Controller
 
         $ordemDeServico->update($request->all());
 
-        return redirect()->route('ordens-de-servico.index')
-            ->with('success', 'Ordem de serviço atualizada com sucesso.');
+        return redirect()->route('ordens-de-servico.index')->with('success', 'Ordem de serviço atualizada com sucesso!');
     }
 
     public function destroy(OrdemDeServico $ordemDeServico)
