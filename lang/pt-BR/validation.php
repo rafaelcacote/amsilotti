@@ -2,6 +2,7 @@
 
 return [
     'required' => 'O campo :attribute é obrigatório.',
+    'email' => 'Por favor, insira um endereço de e-mail válido.',
     'custom' => [
         'descricao' => [
             'required' => 'Por favor, insira uma descrição.',

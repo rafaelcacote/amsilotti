@@ -10,11 +10,11 @@ class OrdemDeServico extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','descricao', 'user_id', 'status'];
+    protected $fillable = ['id','descricao', 'membro_equipe_tecnica_id', 'status'];
 
-    public function user()
+    public function membroEquipeTecnica()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(MembroEquipeTecnica::class);
     }
 
     public static function getStatusValues()
