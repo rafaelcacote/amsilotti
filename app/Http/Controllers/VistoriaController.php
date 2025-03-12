@@ -33,14 +33,11 @@ class VistoriaController extends Controller
     {
         $superficieValues = Vistoria::getSuperficieValues();
         $tipoOcupacaoValues = Vistoria::getTipoOcupacaoValues();
-        $utilizaDaBenfeitoriaValues = Vistoria::getTipoOcupacaoValues();
 
-            //dd($utilizaDaBenfeitoriaValues);
 
         return view('vistorias.create', compact(
             'superficieValues',
             'tipoOcupacaoValues',
-            'utilizaDaBenfeitoriaValues'
         ));
     }
 

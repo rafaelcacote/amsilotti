@@ -237,17 +237,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label" for="utiliza_da_benfeitoria">Utilização da
-                                        Benfeitoria</label>
-                                    <select class="form-select @error('utiliza_da_benfeitoria') is-invalid @enderror"
-                                        id="utiliza_da_benfeitoria" name="utiliza_da_benfeitoria" required>
+                                    <label class="form-label" for="utiliza_da_benfeitoria">Utilização da Benfeitoria</label>
+                                    <select class="form-select @error('utiliza_da_benfeitoria') is-invalid @enderror" id="utiliza_da_benfeitoria" name="utiliza_da_benfeitoria" required>
                                         <option value="">Selecione</option>
-                                        @foreach ($utilizaDaBenfeitoriaValues as $utilizacao)
-                                            <option value="{{ $utilizacao }}"
-                                                {{ old('utiliza_da_benfeitoria') == $utilizacao ? 'selected' : '' }}>
-                                                {{ $utilizacao }}
-                                            </option>
-                                        @endforeach
+                                        <option value="Uso Próprio" {{ old('utiliza_da_benfeitoria') == 'Uso Próprio' ? 'selected' : '' }}>Uso Próprio</option>
+                                        <option value="Alugada" {{ old('utiliza_da_benfeitoria') == 'Alugada' ? 'selected' : '' }}>Alugada</option>
+                                        <option value="Outros" {{ old('utiliza_da_benfeitoria') == 'Outros' ? 'selected' : '' }}>Outros</option>
                                     </select>
                                     @error('utiliza_da_benfeitoria')
                                         <div class="invalid-feedback">{{ $message }}</div>

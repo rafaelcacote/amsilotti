@@ -54,16 +54,7 @@
                 <div class="col-sm-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            @if (session('error'))
-                                <div class="alert alert-danger" role="alert">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
+
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped align-middle">
                                     <thead>

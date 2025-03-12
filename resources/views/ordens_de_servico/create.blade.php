@@ -6,7 +6,7 @@
                 <div class="col-sm-12">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white border-bottom d-flex align-items-center py-3">
-                            <h3 class="mb-0 text-primary"><i class="fas fa-clipboard-list me-2"></i>Detalhes da Ordem de
+                            <h3 class="mb-0 text-primary"><i class="fas fa-clipboard-list me-2"></i>Ordem de
                                 Serviço</h3>
                         </div>
                         <div class="card-body">

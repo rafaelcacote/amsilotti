@@ -28,4 +28,6 @@ Route::resource('valores-bairros', \App\Http\Controllers\ValorBairroController::
 Route::resource('vistorias', \App\Http\Controllers\VistoriaController::class)->middleware('auth');
 Route::delete('vistorias/fotos/{id}', [\App\Http\Controllers\VistoriaController::class, 'deleteFoto'])->name('vistorias.delete-foto')->middleware('auth');
 
+Route::resource('membro-equipe-tecnicas', \App\Http\Controllers\MembroEquipeTecnicaController::class)->parameters(['membro-equipe-tecnicas' => 'membroEquipeTecnica'])->middleware('auth');
+
 require __DIR__ . '/auth.php';

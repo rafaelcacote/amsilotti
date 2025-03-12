@@ -11,13 +11,37 @@ class Vistoria extends Model
     use HasFactory;
 
     protected $fillable = [
-        'num_processo', 'requerente', 'requerido', 'nome', 'cpf', 'telefone',
-        'endereco', 'num', 'bairro', 'cidade', 'estado', 'limites_confrontacoes',
-        'lado_direito', 'lado_esquerdo', 'topografia', 'formato_terreno', 'superficie',
-        'documentacao', 'reside_no_imovel', 'data_ocupacao', 'tipo_ocupacao',
-        'exerce_pacificamente_posse', 'utiliza_da_benfeitoria', 'tipo_construcao',
-        'padrao_acabamento', 'idade_aparente', 'estado_de_conservacao', 'observacoes',
-        'acompanhamento_vistoria', 'cpf_acompanhante', 'telefone_acompanhante'
+        'num_processo',
+        'requerente',
+        'requerido',
+        'nome',
+        'cpf',
+        'telefone',
+        'endereco',
+        'num',
+        'bairro',
+        'cidade',
+        'estado',
+        'limites_confrontacoes',
+        'lado_direito',
+        'lado_esquerdo',
+        'topografia',
+        'formato_terreno',
+        'superficie',
+        'documentacao',
+        'reside_no_imovel',
+        'data_ocupacao',
+        'tipo_ocupacao',
+        'exerce_pacificamente_posse',
+        'utiliza_da_benfeitoria',
+        'tipo_construcao',
+        'padrao_acabamento',
+        'idade_aparente',
+        'estado_de_conservacao',
+        'observacoes',
+        'acompanhamento_vistoria',
+        'cpf_acompanhante',
+        'telefone_acompanhante'
     ];
 
     protected $casts = [
@@ -43,11 +67,7 @@ class Vistoria extends Model
         return self::extractEnumValues($columnType);
     }
 
-    public static function getUtilizaDaBenfeitoriaValues()
-    {
-        $columnType = DB::selectOne("SHOW COLUMNS FROM vistorias WHERE Field = 'utiliza_da_benfeitoria'")->Type;
-        return self::extractEnumValues($columnType);
-    }
+
 
     private static function extractEnumValues($columnType)
     {

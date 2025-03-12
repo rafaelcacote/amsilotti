@@ -11,7 +11,7 @@
         onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
 </div>
 <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
-    <li class="nav-item"><a class="nav-link" href="index.html">
+    <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">
             <i class="fas fa-camera nav-icon"></i>
             Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
     <li class="nav-title">Cadastros</li>
@@ -25,6 +25,8 @@
             <i class="fas fa-building nav-icon"></i> Imóveis</a></li>
 
     <li class="nav-title">Gerenciamento</li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('membro-equipe-tecnicas.index') }}">
+        <i class="fa-solid fa-users nav-icon"></i> Membro Equipe Técnica</a></li>
     <li class="nav-group" aria-expanded="true">
         <a class="nav-link nav-group-toggle" href="#">
             <i class="fa-solid fa-money-bill-transfer nav-icon"></i> PGM

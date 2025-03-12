@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="{{ asset('css/vendors/simplebar.css') }}">
     <!-- Main styles for this application-->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
     <link href="{{ asset('css/charts/coreui-chartjs.css') }}" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </head>
@@ -58,8 +60,6 @@
         <!-- ======= Footer ======= -->
     </div>
     <script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         const header = document.querySelector('header.header');
 

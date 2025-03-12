@@ -106,50 +106,23 @@
                                                         <div class="d-flex gap-2">
                                                             <a class="btn btn-light"
                                                                 href="{{ route('ordens-de-servico.show', $ordem->id) }}">
-                                                                <i class="fas fa-search text-info"></i>
+                                                                <i class="fa-solid fa-magnifying-glass text-info"></i>
                                                             </a>
                                                             <a class="btn btn-light"
                                                                 href="{{ route('ordens-de-servico.edit', $ordem->id) }}">
-                                                                <i class="fas fa-pencil-alt text-warning"></i>
+                                                                <i class="fa-solid fa-pen-to-square text-warning"></i>
                                                             </a>
-                                                            <div class="modal fade" id="deleteModal{{ $ordem->id }}"
-                                                                tabindex="-1"
-                                                                aria-labelledby="deleteModalLabel{{ $ordem->id }}"
-                                                                aria-hidden="true">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title"
-                                                                                id="deleteModalLabel{{ $ordem->id }}">
-                                                                                Confirmar
-                                                                                Exclusão</h5>
-                                                                            <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"
-                                                                                aria-label="Close"></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            Tem certeza que deseja excluir esta ordem de
-                                                                            serviço?
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">Cancelar</button>
-                                                                            <form
-                                                                                action="{{ route('ordens-de-servico.destroy', $ordem->id) }}"
-                                                                                method="POST" style="display: inline;">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit"
-                                                                                    class="btn btn-danger">Excluir</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <x-delete-modal
+                                                                :id="$ordem->id"
+                                                                title="Confirmar Exclusão"
+                                                                message="Tem certeza que deseja excluir esta ordem de serviço?"
+                                                                :route="route('ordens-de-servico.destroy', $ordem->id)"
+                                                                buttonLabel="Excluir"
+                                                            />
                                                             <button type="button" class="btn btn-light"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#deleteModal{{ $ordem->id }}">
-                                                                <i class="fas fa-trash-alt text-danger"></i>
+                                                                <i class="fa-solid fa-trash-can text-danger"></i>
                                                             </button>
                                                         </div>
                                                     </td>

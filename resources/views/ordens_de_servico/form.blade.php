@@ -5,10 +5,6 @@
     @error('descricao')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-
-    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@exampvvvle.com">
-
-
 </div>
 <div class="col-md-6">
     <label class="form-label" for="user_id">Usuário</label>
