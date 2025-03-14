@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MembroEquipeTecnica;
+use App\Models\MembrosEquipeTecnica;
 use Illuminate\Http\Request;
 
 class MembroEquipeTecnicaController extends Controller
@@ -12,7 +12,7 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function index()
     {
-        $membros = MembroEquipeTecnica::orderBy('nome')->paginate(10);
+        $membros = MembrosEquipeTecnica::orderBy('nome')->paginate(10);
         return view('membro_equipe_tecnicas.index', compact('membros'));
     }
 
@@ -35,7 +35,7 @@ class MembroEquipeTecnicaController extends Controller
             'cargo' => 'required|in:Assistente Técnica,Perita Judicial',
         ]);
 
-        MembroEquipeTecnica::create($validatedData);
+        MembrosEquipeTecnica::create($validatedData);
 
         return redirect()->route('membro-equipe-tecnicas.index')
             ->with('success', 'Membro da equipe técnica criado com sucesso!');
@@ -44,7 +44,7 @@ class MembroEquipeTecnicaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MembroEquipeTecnica $membroEquipeTecnica)
+    public function show(MembrosEquipeTecnica $membroEquipeTecnica)
     {
         return view('membro_equipe_tecnicas.show', compact('membroEquipeTecnica'));
     }
@@ -52,7 +52,7 @@ class MembroEquipeTecnicaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MembroEquipeTecnica $membroEquipeTecnica)
+    public function edit(MembrosEquipeTecnica $membroEquipeTecnica)
     {
         return view('membro_equipe_tecnicas.edit', compact('membroEquipeTecnica'));
     }
@@ -60,7 +60,7 @@ class MembroEquipeTecnicaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MembroEquipeTecnica $membroEquipeTecnica)
+    public function update(Request $request, MembrosEquipeTecnica $membroEquipeTecnica)
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
@@ -77,7 +77,7 @@ class MembroEquipeTecnicaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MembroEquipeTecnica $membroEquipeTecnica)
+    public function destroy(MembrosEquipeTecnica $membroEquipeTecnica)
     {
         $membroEquipeTecnica->delete();
 

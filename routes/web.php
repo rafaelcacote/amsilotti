@@ -28,4 +28,6 @@ Route::delete('vistorias/fotos/{id}', [\App\Http\Controllers\VistoriaController:
 
 Route::resource('membro-equipe-tecnicas', \App\Http\Controllers\MembroEquipeTecnicaController::class)->parameters(['membro-equipe-tecnicas' => 'membroEquipeTecnica'])->middleware('auth');
 
+Route::resource('imoveis', \App\Http\Controllers\ImovelController::class)->middleware('auth');
+
 require __DIR__ . '/auth.php';

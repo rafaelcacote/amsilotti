@@ -19,12 +19,12 @@
             <i class="fas fa-clipboard-check nav-icon"></i> Vistorias</a></li>
     <li class="nav-title">Pesquisa de Mercado</li>
 
-    <li class="nav-item"><a class="nav-link" href="#">
+    <li class="nav-item"><a class="nav-link" href="{{ route('imoveis.index') }}">
             <i class="fas fa-building nav-icon"></i> Imóveis</a></li>
 
     <li class="nav-title">Gerenciamento</li>
     <li class="nav-item"><a class="nav-link" href="{{ route('membro-equipe-tecnicas.index') }}">
-        <i class="fa-solid fa-users nav-icon"></i> Membro Equipe Técnica</a></li>
+            <i class="fa-solid fa-users nav-icon"></i> Membro Equipe Técnica</a></li>
     <li class="nav-group" aria-expanded="true">
         <a class="nav-link nav-group-toggle" href="#">
             <i class="fa-solid fa-money-bill-transfer nav-icon"></i> PGM

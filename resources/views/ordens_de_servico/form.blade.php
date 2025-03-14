@@ -7,12 +7,12 @@
     @enderror
 </div>
 <div class="col-md-6">
-    <label class="form-label" for="user_id">Usuário</label>
-    <select class="form-select @error('membro_equipe_tecnicas_id') is-invalid @enderror" id="membro_equipe_tecnicas_id" name="membro_equipe_tecnicas_id" required>
-        <option value="">Selecione um usuário</option>
+    <label class="form-label" for="membro_id">Usuário</label>
+    <select class="form-select @error('membro_id') is-invalid @enderror" id="membro_id" name="membro_id" required>
+        <option value="">Selecione um membro</option>
         @foreach ($membros as $membro)
             <option value="{{ $membro->id }}"
-                {{ (isset($ordemDeServico) && $membro->id == $ordemDeServico->membro_equipe_tecnicas_id) || old('membro_id') == $membro->id ? 'selected' : '' }}>
+                {{ (isset($ordemDeServico) && $membro->id == $ordemDeServico->membro_id) || old('membro_id') == $membro->id ? 'selected' : '' }}>
                 {{ $membro->nome }} - {{ $membro->cargo }}
             </option>
         @endforeach

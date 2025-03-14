@@ -38,7 +38,7 @@ class OrdemDeServicoController extends Controller
     {
         $request->validate([
             'descricao' => 'required',
-            'membro_equipe_tecnicas_id' => 'required|exists:membros_equipe_tecnicas,id',
+            'membro_id' => 'required|exists:membros_equipe_tecnicas,id',
             'status' => 'required'
         ]);
 
