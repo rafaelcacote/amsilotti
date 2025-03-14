@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OrdemDeServico;
 use App\Models\User;
+use App\Models\MembrosEquipeTecnica;
 use Illuminate\Http\Request;
 
 class OrdemDeServicoController extends Controller
@@ -11,33 +12,33 @@ class OrdemDeServicoController extends Controller
     public function index(Request $request)
     {
         $statusValues = OrdemDeServico::getStatusValues();
-        $users = User::all();
+        $membros = MembrosEquipeTecnica::all();
 
-        $ordens = OrdemDeServico::with('user')
+        $ordens = OrdemDeServico::with('membroEquipeTecnica')
             ->when($request->status, function ($query) use ($request) {
                 return $query->where('status', $request->status);
             })
-            ->when($request->user_id, function ($query) use ($request) {
-                return $query->where('user_id', $request->user_id);
+            ->when($request->membro_id, function ($query) use ($request) {
+                return $query->where('membro_id', $request->membro_id);
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10); // Altere o número para a quantidade desejada por página
 
-        return view('ordens_de_servico.index', compact('ordens', 'statusValues', 'users'));
+        return view('ordens_de_servico.index', compact('ordens', 'statusValues', 'membros'));
     }
 
     public function create()
     {
-        $users = User::all();
+        $membros = MembrosEquipeTecnica::all();
         $statusValues = OrdemDeServico::getStatusValues();
-        return view('ordens_de_servico.create', compact('users', 'statusValues'));
+        return view('ordens_de_servico.create', compact('membros', 'statusValues'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'descricao' => 'required',
-            'user_id' => 'required|exists:users,id',
+            'membro_equipe_tecnicas_id' => 'required|exists:membros_equipe_tecnicas,id',
             'status' => 'required'
         ]);
 

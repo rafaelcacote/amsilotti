@@ -1,19 +1,17 @@
 <div class="sidebar-header border-bottom">
     <div class="sidebar-brand">
-        <svg class="sidebar-brand-full" width="88" height="32" alt="CoreUI Logo">
-            <use xlink:href="assets/brand/coreui.svg#full"></use>
-        </svg>
-        <svg class="sidebar-brand-narrow" width="32" height="32" alt="CoreUI Logo">
-            <use xlink:href="assets/brand/coreui.svg#signet"></use>
-        </svg>
+        <!-- Logo completa -->
+        <img class="sidebar-brand-full" src="/img/logo.png" alt="Logo" width="200" height="28">
+        <!-- Logo reduzida (para o modo narrow) -->
+        <img class="sidebar-brand-narrow" src="/img/logomini.png" alt="Logo" width="32" height="32">
     </div>
     <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close"
         onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
 </div>
 <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
     <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">
-            <i class="fas fa-camera nav-icon"></i>
-            Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
+            <i class="fas fa-home nav-icon"></i>
+            Dashboard</a></li>
     <li class="nav-title">Cadastros</li>
     <li class="nav-item"><a class="nav-link" href="{{ route('ordens-de-servico.index') }}">
             <i class="fas fa-clipboard-list nav-icon"></i> Ordem de Serviços</a></li>

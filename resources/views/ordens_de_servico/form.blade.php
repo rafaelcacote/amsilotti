@@ -8,16 +8,16 @@
 </div>
 <div class="col-md-6">
     <label class="form-label" for="user_id">Usuário</label>
-    <select class="form-select @error('user_id') is-invalid @enderror" id="user_id" name="user_id" required>
+    <select class="form-select @error('membro_equipe_tecnicas_id') is-invalid @enderror" id="membro_equipe_tecnicas_id" name="membro_equipe_tecnicas_id" required>
         <option value="">Selecione um usuário</option>
-        @foreach ($users as $user)
-            <option value="{{ $user->id }}"
-                {{ (isset($ordemDeServico) && $user->id == $ordemDeServico->user_id) || old('user_id') == $user->id ? 'selected' : '' }}>
-                {{ $user->name }}
+        @foreach ($membros as $membro)
+            <option value="{{ $membro->id }}"
+                {{ (isset($ordemDeServico) && $membro->id == $ordemDeServico->membro_equipe_tecnicas_id) || old('membro_id') == $membro->id ? 'selected' : '' }}>
+                {{ $membro->nome }} - {{ $membro->cargo }}
             </option>
         @endforeach
     </select>
-    @error('user_id')
+    @error('membro_equipe_tecnicas_id')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>

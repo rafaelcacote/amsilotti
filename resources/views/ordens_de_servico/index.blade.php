@@ -39,10 +39,10 @@
                                         <label class="form-label" for="user_id">Responsável</label>
                                         <select class="form-select" id="user_id" name="user_id">
                                             <option value="">Todos</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}"
-                                                    {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                                                    {{ $user->name }}
+                                            @foreach ($membros as $membro)
+                                                <option value="{{ $membro->id }}"
+                                                    {{ request('user_id') == $membro->id ? 'selected' : '' }}>
+                                                    {{ $membro->nome }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -91,7 +91,7 @@
                                                     <td class="px-4">{{ Str::limit($ordem->descricao, 35) }}</td>
                                                     <td class="px-4">
                                                         <div class="d-flex align-items-center">
-                                                            <span class="text-muted">{{ $ordem->user->name }}</span>
+                                                            <span class="text-muted">{{ $ordem->membroEquipeTecnica->nome }}</span>
                                                         </div>
                                                     </td>
                                                     <td class="px-4 fw-medium text-muted">

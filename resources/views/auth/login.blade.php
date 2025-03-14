@@ -57,8 +57,8 @@
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
                                 <div class="card-body">
-                                    <h1>Entrar</h1>
-                                    <p class="text-body-secondary">Entre na sua conta</p>
+                                    <h4>Sistema de pesquisa de imóveis</h4>
+                                    <p class="text-body-secondary">Faça login para acessar sua conta</p>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">
                                             <i class="fas fa-user"></i>
@@ -76,14 +76,6 @@
                                         </span>
                                         <input id="password" class="form-control block mt-1 w-full" type="password"
                                             name="password" required autocomplete="current-password">
-                                        {{-- @if ($messages)
-                            <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1']) }}>
-                                @foreach ((array) $messages as $message)
-                                    <li>{{ $message }}</li>
-                                @endforeach
-                            </ul>
-                        @endif --}}
-
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
@@ -97,18 +89,10 @@
                                     </div>
                                 </div>
                             </form>
-
                         </div>
-                        <div class="card col-md-5 text-white bg-primary py-5">
-                            <div class="card-body text-center">
-                                <div>
-                                    <h2>Cadastre-se</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
-                                    <button class="btn btn-lg btn-outline-light mt-3" type="button">Cadastre-se
-                                        agora!</button>
-                                </div>
-                            </div>
+                        <!-- Imagem para desktop -->
+                        <div class="col-md-5 d-none d-md-block">
+                            <img src="/img/login.jpg" alt="Imagem de fundo" class="img-fluid">
                         </div>
                     </div>
                 </div>
@@ -117,7 +101,6 @@
     </div>
     <!-- CoreUI and necessary plugins-->
     <script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
-    {{-- <script src="node_modules/simplebar/dist/simplebar.min.js"></script> --}}
     <script>
         const header = document.querySelector('header.header');
 
@@ -127,7 +110,6 @@
             }
         });
     </script>
-    <script></script>
 </body>
 
 </html>

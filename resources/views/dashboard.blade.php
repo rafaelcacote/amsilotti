@@ -8,16 +8,13 @@
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                       <div>
                         <div class="fs-4 fw-semibold">26K <span class="fs-6 fw-normal">(-12.4%
-                            <svg class="icon">
-                              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom"></use>
-                            </svg>)</span></div>
+                            <i class="fas fa-arrow-down"></i>)</span></div>
                         <div>Users</div>
                       </div>
                       <div class="dropdown">
                         <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <svg class="icon">
-                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-options"></use>
-                          </svg>
+                          {{-- <i class="fas fa-bars"></i> --}}
+                          <i class="fa-solid fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
                       </div>
@@ -33,16 +30,12 @@
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                       <div>
                         <div class="fs-4 fw-semibold">$6.200 <span class="fs-6 fw-normal">(40.9%
-                            <svg class="icon">
-                              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-top"></use>
-                            </svg>)</span></div>
+                            <i class="fas fa-arrow-up"></i>)</span></div>
                         <div>Income</div>
                       </div>
                       <div class="dropdown">
                         <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <svg class="icon">
-                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-options"></use>
-                          </svg>
+                          <i class="fas fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
                       </div>
@@ -58,16 +51,12 @@
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                       <div>
                         <div class="fs-4 fw-semibold">2.49% <span class="fs-6 fw-normal">(84.7%
-                            <svg class="icon">
-                              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-top"></use>
-                            </svg>)</span></div>
+                            <i class="fas fa-arrow-up"></i>)</span></div>
                         <div>Conversion Rate</div>
                       </div>
                       <div class="dropdown">
                         <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <svg class="icon">
-                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-options"></use>
-                          </svg>
+                          <i class="fas fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
                       </div>
@@ -83,16 +72,12 @@
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                       <div>
                         <div class="fs-4 fw-semibold">44K <span class="fs-6 fw-normal">(-23.6%
-                            <svg class="icon">
-                              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom"></use>
-                            </svg>)</span></div>
+                            <i class="fas fa-arrow-down"></i>)</span></div>
                         <div>Sessions</div>
                       </div>
                       <div class="dropdown">
                         <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <svg class="icon">
-                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-options"></use>
-                          </svg>
+                          <i class="fas fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
                       </div>
@@ -122,8 +107,7 @@
                         <label class="btn btn-outline-secondary"> Year</label>
                       </div>
                       <button class="btn btn-primary" type="button">
-                        <svg class="icon">
-                          <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-cloud-download"></use>
+                        <i class="fas fa-download icon"></i>
                         </svg>
                       </button>
                     </div>
@@ -177,9 +161,7 @@
                 <div class="col-sm-6 col-lg-4">
                   <div class="card" style="--cui-card-cap-bg: #3b5998">
                     <div class="card-header position-relative d-flex justify-content-center align-items-center">
-                      <svg class="icon icon-3xl text-white my-4">
-                        <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-facebook-f"></use>
-                      </svg>
+                      <i class="fab fa-facebook-f icon-3xl text-white my-4"></i>
                       <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
                         <canvas id="social-box-chart-1" height="90"></canvas>
                       </div>
@@ -201,9 +183,7 @@
                 <div class="col-sm-6 col-lg-4">
                   <div class="card" style="--cui-card-cap-bg: #00aced">
                     <div class="card-header position-relative d-flex justify-content-center align-items-center">
-                      <svg class="icon icon-3xl text-white my-4">
-                        <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-twitter"></use>
-                      </svg>
+                      <i class="fab fa-twitter icon-3xl text-white my-4"></i>
                       <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
                         <canvas id="social-box-chart-2" height="90"></canvas>
                       </div>
@@ -225,9 +205,7 @@
                 <div class="col-sm-6 col-lg-4">
                   <div class="card" style="--cui-card-cap-bg: #4875b4">
                     <div class="card-header position-relative d-flex justify-content-center align-items-center">
-                      <svg class="icon icon-3xl text-white my-4">
-                        <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-linkedin"></use>
-                      </svg>
+                      <i class="fab fa-linkedin icon-3xl text-white my-4"></i>
                       <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
                         <canvas id="social-box-chart-3" height="90"></canvas>
                       </div>
@@ -373,8 +351,7 @@
                           <hr class="mt-0">
                           <div class="progress-group">
                             <div class="progress-group-header">
-                              <svg class="icon icon-lg me-2">
-                                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-user"></use>
+                              <i class="fas fa-user icon icon-lg me-2"></i>
                               </svg>
                               <div>Male</div>
                               <div class="ms-auto fw-semibold">43%</div>
@@ -387,8 +364,7 @@
                           </div>
                           <div class="progress-group mb-5">
                             <div class="progress-group-header">
-                              <svg class="icon icon-lg me-2">
-                                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-user-female"></use>
+                              <i class="fas fa-female icon icon-lg me-2"></i>
                               </svg>
                               <div>Female</div>
                               <div class="ms-auto fw-semibold">37%</div>
@@ -401,8 +377,7 @@
                           </div>
                           <div class="progress-group">
                             <div class="progress-group-header">
-                              <svg class="icon icon-lg me-2">
-                                <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-google"></use>
+                              <i class="fab fa-google icon icon-lg me-2"></i>
                               </svg>
                               <div>Organic Search</div>
                               <div class="ms-auto fw-semibold me-2">191.235</div>
@@ -416,8 +391,7 @@
                           </div>
                           <div class="progress-group">
                             <div class="progress-group-header">
-                              <svg class="icon icon-lg me-2">
-                                <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-facebook-f"></use>
+                              <i class="fab fa-facebook-f icon icon-lg me-2"></i>
                               </svg>
                               <div>Facebook</div>
                               <div class="ms-auto fw-semibold me-2">51.223</div>
@@ -431,8 +405,7 @@
                           </div>
                           <div class="progress-group">
                             <div class="progress-group-header">
-                              <svg class="icon icon-lg me-2">
-                                <use xlink:href="vendors/@coreui/icons/svg/brand.svg#cib-twitter"></use>
+                              <i class="fab fa-twitter icon icon-lg me-2"></i>
                               </svg>
                               <div>Twitter</div>
                               <div class="ms-auto fw-semibold me-2">37.564</div>
