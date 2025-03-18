@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container-fluid">
     <div class="animated fadeIn">
@@ -16,7 +17,27 @@
                     </div>
                     <div class="card-body">
 
+                        <!-- Filtros -->
+                        <form action="{{ route('membro-equipe-tecnicas.index') }}" method="GET" class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" name="search" class="form-control" placeholder="Buscar por nome..." value="{{ request('search') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="cargo" class="form-select">
+                                        <option value="">Filtrar por cargo</option>
+                                        <option value="Assistente Técnica" {{ request('cargo') == 'Assistente Técnica' ? 'selected' : '' }}>Assistente Técnica</option>
+                                        <option value="Perita Judicial" {{ request('cargo') == 'Perita Judicial' ? 'selected' : '' }}>Perita Judicial</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                                    <a href="{{ route('membro-equipe-tecnicas.index') }}" class="btn btn-outline-secondary">Limpar Filtros</a>
+                                </div>
+                            </div>
+                        </form>
 
+                        <!-- Tabela de Membros -->
                         <div class="table-responsive">
                             <table class="table table-hover table-striped align-middle">
                                 <thead>
@@ -25,8 +46,8 @@
                                         <th class="px-4 py-3 border-bottom-0">Nome</th>
                                         <th class="px-4 py-3 border-bottom-0">Telefone</th>
                                         <th class="px-4 py-3 border-bottom-0">Cargo</th>
-                                        <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
-                                        </th>
+                                        <th class="px-4 py-3 border-bottom-0">Usuário</th>
+                                        <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -43,6 +64,7 @@
                                                         {{ $membro->cargo }}
                                                     </span>
                                                 </td>
+                                                <td class="px-4">{{ $membro->usuario->name ?? '-' }}</td>
                                                 <td class="px-4">
                                                     <div class="d-flex gap-2">
                                                         <a class="btn btn-light"
@@ -54,24 +76,24 @@
                                                             <i class="fa-solid fa-pen-to-square text-warning"></i>
                                                         </a>
                                                         <x-delete-modal
-                                                                :id="$membro->id"
-                                                                title="Confirmar Exclusão"
-                                                                message="Tem certeza que deseja excluir o membro da equipe {{ $membro->nome }}?"
-                                                                :route="route('membro-equipe-tecnicas.destroy', $membro->id)"
-                                                                buttonLabel="Excluir"
-                                                            />
-                                                            <button type="button" class="btn btn-light"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#deleteModal{{ $membro->id }}">
-                                                                <i class="fa-solid fa-trash-can text-danger"></i>
-                                                            </button>
+                                                            :id="$membro->id"
+                                                            title="Confirmar Exclusão"
+                                                            message="Tem certeza que deseja excluir o membro da equipe {{ $membro->nome }}?"
+                                                            :route="route('membro-equipe-tecnicas.destroy', $membro->id)"
+                                                            buttonLabel="Excluir"
+                                                        />
+                                                        <button type="button" class="btn btn-light"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteModal{{ $membro->id }}">
+                                                            <i class="fa-solid fa-trash-can text-danger"></i>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="5" class="text-center py-4">
+                                            <td colspan="6" class="text-center py-4">
                                                 <p class="text-muted mb-0">Nenhum membro encontrado.</p>
                                             </td>
                                         </tr>
@@ -80,6 +102,7 @@
                             </table>
                         </div>
 
+                        <!-- Paginação -->
                         <div class="d-flex justify-content-center mt-4">
                             {{ $membros->links() }}
                         </div>

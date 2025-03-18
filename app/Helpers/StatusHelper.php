@@ -20,4 +20,14 @@ class StatusHelper
             'cancelada' => 'danger',
         ][$status] ?? 'secondary';
     }
+
+    public static function prioridadeColor($prioridade)
+    {
+        $prioridade = strtolower($prioridade);
+        return [
+            'alta' => 'danger',
+            'media' => 'warning',
+            'baixa' => 'info',
+        ][$prioridade] ?? 'secondary';
+    }
 }

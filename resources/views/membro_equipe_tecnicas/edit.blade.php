@@ -20,7 +20,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="telefone" class="form-label">Telefone</label>
                                 <input type="text" class="form-control telefone-mask @error('telefone') is-invalid @enderror" id="telefone" name="telefone" value="{{ old('telefone', $membroEquipeTecnica->telefone) }}">
                                 @error('telefone')
@@ -28,12 +28,28 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="cargo" class="form-label">Cargo <span class="text-danger">*</span></label>
                                 <select class="form-select @error('cargo') is-invalid @enderror" id="cargo" name="cargo" required>
                                     <option value="">Selecione um cargo</option>
                                     <option value="Assistente Técnica" {{ (old('cargo', $membroEquipeTecnica->cargo) == 'Assistente Técnica') ? 'selected' : '' }}>Assistente Técnica</option>
                                     <option value="Perita Judicial" {{ (old('cargo', $membroEquipeTecnica->cargo) == 'Perita Judicial') ? 'selected' : '' }}>Perita Judicial</option>
+                                </select>
+                                @error('cargo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="cargo" class="form-label">
+                                    Usuário <strong><span class="login-warning">(opção disponível apenas para membros com login no sistema)</span></strong>
+                                </label>
+                                <select class="form-select @error('user_id') is-invalid @enderror" id="user_id" name="user_id" required>
+                                    <option value="">Selecionar</option>
+                                    @foreach ($usuarios as $item)
+                                        <option value="{{ $item->id }}" {{ old('user_id', $membroEquipeTecnica->user_id) == $item->id ? 'selected' : '' }}>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('cargo')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -57,9 +73,15 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('scripts')
+<style>
+    .login-warning {
+        color: red; /* Cor vermelha */
+        font-size: 0.6em; /* Tamanho da fonte menor */
+        font-weight: normal; /* Remove o negrito, se necessário */
+    }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Telefone mask
@@ -87,5 +109,6 @@
         });
     });
 </script>
-@endpush
 @endsection
+
+

@@ -27,6 +27,10 @@
                                                 <p class="mb-1"><strong>Telefone:</strong></p>
                                                 <p>{{ $membroEquipeTecnica->telefone ?: 'Não informado' }}</p>
                                             </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1"><strong>Usuário:</strong></p>
+                                                <p>{{ $membroEquipeTecnica->usuario->name ?? 'Não informado' }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -12,11 +12,18 @@ class MembrosEquipeTecnica extends Model
     protected $fillable = [
         'nome',
         'telefone',
-        'cargo'
+        'cargo',
+        'user_id',
+        'status'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

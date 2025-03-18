@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bairro;
 use App\Models\Zona;
+use App\Models\ValorBairro;
 use Illuminate\Http\Request;
 
 class BairroController extends Controller
@@ -11,14 +12,14 @@ class BairroController extends Controller
     public function index(Request $request)
     {
         $zonas = Zona::orderBy('nome')->get();
-        
+
         $bairros = Bairro::with('zona')
             ->when($request->zona_id, function ($query) use ($request) {
                 return $query->where('zona_id', $request->zona_id);
             })
             ->orderBy('nome')
             ->paginate(10);
-            
+
         return view('bairros.index', compact('bairros', 'zonas'));
     }
 
@@ -43,10 +44,10 @@ class BairroController extends Controller
 
     public function show(Bairro $bairro)
     {
-        $bairro->load(['zona', 'valoresBairro' => function($query) {
+        $bairro->load(['zona', 'valoresBairro' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }]);
-        
+
         return view('bairros.show', compact('bairro'));
     }
 
@@ -76,10 +77,29 @@ class BairroController extends Controller
             return redirect()->route('bairros.index')
                 ->with('error', 'Não é possível excluir este bairro pois existem valores associados a ele.');
         }
-        
+
         $bairro->delete();
 
         return redirect()->route('bairros.index')
             ->with('success', 'Bairro excluído com sucesso!');
+    }
+
+    public function getBairroData($id)
+    {
+        $bairro = Bairro::with('zona')->find($id);
+
+        if (!$bairro) {
+            return response()->json([
+                'error' => 'Bairro não encontrado.',
+            ], 404);
+        }
+
+        $valorBairro = ValorBairro::where('bairro_id', $id)->first();
+
+        return response()->json([
+            'zona_id' => $bairro->zona ? $bairro->zona->id : null,
+            'zona_nome' => $bairro->zona ? $bairro->zona->nome : null,
+            'pgm' => $valorBairro ? $valorBairro->valor : null,
+        ]);
     }
 }

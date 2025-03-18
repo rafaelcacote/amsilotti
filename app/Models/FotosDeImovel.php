@@ -9,12 +9,12 @@ class FotosDeImovel extends Model
 {
     use HasFactory;
 
-    protected $table = 'fotosdeimoveis';
+    protected $table = 'fotos_de_imoveis';
 
     protected $fillable = [
         'imovel_id',
-        'url',
-        'descricao'
+        'caminho',
+        'descricao',
     ];
 
     public function imovel()

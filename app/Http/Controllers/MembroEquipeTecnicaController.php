@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MembrosEquipeTecnica;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MembroEquipeTecnicaController extends Controller
@@ -10,9 +11,22 @@ class MembroEquipeTecnicaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $membros = MembrosEquipeTecnica::orderBy('nome')->paginate(10);
+        $query = MembrosEquipeTecnica::where('status', true);
+
+        // Filtro por nome
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nome', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtro por cargo
+        if ($request->has('cargo') && !empty($request->cargo)) {
+            $query->where('cargo', $request->cargo);
+        }
+
+        $membros = $query->orderBy('id', 'desc')->paginate(10);
+
         return view('membro_equipe_tecnicas.index', compact('membros'));
     }
 
@@ -21,7 +35,8 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function create()
     {
-        return view('membro_equipe_tecnicas.create');
+        $usuarios = User::all();
+        return view('membro_equipe_tecnicas.create', compact('usuarios'));
     }
 
     /**
@@ -29,10 +44,12 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
             'telefone' => 'nullable|string|max:15',
             'cargo' => 'required|in:Assistente Técnica,Perita Judicial',
+            'user_id' => 'nullable|',
         ]);
 
         MembrosEquipeTecnica::create($validatedData);
@@ -46,6 +63,7 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function show(MembrosEquipeTecnica $membroEquipeTecnica)
     {
+        $membroEquipeTecnica->load('usuario');
         return view('membro_equipe_tecnicas.show', compact('membroEquipeTecnica'));
     }
 
@@ -54,7 +72,10 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function edit(MembrosEquipeTecnica $membroEquipeTecnica)
     {
-        return view('membro_equipe_tecnicas.edit', compact('membroEquipeTecnica'));
+        $usuarios = User::all();
+        $membroEquipeTecnica->load('usuario');
+
+        return view('membro_equipe_tecnicas.edit', compact('membroEquipeTecnica', 'usuarios'));
     }
 
     /**
@@ -66,6 +87,7 @@ class MembroEquipeTecnicaController extends Controller
             'nome' => 'required|string|max:255',
             'telefone' => 'nullable|string|max:15',
             'cargo' => 'required|in:Assistente Técnica,Perita Judicial',
+            'user_id' => 'nullable|',
         ]);
 
         $membroEquipeTecnica->update($validatedData);
@@ -79,9 +101,10 @@ class MembroEquipeTecnicaController extends Controller
      */
     public function destroy(MembrosEquipeTecnica $membroEquipeTecnica)
     {
-        $membroEquipeTecnica->delete();
+        // Atualiza o status para false
+        $membroEquipeTecnica->update(['status' => false]);
 
         return redirect()->route('membro-equipe-tecnicas.index')
-            ->with('success', 'Membro da equipe técnica excluído com sucesso!');
+            ->with('success', 'Membro da equipe técnica desativado com sucesso!');
     }
 }

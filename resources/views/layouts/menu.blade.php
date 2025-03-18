@@ -13,10 +13,12 @@
             <i class="fas fa-home nav-icon"></i>
             Dashboard</a></li>
     <li class="nav-title">Cadastros</li>
-    <li class="nav-item"><a class="nav-link" href="{{ route('ordens-de-servico.index') }}">
-            <i class="fas fa-clipboard-list nav-icon"></i> Ordem de Serviços</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('controle_de_tarefas.index') }}">
+            <i class="fas fa-clipboard-list nav-icon"></i> Controle de Tarefas</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ route('vistorias.index') }}">
             <i class="fas fa-clipboard-check nav-icon"></i> Vistorias</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('clientes.index') }}">
+                <i class="fas fa-user-tie nav-icon"></i> Clientes</a></li>
     <li class="nav-title">Pesquisa de Mercado</li>
 
     <li class="nav-item"><a class="nav-link" href="{{ route('imoveis.index') }}">
@@ -24,10 +26,10 @@
 
     <li class="nav-title">Gerenciamento</li>
     <li class="nav-item"><a class="nav-link" href="{{ route('membro-equipe-tecnicas.index') }}">
-            <i class="fa-solid fa-users nav-icon"></i> Membro Equipe Técnica</a></li>
+            <i class="fas fa-users nav-icon"></i> Membro Equipe Técnica</a></li>
     <li class="nav-group" aria-expanded="true">
         <a class="nav-link nav-group-toggle" href="#">
-            <i class="fa-solid fa-money-bill-transfer nav-icon"></i> PGM
+            <i class="fa-solid fa-money-bill-transfer"></i> PGM
         </a>
         <ul class="nav-group-items compact" style="height: auto;">
             <li class="nav-item">
@@ -45,13 +47,13 @@
                     <i class="fas fa-map-signs nav-icon"></i> PGM - Bairro
                 </a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="500.html" target="_top">
-                    <i class="fas fa-road nav-icon"></i> PGM - Vias Específicas</a></li>
+            {{-- <li class="nav-item"><a class="nav-link" href="500.html" target="_top">
+                    <i class="fas fa-road nav-icon"></i> PGM - Vias Específicas</a></li> --}}
         </ul>
     </li>
     <li class="nav-title">Gerenciamento de Usuários</li>
-    <li class="nav-item"><a class="nav-link" href="charts.html">
-            <i class="fas fa-chart-pie nav-icon"></i> Usuários</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">
+            <i class="fas fa-user nav-icon"></i> Usuários</a></li>
 
 </ul>
 <div class="sidebar-footer border-top d-none d-md-flex">
