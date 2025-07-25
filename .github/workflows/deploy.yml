@@ -29,6 +29,7 @@ jobs:
           target: "/home1/peric572/public_html/amsilotti"
           rm: true
           strip_components: 0
+          args: "-oKexAlgorithms=+diffie-hellman-group-exchange-sha256"
 
       - name: Run SSH commands on HostGator
         uses: appleboy/ssh-action@master
@@ -37,6 +38,7 @@ jobs:
           username: peric572
           key: ${{ secrets.HOSTGATOR_SSH_KEY }}
           port: 22
+          args: "-oKexAlgorithms=+diffie-hellman-group-exchange-sha256"
           script: |
             cd /home1/peric572/public_html/amsilotti
             composer install --no-interaction --prefer-dist --optimize-autoloader
