@@ -188,7 +188,7 @@
                 <td style="width: 33,33%; background-color: #e9eaf0; border: none;">
                     <div class="section-title">FATOR DE FUNDAMENTAÇÃO:
                         <strong><span class="data-value">
-                                GRAU II
+                                {{ $data['imovel']->fator_fundamentacao }}
                             </span></strong>
                     </div>
                 </td>

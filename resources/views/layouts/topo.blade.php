@@ -37,9 +37,9 @@
             </a>
             <div class="dropdown-menu dropdown-menu-end pt-0">
 
-                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
-                    <i class="fas fa-user me-2"></i> Perfil Usuário</a><a class="dropdown-item"
-                    href="{{ route('users.edit', auth()->user()->id) }}"
+                <div class="dropdown-divider"></div><a class="dropdown-item"
+                    href="{{ route('users.edit', auth()->user()->id) }}">
+                    <i class="fas fa-user me-2"></i> Perfil Usuário</a><a class="dropdown-item" href="#"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt me-2"></i> Sair</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
