@@ -33,7 +33,8 @@ jobs:
               -o StrictHostKeyChecking=no \
               -i /tmp/deploy_key -p 22 peric572@162.241.203.155 '
             cd /home1/peric572/public_html/amsilotti &&
-            composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            if [ ! -f composer.phar ]; then curl -sS https://getcomposer.org/installer | php; fi &&
+            php composer.phar install --no-interaction --prefer-dist --optimize-autoloader &&
             php artisan config:cache &&
             php artisan route:cache
             # php artisan migrate --force
