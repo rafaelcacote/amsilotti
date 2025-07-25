@@ -13,35 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.HOSTGATOR_SSH_KEY }}
+      - name: Write SSH key to file
+        run: |
+          echo "$DEPLOY_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+        env:
+          DEPLOY_KEY: ${{ secrets.HOSTGATOR_SSH_KEY }}
 
-      - name: Copy project files to HostGator
-        uses: appleboy/scp-action@master
-        with:
-          host: 162.241.203.155
-          username: peric572
-          key: ${{ secrets.HOSTGATOR_SSH_KEY }}
-          port: 22
-          source: "."
-          target: "/home1/peric572/public_html/amsilotti"
-          rm: true
-          strip_components: 0
-          args: "-oKexAlgorithms=+diffie-hellman-group-exchange-sha256"
+      - name: Deploy via SCP (nativo)
+        run: |
+          scp -o KexAlgorithms=+diffie-hellman-group-exchange-sha256 -i /tmp/deploy_key -P 22 -r . peric572@162.241.203.155:/home1/peric572/public_html/amsilotti
 
       - name: Run SSH commands on HostGator
-        uses: appleboy/ssh-action@master
-        with:
-          host: 162.241.203.155
-          username: peric572
-          key: ${{ secrets.HOSTGATOR_SSH_KEY }}
-          port: 22
-          args: "-oKexAlgorithms=+diffie-hellman-group-exchange-sha256"
-          script: |
-            cd /home1/peric572/public_html/amsilotti
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-            php artisan config:cache
+        run: |
+          ssh -o KexAlgorithms=+diffie-hellman-group-exchange-sha256 -i /tmp/deploy_key -p 22 peric572@162.241.203.155 '
+            cd /home1/peric572/public_html/amsilotti &&
+            composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            php artisan config:cache &&
             php artisan route:cache
             # php artisan migrate --force
+          '
