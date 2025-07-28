@@ -173,32 +173,31 @@
         .photo-table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 24px;
-            margin-bottom: 34px;
-            /* Para alinhar uma imagem por linha */
+            border-spacing: 0 15px;
+            margin-bottom: 25px;
         }
 
         .photo-item {
             background: #fcfdff;
             border-radius: 9px;
             box-shadow: 0 1px 6px rgba(25, 118, 210, 0.07);
-            padding: 18px 12px 14px 12px;
+            padding: 12px 8px 10px 8px;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         .photo-img {
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 90%;
-            max-width: 600px;
-            max-height: 300px;
-            border-radius: 10px;
+            width: 98%;
+            max-width: 580px;
+            max-height: 320px;
+            border-radius: 8px;
             border: 2px solid #e3eafc;
             object-fit: contain;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09);
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .photo-caption {
@@ -218,7 +217,7 @@
 
         /* Signature */
         .assinatura-final {
-            margin-top: 120px;
+            padding-top: 50px;
             text-align: left;
             font-size: 1.12rem;
             color: #222;
@@ -601,8 +600,8 @@
                 @if ($pagina > 0)
                     <pagebreak />
                 @endif
-                <table class="photo-table" style="margin-left:auto; margin-right:auto;">
-                    @for ($linha = 0; $linha < 2; $linha++)
+                <table class="photo-table">
+                    @for ($linha = 0; $linha < $fotosPorPagina; $linha++)
                         @php
                             $indice = $pagina * $fotosPorPagina + $linha;
                         @endphp
@@ -611,13 +610,13 @@
                                 $foto = (object) $fotos[$indice];
                             @endphp
                             <tr>
-                                <td style="width:50%; vertical-align:top; text-align:center;">
+                                <td style="width:100%; vertical-align:top; text-align:center;">
                                     <div class="photo-item">
                                         @if (file_exists(public_path('storage/' . $foto->url)))
                                             <img src="{{ public_path('storage/' . $foto->url) }}" class="photo-img"
                                                 alt="Foto da vistoria">
                                         @else
-                                            <div style="color: #c0392b; text-align: center; padding: 10mm;">
+                                            <div style="color: #c0392b; text-align: center; padding: 20px;">
                                                 Imagem não encontrada
                                             </div>
                                         @endif
@@ -637,7 +636,7 @@
 
         <!-- Assinatura -->
         <div class="assinatura-final" style="page-break-inside: avoid;">
-            Manaus, 15 de maio de 2025
+            Manaus, {{ \Carbon\Carbon::now()->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY') }}
             <br><br>
             <span class="nome">Amanda da Rocha Silotti</span><br>
             <span class="titulo">Especialista em Engenharia de Avaliações e Perícias</span><br>

@@ -9,7 +9,8 @@
                 <div class="d-flex align-items-center">
                     <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-search me-2"></i>Consulta de Imóveis</h1>
                 </div>
-                <p class="text-muted mt-2">Bem-vindo ao sistema de consulta do Amsillote. Explore nosso banco de dados de imóveis.</p>
+                <p class="text-muted mt-2">Bem-vindo ao sistema de consulta do Amsillote. Explore nosso banco de dados de
+                    imóveis.</p>
             </div>
         </div>
 
@@ -134,7 +135,8 @@
                                                 <td>
                                                     @if ($imovel->valor_total_imovel)
                                                         <span class="text-success fw-bold">
-                                                            R$ {{ number_format($imovel->valor_total_imovel, 2, ',', '.') }}
+                                                            R$
+                                                            {{ number_format($imovel->valor_total_imovel, 2, ',', '.') }}
                                                         </span>
                                                     @else
                                                         <span class="text-muted">Não informado</span>
@@ -147,14 +149,16 @@
                                                         </span>
                                                     @elseif (in_array($imovel->tipo, ['apartamento', 'imovel_urbano', 'galpao', 'sala_comercial']))
                                                         <span class="text-info">
-                                                            {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '0,00' }} m²
+                                                            {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '0,00' }}
+                                                            m²
                                                         </span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($imovel->preco_venda_amostra)
                                                         <span class="text-success fw-bold">
-                                                            R$ {{ number_format($imovel->preco_venda_amostra, 2, ',', '.') }}
+                                                            R$
+                                                            {{ number_format($imovel->preco_venda_amostra, 2, ',', '.') }}
                                                         </span>
                                                     @else
                                                         <span class="text-muted">Não informado</span>
@@ -162,16 +166,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group" role="group">
-                                                        <a class="btn btn-outline-primary btn-sm" 
-                                                           href="{{ route('consulta.cliente.show', $imovel->id) }}"
-                                                           data-bs-toggle="tooltip" 
-                                                           title="Ver detalhes">
-                                                           <i class="fa-solid fa-magnifying-glass"></i>
+                                                        <a class="btn btn-outline-primary btn-sm"
+                                                            href="{{ route('consulta.cliente.show', $imovel->id) }}"
+                                                            data-bs-toggle="tooltip" title="Ver detalhes">
+                                                            <i class="fa-solid fa-magnifying-glass"></i>
                                                         </a>
                                                         @if (!empty($imovel->latitude) && !empty($imovel->longitude))
                                                             <button class="btn btn-outline-success btn-sm view-location"
-                                                                data-bs-toggle="tooltip"
-                                                                title="Ver no mapa"
+                                                                data-bs-toggle="tooltip" title="Ver no mapa"
                                                                 data-latitude="{{ str_replace(',', '.', $imovel->latitude) }}"
                                                                 data-longitude="{{ str_replace(',', '.', $imovel->longitude) }}"
                                                                 data-id="{{ $imovel->id }}"
@@ -182,17 +184,22 @@
                                                             </button>
                                                         @endif
                                                         @if ($imovel->preco_venda_amostra && $imovel->preco_venda_amostra > 0)
-                                                            @if(isset($itensNoCarrinho) && $itensNoCarrinho->contains($imovel->id))
-                                                                <button class="btn btn-success btn-sm" disabled data-bs-toggle="tooltip" title="Já adicionado ao carrinho">
+                                                            @if (isset($itensNoCarrinho) && $itensNoCarrinho->contains($imovel->id))
+                                                                <button class="btn btn-success btn-sm" disabled
+                                                                    data-bs-toggle="tooltip"
+                                                                    title="Já adicionado ao carrinho">
                                                                     <i class="fa-solid fa-check"></i> Adicionado
                                                                 </button>
                                                             @else
-                                                                <button class="btn btn-primary btn-sm btn-add-carrinho" data-amostra-id="{{ $imovel->id }}" data-bs-toggle="tooltip" title="Comprar Amostra">
+                                                                <button class="btn btn-primary btn-sm btn-add-carrinho"
+                                                                    data-amostra-id="{{ $imovel->id }}"
+                                                                    data-bs-toggle="tooltip" title="Comprar Amostra">
                                                                     <i class="fa-solid fa-cart-plus"></i> Comprar Amostra
                                                                 </button>
                                                             @endif
                                                         @else
-                                                            <button class="btn btn-secondary btn-sm" disabled data-bs-toggle="tooltip" title="Amostra não disponível">
+                                                            <button class="btn btn-secondary btn-sm" disabled
+                                                                data-bs-toggle="tooltip" title="Amostra não disponível">
                                                                 <i class="fa-solid fa-times"></i> Indisponível
                                                             </button>
                                                         @endif
@@ -207,8 +214,8 @@
                             <!-- Paginação -->
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="text-muted">
-                                    Mostrando <strong>{{ $imoveis->firstItem() ?? 0 }}</strong> a 
-                                    <strong>{{ $imoveis->lastItem() ?? 0 }}</strong> de 
+                                    Mostrando <strong>{{ $imoveis->firstItem() ?? 0 }}</strong> a
+                                    <strong>{{ $imoveis->lastItem() ?? 0 }}</strong> de
                                     <strong>{{ $imoveis->total() }}</strong> resultados
                                 </div>
                                 <div>
@@ -238,15 +245,18 @@
     </div>
 
     <!-- Modal para Visualização Única de Localização -->
-    <div class="modal fade" id="singleLocationModal" tabindex="-1" aria-labelledby="singleLocationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="singleLocationModal" tabindex="-1" aria-labelledby="singleLocationModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="singleLocationModalLabel">Localização do Imóvel #<span id="imovelIdTitle"></span></h5>
+                    <h5 class="modal-title" id="singleLocationModalLabel">Localização do Imóvel #<span
+                            id="imovelIdTitle"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
-                    <iframe id="googleMapsIframe" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe id="googleMapsIframe" width="100%" height="400" frameborder="0" style="border:0"
+                        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -259,7 +269,9 @@
     <div id="carrinho-indicador" class="d-none" style="position: fixed; bottom: 30px; right: 30px; z-index: 1050;">
         <a href="{{ route('carrinho.index') }}" class="btn btn-success btn-lg shadow position-relative">
             <i class="fa-solid fa-cart-shopping"></i> Ver Carrinho
-            <span id="carrinho-contador" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.75rem;">
+            <span id="carrinho-contador"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style="font-size: 0.75rem;">
                 0
             </span>
         </a>
@@ -267,158 +279,171 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Verificar se o elemento carrinho-indicador existe
-        const carrinhoIndicador = document.getElementById('carrinho-indicador');
-        const carrinhoContador = document.getElementById('carrinho-contador');
-        
-        if (!carrinhoIndicador) {
-            console.error('Elemento carrinho-indicador não encontrado no DOM');
-        } else {
-            console.log('Elemento carrinho-indicador encontrado');
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se o elemento carrinho-indicador existe
+            const carrinhoIndicador = document.getElementById('carrinho-indicador');
+            const carrinhoContador = document.getElementById('carrinho-contador');
 
-        // Função para atualizar o contador do carrinho
-        function atualizarContadorCarrinho() {
-            fetch("{{ route('carrinho.contador') }}", {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (carrinhoContador) {
-                    carrinhoContador.textContent = data.total_itens;
-                }
-                
-                // Mostra ou esconde o indicador baseado na quantidade
-                if (data.total_itens > 0) {
-                    carrinhoIndicador.classList.remove('d-none');
-                } else {
-                    carrinhoIndicador.classList.add('d-none');
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao atualizar contador do carrinho:', error);
-            });
-        }
+            if (!carrinhoIndicador) {
+                console.error('Elemento carrinho-indicador não encontrado no DOM');
+            } else {
+                console.log('Elemento carrinho-indicador encontrado');
+            }
 
-        // Carrega o contador inicial
-        atualizarContadorCarrinho();
-
-        document.querySelectorAll('.view-location').forEach(button => {
-            button.addEventListener('click', function() {
-                const latitude = parseFloat(this.dataset.latitude);
-                const longitude = parseFloat(this.dataset.longitude);
-                const codigo = this.dataset.id;
-
-                document.getElementById('imovelIdTitle').textContent = codigo;
-
-                // Monta a URL do Google Maps Embed
-                const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}&hl=pt-BR&z=17&output=embed`;
-                document.getElementById('googleMapsIframe').src = mapsUrl;
-
-                const modal = new bootstrap.Modal(document.getElementById('singleLocationModal'));
-                modal.show();
-            });
-        });
-
-        // Funcionalidade do carrinho
-        document.querySelectorAll('.btn-add-carrinho').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                var amostraId = this.dataset.amostraId;
-                var btnElement = this;
-                
-                console.log('Iniciando adição ao carrinho para amostra:', amostraId);
-                console.log('CSRF Token:', '{{ csrf_token() }}');
-                console.log('URL da requisição:', "{{ route('carrinho.adicionar') }}");
-                
-                // Desabilita o botão durante a requisição
-                btnElement.disabled = true;
-                btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adicionando...';
-                
-                fetch("{{ route('carrinho.adicionar') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ amostra_id: amostraId })
-                })
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    console.log('Response headers:', response.headers);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.text().then(text => {
-                        console.log('Response text:', text);
-                        try {
-                            return JSON.parse(text);
-                        } catch (e) {
-                            console.error('Erro ao fazer parse do JSON:', e);
-                            console.error('Resposta recebida:', text);
-                            throw new Error('Resposta não é um JSON válido');
+            // Função para atualizar o contador do carrinho
+            function atualizarContadorCarrinho() {
+                fetch("{{ route('carrinho.contador') }}", {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
-                    });
-                })
-                .then(data => {
-                    console.log('Response data:', data);
-                    if(data.success) {
-                        // Atualiza o contador do carrinho
-                        if (carrinhoContador && data.total_itens) {
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (carrinhoContador) {
                             carrinhoContador.textContent = data.total_itens;
                         }
-                        
-                        // Mostra o indicador do carrinho
-                        const carrinhoIndicador = document.getElementById('carrinho-indicador');
-                        if (carrinhoIndicador) {
+
+                        // Mostra ou esconde o indicador baseado na quantidade
+                        if (data.total_itens > 0) {
                             carrinhoIndicador.classList.remove('d-none');
-                            console.log('Carrinho indicador mostrado com sucesso');
                         } else {
-                            console.error('Elemento carrinho-indicador não encontrado');
+                            carrinhoIndicador.classList.add('d-none');
                         }
-                        
-                        // Deixa o botão permanentemente como "Adicionado" e desabilitado
-                        btnElement.disabled = true;
-                        btnElement.classList.remove('btn-primary');
-                        btnElement.classList.add('btn-success');
-                        btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Adicionado';
-                        btnElement.setAttribute('data-bs-original-title', 'Item já adicionado ao carrinho');
-                        
-                        // Atualiza o tooltip se existir
-                        var tooltip = bootstrap.Tooltip.getInstance(btnElement);
-                        if (tooltip) {
-                            tooltip.dispose();
-                            new bootstrap.Tooltip(btnElement);
-                        }
-                    } else {
-                        console.error('Erro na resposta:', data.message || 'Erro desconhecido');
-                        btnElement.disabled = false;
-                        btnElement.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Comprar Amostra';
-                        alert('Erro ao adicionar ao carrinho: ' + (data.message || 'Erro desconhecido'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro na requisição:', error);
-                    btnElement.disabled = false;
-                    btnElement.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Comprar Amostra';
-                    alert('Erro ao adicionar ao carrinho. Verifique o console para mais detalhes. Erro: ' + error.message);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao atualizar contador do carrinho:', error);
+                    });
+            }
+
+            // Carrega o contador inicial
+            atualizarContadorCarrinho();
+
+            document.querySelectorAll('.view-location').forEach(button => {
+                button.addEventListener('click', function() {
+                    const latitude = parseFloat(this.dataset.latitude);
+                    const longitude = parseFloat(this.dataset.longitude);
+                    const codigo = this.dataset.id;
+
+                    document.getElementById('imovelIdTitle').textContent = codigo;
+
+                    // Monta a URL do Google Maps Embed
+                    const mapsUrl =
+                        `https://www.google.com/maps?q=${latitude},${longitude}&hl=pt-BR&z=17&output=embed`;
+                    document.getElementById('googleMapsIframe').src = mapsUrl;
+
+                    const modal = new bootstrap.Modal(document.getElementById(
+                        'singleLocationModal'));
+                    modal.show();
                 });
             });
-        });
 
-        // Inicializar tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+            // Funcionalidade do carrinho
+            document.querySelectorAll('.btn-add-carrinho').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var amostraId = this.dataset.amostraId;
+                    var btnElement = this;
+
+                    console.log('Iniciando adição ao carrinho para amostra:', amostraId);
+                    console.log('CSRF Token:', '{{ csrf_token() }}');
+                    console.log('URL da requisição:', "{{ route('carrinho.adicionar') }}");
+
+                    // Desabilita o botão durante a requisição
+                    btnElement.disabled = true;
+                    btnElement.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Adicionando...';
+
+                    fetch("{{ route('carrinho.adicionar') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                amostra_id: amostraId
+                            })
+                        })
+                        .then(response => {
+                            console.log('Response status:', response.status);
+                            console.log('Response headers:', response.headers);
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.text().then(text => {
+                                console.log('Response text:', text);
+                                try {
+                                    return JSON.parse(text);
+                                } catch (e) {
+                                    console.error('Erro ao fazer parse do JSON:', e);
+                                    console.error('Resposta recebida:', text);
+                                    throw new Error('Resposta não é um JSON válido');
+                                }
+                            });
+                        })
+                        .then(data => {
+                            console.log('Response data:', data);
+                            if (data.success) {
+                                // Atualiza o contador do carrinho
+                                if (carrinhoContador && data.total_itens) {
+                                    carrinhoContador.textContent = data.total_itens;
+                                }
+
+                                // Mostra o indicador do carrinho
+                                const carrinhoIndicador = document.getElementById(
+                                    'carrinho-indicador');
+                                if (carrinhoIndicador) {
+                                    carrinhoIndicador.classList.remove('d-none');
+                                    console.log('Carrinho indicador mostrado com sucesso');
+                                } else {
+                                    console.error('Elemento carrinho-indicador não encontrado');
+                                }
+
+                                // Deixa o botão permanentemente como "Adicionado" e desabilitado
+                                btnElement.disabled = true;
+                                btnElement.classList.remove('btn-primary');
+                                btnElement.classList.add('btn-success');
+                                btnElement.innerHTML =
+                                    '<i class="fa-solid fa-check"></i> Adicionado';
+                                btnElement.setAttribute('data-bs-original-title',
+                                    'Item já adicionado ao carrinho');
+
+                                // Atualiza o tooltip se existir
+                                var tooltip = bootstrap.Tooltip.getInstance(btnElement);
+                                if (tooltip) {
+                                    tooltip.dispose();
+                                    new bootstrap.Tooltip(btnElement);
+                                }
+                            } else {
+                                console.error('Erro na resposta:', data.message ||
+                                    'Erro desconhecido');
+                                btnElement.disabled = false;
+                                btnElement.innerHTML =
+                                    '<i class="fa-solid fa-cart-shopping"></i> Comprar Amostra';
+                                alert('Erro ao adicionar ao carrinho: ' + (data.message ||
+                                    'Erro desconhecido'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro na requisição:', error);
+                            btnElement.disabled = false;
+                            btnElement.innerHTML =
+                                '<i class="fa-solid fa-cart-shopping"></i> Comprar Amostra';
+                            alert('Erro ao adicionar ao carrinho. Verifique o console para mais detalhes. Erro: ' +
+                                error.message);
+                        });
+                });
+            });
+
+            // Inicializar tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
-    });
-</script>
+    </script>
 @endsection
