@@ -118,7 +118,7 @@ class AgendaController extends Controller
 
         // Se for uma vistoria, criar também o registro na tabela vistorias
         if ($data['tipo'] === 'vistoria') {
-            Vistoria::create([
+            $vistoria = Vistoria::create([
                 'agenda_id' => $agenda->id,
                 'num_processo' => $data['num_processo'],
                 'requerido' => $data['requerido'],
@@ -130,6 +130,26 @@ class AgendaController extends Controller
                 'estado' => $data['estado'],
                 'status' => 'agendada',
             ]);
+
+            // Carregar o requerente para exibir no modal
+            $vistoria->load('requerente');
+
+            return redirect()->route('agenda.index')
+                ->with('success', 'Vistoria agendada com sucesso!')
+                ->with('vistoria_criada', [
+                    'id' => $vistoria->id,
+                    'num_processo' => $vistoria->num_processo,
+                    'requerido' => $vistoria->requerido,
+                    'requerente_nome' => $vistoria->requerente ? $vistoria->requerente->nome : 'Não informado',
+                    'endereco' => $vistoria->endereco,
+                    'num' => $vistoria->num,
+                    'bairro' => $vistoria->bairro,
+                    'cidade' => $vistoria->cidade,
+                    'estado' => $vistoria->estado,
+                    'data' => $agenda->data,
+                    'hora' => $agenda->hora,
+                    'status' => $vistoria->status
+                ]);
         }
 
         return redirect()->route('agenda.index')->with('success', 'Agenda criada com sucesso!');

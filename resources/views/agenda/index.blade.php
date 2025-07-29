@@ -9,14 +9,14 @@
                             <h3 class="mb-0 text-primary"><i class="fas fa-calendar-alt me-2"></i>Agenda</h3>
                             <div class="ms-auto d-flex gap-2">
                                 @can('view agenda tipos-evento')
-                                <a href="{{ route('tipos-de-evento.index') }}" class="btn btn-info">
-                                    <i class="fas fa-palette me-1"></i> Tipos de Evento
-                                </a>
+                                    <a href="{{ route('tipos-de-evento.index') }}" class="btn btn-info">
+                                        <i class="fas fa-palette me-1"></i> Tipos de Evento
+                                    </a>
                                 @endcan
                                 @can('create agenda')
-                                <a href="{{ route('agenda.create') }}" class="btn btn-success">
-                                    <i class="fas fa-plus me-1"></i> Novo Compromisso
-                                </a>
+                                    <a href="{{ route('agenda.create') }}" class="btn btn-success">
+                                        <i class="fas fa-plus me-1"></i> Novo Compromisso
+                                    </a>
                                 @endcan
                             </div>
                         </div>
@@ -83,30 +83,30 @@
                                                             </span>
                                                         </td>
                                                         <!-- <td>
-                                                                        <a href="{{ route('agenda.show', $agenda) }}"
-                                                                            class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                                                        <a href="{{ route('agenda.edit', $agenda) }}"
-                                                                            class="btn btn-primary btn-sm"><i
-                                                                                class="fas fa-edit"></i></a>
-                                                                        <form id="form-excluir-{{ $agenda->id }}"
-                                                                            action="{{ route('agenda.destroy', $agenda) }}"
-                                                                            method="POST" class="d-inline">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="button"
-                                                                                class="btn btn-danger btn-sm btn-excluir-agenda"
-                                                                                data-id="{{ $agenda->id }}"
-                                                                                data-processo="{{ $agenda->num_processo ?? ($agenda->titulo ?? '-') }}">
-                                                                                <i class="fas fa-trash"></i>
-                                                                            </button>
-                                                                        </form>
-                                                                    </td> -->
+                                                                            <a href="{{ route('agenda.show', $agenda) }}"
+                                                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                                                            <a href="{{ route('agenda.edit', $agenda) }}"
+                                                                                class="btn btn-primary btn-sm"><i
+                                                                                    class="fas fa-edit"></i></a>
+                                                                            <form id="form-excluir-{{ $agenda->id }}"
+                                                                                action="{{ route('agenda.destroy', $agenda) }}"
+                                                                                method="POST" class="d-inline">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="button"
+                                                                                    class="btn btn-danger btn-sm btn-excluir-agenda"
+                                                                                    data-id="{{ $agenda->id }}"
+                                                                                    data-processo="{{ $agenda->num_processo ?? ($agenda->titulo ?? '-') }}">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </form>
+                                                                        </td> -->
 
                                                         <td width="150px" class="text-center">
                                                             <x-action-buttons-agenda showRoute="agenda.show"
                                                                 editRoute="agenda.edit" destroyRoute="agenda.destroy"
-                                                                printRoute="agenda.imprimir"
-                                                                :itemId="$agenda->id" title="Confirmar Exclusão"
+                                                                printRoute="agenda.imprimir" :itemId="$agenda->id"
+                                                                title="Confirmar Exclusão"
                                                                 message="Tem certeza que deseja excluir este compromisso?" />
                                                         </td>
 
@@ -251,7 +251,7 @@
                 // Traduções adicionais
                 dayHeaderFormat: {
                     weekday: 'short',
-                    
+
                 },
                 allDayText: 'Dia inteiro',
                 noEventsText: 'Não há eventos para exibir',
@@ -723,4 +723,152 @@
             box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.25);
         }
     </style>
+
+    <!-- Modal de Vistoria Criada -->
+    @if (session('vistoria_criada'))
+        <div class="modal fade" id="modalVistoriaCriada" tabindex="-1" aria-labelledby="modalVistoriaCriadaLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-gradient"
+                        style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 0.375rem 0.375rem 0 0;">
+                        <h5 class="modal-title text-white fw-bold" id="modalVistoriaCriadaLabel">
+                            <i class="fas fa-check-circle me-2"></i>Vistoria Criada com Sucesso!
+                        </h5>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row">
+                            <div class="col-12 text-center mb-4">
+                                <div class="success-icon mb-3">
+                                    <i class="fas fa-calendar-check text-success" style="font-size: 4rem;"></i>
+                                </div>
+                                <h4 class="text-success mb-3">Vistoria Agendada e Registrada!</h4>
+                                <p class="text-muted">A vistoria foi criada com sucesso no sistema. Confira os detalhes
+                                    abaixo:</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light mb-3">
+                                    <div class="card-header bg-primary text-white py-2">
+                                        <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>Informações do Processo
+                                        </h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="row g-2">
+                                            <div class="col-5"><strong>ID:</strong></div>
+                                            <div class="col-7">#{{ session('vistoria_criada')['id'] }}</div>
+
+                                            <div class="col-5"><strong>Processo:</strong></div>
+                                            <div class="col-7">{{ session('vistoria_criada')['num_processo'] }}</div>
+
+                                            <div class="col-5"><strong>Status:</strong></div>
+                                            <div class="col-7">
+                                                <span
+                                                    class="badge bg-warning text-dark">{{ ucfirst(session('vistoria_criada')['status']) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light mb-3">
+                                    <div class="card-header bg-info text-white py-2">
+                                        <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Data e Hora</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="row g-2">
+                                            <div class="col-4"><strong>Data:</strong></div>
+                                            <div class="col-8">
+                                                {{ \Carbon\Carbon::parse(session('vistoria_criada')['data'])->format('d/m/Y') }}
+                                            </div>
+
+                                            <div class="col-4"><strong>Hora:</strong></div>
+                                            <div class="col-8">
+                                                @if (session('vistoria_criada')['hora'])
+                                                    {{ \Carbon\Carbon::parse(session('vistoria_criada')['hora'])->format('H:i') }}
+                                                @else
+                                                    <span class="text-muted">Não informado</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 bg-light mb-3">
+                                    <div class="card-header bg-secondary text-white py-2">
+                                        <h6 class="mb-0"><i class="fas fa-users me-2"></i>Partes Envolvidas</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="row g-2">
+                                            <div class="col-md-3"><strong>Requerente:</strong></div>
+                                            <div class="col-md-9">{{ session('vistoria_criada')['requerente_nome'] }}
+                                            </div>
+
+                                            <div class="col-md-3"><strong>Requerido:</strong></div>
+                                            <div class="col-md-9">
+                                                {{ session('vistoria_criada')['requerido'] ?: 'Não informado' }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-header bg-dark text-white py-2">
+                                        <h6 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Localização</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="row g-2">
+                                            <div class="col-md-2"><strong>Endereço:</strong></div>
+                                            <div class="col-md-10">
+                                                {{ session('vistoria_criada')['endereco'] }}
+                                                @if (session('vistoria_criada')['num'])
+                                                    , nº {{ session('vistoria_criada')['num'] }}
+                                                @endif
+                                            </div>
+
+                                            <div class="col-md-2"><strong>Bairro:</strong></div>
+                                            <div class="col-md-4">{{ session('vistoria_criada')['bairro'] }}</div>
+
+                                            <div class="col-md-2"><strong>Cidade/UF:</strong></div>
+                                            <div class="col-md-4">
+                                                {{ session('vistoria_criada')['cidade'] }}/{{ session('vistoria_criada')['estado'] }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>Fechar
+                        </button>
+                        <a href="{{ route('vistorias.index') }}" class="btn btn-success">
+                            <i class="fas fa-eye me-1"></i>Ver Vistorias
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Auto-mostrar o modal quando vistoria for criada
+            @if (session('vistoria_criada'))
+                document.addEventListener('DOMContentLoaded', function() {
+                    var modal = new bootstrap.Modal(document.getElementById('modalVistoriaCriada'));
+                    modal.show();
+                });
+            @endif
+        </script>
+    @endif
 @endsection
