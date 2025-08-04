@@ -86,6 +86,21 @@
                 <div class="col-sm-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
+                            <!-- Contadores de Perícias -->
+                            <div class="mb-3 d-flex gap-3 align-items-center flex-wrap">
+                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                    <span class="fw-semibold text-primary" style="font-size: 1.1rem;">
+                                        <i class="fas fa-database me-2"></i>Total cadastradas:
+                                    </span>
+                                    <span class="badge bg-primary fs-5">{{ $totalPericias ?? $pericias->total() }}</span>
+                                </div>
+                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                    <span class="fw-semibold text-success" style="font-size: 1.1rem;">
+                                        <i class="fas fa-filter me-2"></i>Exibindo:
+                                    </span>
+                                    <span class="badge bg-success fs-5">{{ $pericias->count() }}</span>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped align-middle">
                                     <thead>
