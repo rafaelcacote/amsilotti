@@ -158,53 +158,128 @@
                         <!-- Modal de detalhes do compromisso -->
                         <div class="modal fade" id="compromissoModal" tabindex="-1" aria-labelledby="compromissoModalLabel"
                             aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="compromissoModalLabel">Detalhes do Compromisso</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content border-0 shadow-lg">
+                                    <div class="modal-header bg-gradient bg-primary text-white border-0">
+                                        <h5 class="modal-title d-flex align-items-center" id="compromissoModalLabel">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            Detalhes do Compromisso
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                             aria-label="Fechar"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <strong>Título:</strong> <span id="modalCompromissoTitulo"></span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <strong>Tipo:</strong> <span id="modalCompromissoTipo"></span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <strong>Data:</strong> <span id="modalCompromissoData"></span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <strong>Local:</strong> <span id="modalCompromissoLocal"></span>
+                                    <div class="modal-body p-4">
+                                        <div class="row g-4">
+                                            <!-- Informações principais -->
+                                            <div class="col-12">
+                                                <div class="card border-0 bg-light">
+                                                    <div class="card-body">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-8">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-tag text-primary me-2"></i>
+                                                                    <small class="text-muted text-uppercase fw-bold">Título</small>
+                                                                </div>
+                                                                <h6 class="mb-0 fw-bold" id="modalCompromissoTitulo"></h6>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-bookmark text-warning me-2"></i>
+                                                                    <small class="text-muted text-uppercase fw-bold">Tipo</small>
+                                                                </div>
+                                                                <span class="badge bg-primary px-3 py-2 rounded-pill" id="modalCompromissoTipo"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Data e Local -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="fas fa-clock text-success me-2"></i>
+                                                    <small class="text-muted text-uppercase fw-bold">Data</small>
+                                                </div>
+                                                <div class="p-3 bg-light rounded">
+                                                    <span class="fw-bold" id="modalCompromissoData"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                                    <small class="text-muted text-uppercase fw-bold">Local</small>
+                                                </div>
+                                                <div class="p-3 bg-light rounded">
+                                                    <span id="modalCompromissoLocal"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                         
                                         <!-- Informações específicas para vistorias -->
-                                        <div id="modalVistoriaInfo" style="display: none;">
-                                            <div class="mb-3">
-                                                <strong>Requerido:</strong> <span id="modalCompromissoRequerido"></span>
-                                            </div>
-                                            <div class="mb-3">
-                                                <strong>Requerente:</strong> <span id="modalCompromissoRequerente"></span>
+                                        <div id="modalVistoriaInfo" style="display: none;" class="mt-4">
+                                            <div class="card border-0 bg-info bg-opacity-10">
+                                                <div class="card-header bg-info bg-opacity-20 border-0">
+                                                    <h6 class="mb-0 text-info">
+                                                        <i class="fas fa-eye me-2"></i>
+                                                        Informações da Vistoria
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <i class="fas fa-user-tag text-info me-2"></i>
+                                                                <small class="text-muted text-uppercase fw-bold">Requerido</small>
+                                                            </div>
+                                                            <div class="p-2 bg-white rounded border">
+                                                                <span id="modalCompromissoRequerido"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <i class="fas fa-user text-info me-2"></i>
+                                                                <small class="text-muted text-uppercase fw-bold">Requerente</small>
+                                                            </div>
+                                                            <div class="p-2 bg-white rounded border">
+                                                                <span id="modalCompromissoRequerente"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         
                                         <!-- Nota para outros tipos -->
-                                        <div id="modalNotaInfo" style="display: none;">
-                                            <div class="mb-3">
-                                                <strong>Nota:</strong>
-                                                <div id="modalCompromissoNota" class="border rounded p-2 bg-light mt-1"></div>
+                                        <div id="modalNotaInfo" style="display: none;" class="mt-4">
+                                            <div class="card border-0 bg-warning bg-opacity-10">
+                                                <div class="card-header bg-warning bg-opacity-20 border-0">
+                                                    <h6 class="mb-0 text-warning-emphasis">
+                                                        <i class="fas fa-sticky-note me-2"></i>
+                                                        Nota do Compromisso
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="p-3 bg-white rounded border" id="modalCompromissoNota"></div>
+                                                </div>
                                             </div>
                                         </div>
                                         
-                                        <div class="mb-2">
-                                            <strong>Descrição:</strong>
-                                            <div id="modalCompromissoDescricao" class="border rounded p-2 bg-light mt-1"></div>
+                                        <!-- Descrição -->
+                                        <div class="mt-4">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <i class="fas fa-file-alt text-secondary me-2"></i>
+                                                <h6 class="mb-0 text-secondary">Descrição</h6>
+                                            </div>
+                                            <div class="p-3 bg-light rounded border" id="modalCompromissoDescricao" style="min-height: 60px;"></div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Fechar</button>
+                                    <div class="modal-footer border-0 bg-light">
+                                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                                            <i class="fas fa-times me-2"></i>Fechar
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-primary px-4">
+                                            <i class="fas fa-edit me-2"></i>Editar
+                                        </button> -->
                                     </div>
                                 </div>
                             </div>
@@ -471,6 +546,40 @@
 
         .compromisso-item .text-muted {
             line-height: 1.3;
+        }
+
+        /* Melhorias para o modal */
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header.bg-gradient {
+            background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+        }
+
+        .modal-body .card {
+            transition: all 0.2s ease;
+        }
+
+        .modal-body .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .badge.rounded-pill {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Animação suave para as seções do modal */
+        #modalVistoriaInfo, #modalNotaInfo {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ajuste mapa */
