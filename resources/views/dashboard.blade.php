@@ -114,16 +114,41 @@
                             </a>
                         </h5>
                         <ul class="list-group list-group-flush">
-                            @forelse ($proximosCompromissos as $compromisso)
+                                                        @forelse ($proximosCompromissos as $compromisso)
                                 <li class="list-group-item compromisso-item" style="cursor:pointer;"
                                     data-titulo="{{ $compromisso->titulo ?? 'Compromisso' }}"
                                     data-data="{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}"
                                     data-descricao="{{ $compromisso->descricao ?? '' }}"
-                                    data-local="{{ $compromisso->local ?? '' }}">
+                                    data-local="{{ $compromisso->local ?? '' }}"
+                                    data-tipo="{{ $compromisso->tipo ?? 'Compromisso' }}"
+                                    data-requerido="{{ $compromisso->requerido ?? '' }}"
+                                    data-requerente="{{ $compromisso->requerente->nome ?? '' }}"
+                                    data-nota="{{ $compromisso->nota ?? '' }}">
                                     <div class="fw-bold"><i class="fas fa-calendar-check me-1 text-success"></i>
-                                        {{ $compromisso->titulo ?? 'Compromisso' }}</div>
-                                    <div class="text-muted small">
-                                        {{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}</div>
+                                        {{ $compromisso->tipo ?? 'Compromisso' }}</div>
+                                    
+                                    @if(strtolower($compromisso->tipo ?? '') === 'vistoria')
+                                        @if($compromisso->requerido || $compromisso->requerente)
+                                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 2px;">
+                                                @if($compromisso->requerido)
+                                                    <div><i class="fas fa-user-tag me-1" style="font-size: 0.8rem;"></i>{{ $compromisso->requerido }}</div>
+                                                @endif
+                                                @if($compromisso->requerente)
+                                                    <div><i class="fas fa-user me-1" style="font-size: 0.8rem;"></i>{{ $compromisso->requerente->nome ?? $compromisso->requerente }}</div>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    @else
+                                        @if($compromisso->nota)
+                                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 2px; font-style: italic;">
+                                                <i class="fas fa-sticky-note me-1" style="font-size: 0.8rem;"></i>{{ Str::limit($compromisso->nota, 50) }}
+                                            </div>
+                                        @endif
+                                    @endif
+                                    
+                                    <div class="text-muted small mt-1">
+                                        <i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}
+                                    </div>
                                 </li>
                             @empty
                                 <li class="list-group-item text-muted"><i class="fas fa-calendar-times me-1"></i> Nenhum
@@ -141,18 +166,40 @@
                                             aria-label="Fechar"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="mb-2">
+                                        <div class="mb-3">
                                             <strong>Título:</strong> <span id="modalCompromissoTitulo"></span>
                                         </div>
-                                        <div class="mb-2">
+                                        <div class="mb-3">
+                                            <strong>Tipo:</strong> <span id="modalCompromissoTipo"></span>
+                                        </div>
+                                        <div class="mb-3">
                                             <strong>Data:</strong> <span id="modalCompromissoData"></span>
                                         </div>
-                                        <div class="mb-2">
+                                        <div class="mb-3">
                                             <strong>Local:</strong> <span id="modalCompromissoLocal"></span>
                                         </div>
+                                        
+                                        <!-- Informações específicas para vistorias -->
+                                        <div id="modalVistoriaInfo" style="display: none;">
+                                            <div class="mb-3">
+                                                <strong>Requerido:</strong> <span id="modalCompromissoRequerido"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <strong>Requerente:</strong> <span id="modalCompromissoRequerente"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Nota para outros tipos -->
+                                        <div id="modalNotaInfo" style="display: none;">
+                                            <div class="mb-3">
+                                                <strong>Nota:</strong>
+                                                <div id="modalCompromissoNota" class="border rounded p-2 bg-light mt-1"></div>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="mb-2">
                                             <strong>Descrição:</strong>
-                                            <div id="modalCompromissoDescricao" class="border rounded p-2 bg-light"></div>
+                                            <div id="modalCompromissoDescricao" class="border rounded p-2 bg-light mt-1"></div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -174,14 +221,39 @@
                 // Modal de detalhes do compromisso
                 document.querySelectorAll('.compromisso-item').forEach(function(item) {
                     item.addEventListener('click', function() {
-                        document.getElementById('modalCompromissoTitulo').textContent = this
-                            .getAttribute('data-titulo');
-                        document.getElementById('modalCompromissoData').textContent = this.getAttribute(
-                            'data-data');
-                        document.getElementById('modalCompromissoLocal').textContent = this
-                            .getAttribute('data-local') || '-';
-                        document.getElementById('modalCompromissoDescricao').textContent = this
-                            .getAttribute('data-nota') || '-';
+                        const titulo = this.getAttribute('data-titulo');
+                        const data = this.getAttribute('data-data');
+                        const local = this.getAttribute('data-local');
+                        const descricao = this.getAttribute('data-descricao');
+                        const tipo = this.getAttribute('data-tipo');
+                        const requerido = this.getAttribute('data-requerido');
+                        const requerente = this.getAttribute('data-requerente');
+                        const nota = this.getAttribute('data-nota');
+
+                        // Preenche as informações básicas
+                        document.getElementById('modalCompromissoTitulo').textContent = titulo;
+                        document.getElementById('modalCompromissoTipo').textContent = tipo;
+                        document.getElementById('modalCompromissoData').textContent = data;
+                        document.getElementById('modalCompromissoLocal').textContent = local || '-';
+                        document.getElementById('modalCompromissoDescricao').textContent = descricao || '-';
+
+                        // Controla a exibição das seções específicas
+                        const vistoriaInfo = document.getElementById('modalVistoriaInfo');
+                        const notaInfo = document.getElementById('modalNotaInfo');
+
+                        if (tipo && tipo.toLowerCase() === 'vistoria') {
+                            // Mostra informações de vistoria
+                            document.getElementById('modalCompromissoRequerido').textContent = requerido || '-';
+                            document.getElementById('modalCompromissoRequerente').textContent = requerente || '-';
+                            vistoriaInfo.style.display = 'block';
+                            notaInfo.style.display = 'none';
+                        } else {
+                            // Mostra nota para outros tipos
+                            document.getElementById('modalCompromissoNota').textContent = nota || '-';
+                            vistoriaInfo.style.display = 'none';
+                            notaInfo.style.display = 'block';
+                        }
+
                         var modal = new bootstrap.Modal(document.getElementById('compromissoModal'));
                         modal.show();
                     });
@@ -193,13 +265,19 @@
                     let mesesRealizadas = {!! json_encode($vistoriasRealizadasPorMes->pluck('mes')->toArray()) !!};
                     let todosMeses = Array.from(new Set([...mesesAgendadas, ...mesesRealizadas])).sort();
 
-                    // Formata os labels para F/Y
+                    // Função para formatar mês/ano em português
+                    function formatarMesAno(mesString) {
+                        const [ano, mes] = mesString.split('-');
+                        const meses = [
+                            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                        ];
+                        return meses[parseInt(mes) - 1] + '/' + ano;
+                    }
+
+                    // Formata os labels para mostrar o nome do mês/ano
                     let labels = todosMeses.map(function(mes) {
-                        try {
-                            return moment(mes, 'YYYY-MM').format('MMMM/YYYY');
-                        } catch (e) {
-                            return mes;
-                        }
+                        return formatarMesAno(mes);
                     });
 
                     // Preenche os dados para cada mês (0 se não houver)
@@ -212,16 +290,7 @@
                         return idx !== -1 ? {!! json_encode($vistoriasRealizadasPorMes->pluck('total')->toArray()) !!}[idx] : 0;
                     });
 
-                    // Adiciona moment.js para formatação
-                    if (typeof moment === 'undefined') {
-                        var script = document.createElement('script');
-                        script.src = 'https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js';
-                        script.onload = renderChart;
-                        document.head.appendChild(script);
-                    } else {
-                        renderChart();
-                    }
-
+                    // Renderiza o gráfico diretamente
                     function renderChart() {
                         new Chart(ctx, {
                             type: 'bar',
@@ -287,6 +356,9 @@
                             }
                         });
                     }
+                    
+                    // Chama a função para renderizar o gráfico
+                    renderChart();
                 }
             });
         </script>
@@ -385,6 +457,21 @@
             user-select: none;
         }
 
+        /* Estilo para os compromissos */
+        .compromisso-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .compromisso-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #0d6efd;
+            transform: translateX(2px);
+        }
+
+        .compromisso-item .text-muted {
+            line-height: 1.3;
+        }
 
         /* ajuste mapa */
 
