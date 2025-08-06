@@ -106,7 +106,7 @@
                         <h5 class="card-title d-flex align-items-center justify-content-between">
                             <span class="d-flex align-items-center">
                                 <i class="fas fa-calendar-alt me-2 text-warning"></i>
-                                Próximos Compromissos
+                                Compromissos
                             </span>
                             <a href="{{ route('agenda.index') }}"
                                 class="btn btn-outline-primary btn-sm ms-2 d-flex align-items-center">
@@ -114,7 +114,7 @@
                             </a>
                         </h5>
                         <ul class="list-group list-group-flush">
-                                                        @forelse ($proximosCompromissos as $compromisso)
+                            @forelse ($proximosCompromissos as $compromisso)
                                 <li class="list-group-item compromisso-item" style="cursor:pointer;"
                                     data-titulo="{{ $compromisso->titulo ?? 'Compromisso' }}"
                                     data-data="{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}"
@@ -125,7 +125,16 @@
                                     data-requerente="{{ $compromisso->requerente->nome ?? '' }}"
                                     data-nota="{{ $compromisso->nota ?? '' }}">
                                     <div class="fw-bold"><i class="fas fa-calendar-check me-1 text-success"></i>
-                                        {{ $compromisso->tipo ?? 'Compromisso' }}</div>
+                                        {{ $compromisso->tipoDeEvento->nome ?? 'Compromisso' }} <span class="compromisso-data-pequena">- <i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}</span></div>
+<style>
+    .compromisso-data-pequena {
+        font-size: 0.92em;
+        color: #888;
+        font-weight: 400;
+        margin-left: 2px;
+        vertical-align: middle;
+    }
+</style>
                                     
                                     @if(strtolower($compromisso->tipo ?? '') === 'vistoria')
                                         @if($compromisso->requerido || $compromisso->requerente)
@@ -147,7 +156,7 @@
                                     @endif
                                     
                                     <div class="text-muted small mt-1">
-                                        <i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}
+                                       
                                     </div>
                                 </li>
                             @empty
