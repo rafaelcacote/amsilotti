@@ -83,6 +83,42 @@ class DashboardController extends Controller
         // Novos dados para o dashboard moderno
         $quantidadePericias = \App\Models\ControlePericia::count();
         $quantidadeTarefas = ControleDeTarefas::count();
+
+        // Dados específicos para gráficos de perícias
+        $periciasPorStatus = \App\Models\ControlePericia::selectRaw('status_atual, COUNT(*) as total')
+            ->groupBy('status_atual')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        $periciasPorTipo = \App\Models\ControlePericia::selectRaw('tipo_pericia, COUNT(*) as total')
+            ->whereNotNull('tipo_pericia')
+            ->groupBy('tipo_pericia')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        $periciasPorResponsavel = \App\Models\ControlePericia::with('responsavelTecnico')
+            ->selectRaw('responsavel_tecnico_id, COUNT(*) as total')
+            ->whereNotNull('responsavel_tecnico_id')
+            ->groupBy('responsavel_tecnico_id')
+            ->orderBy('total', 'desc')
+            ->limit(8)
+            ->get();
+
+        // Perícias por mês (últimos 6 meses)
+        $periciasPorMes = \App\Models\ControlePericia::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as mes, COUNT(*) as total')
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->get();
+
+        // Métricas importantes de perícias
+        $periciasPrazosVencidos = \App\Models\ControlePericia::where('prazo_final', '<', now())
+            ->whereNotIn('status_atual', ['Concluído', 'Entregue', 'Cancelado'])
+            ->count();
+
+        $periciasPendentesVistoria = \App\Models\ControlePericia::where('status_atual', 'Aguardando Vistoria')->count();
+        $periciasEmRedacao = \App\Models\ControlePericia::whereIn('status_atual', ['Em Redação', 'em redacao'])->count();
+        $periciasEntregues = \App\Models\ControlePericia::whereIn('status_atual', ['Entregue', 'Concluído', 'concluido'])->count();
         // Buscar compromissos a partir de hoje (futuros)
         $hoje = now()->startOfDay();
         $proximosCompromissos = \App\Models\Agenda::where('data', '>=', $hoje)
@@ -175,7 +211,15 @@ class DashboardController extends Controller
             'getPrioridadeValues',
             'user',
             'getStatusValues',
-            'tarefasPorUsuario'
+            'tarefasPorUsuario',
+            'periciasPorStatus',
+            'periciasPorTipo',
+            'periciasPorResponsavel',
+            'periciasPorMes',
+            'periciasPrazosVencidos',
+            'periciasPendentesVistoria',
+            'periciasEmRedacao',
+            'periciasEntregues'
         ));
     }
 }

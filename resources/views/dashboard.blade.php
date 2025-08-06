@@ -289,6 +289,128 @@
             </div>
         </div>
 
+        <!-- Seção de Gráficos de Perícias -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-gradient-warning text-white border-0 py-3">
+                        <h4 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-gavel me-3"></i>
+                            <span>Análise de Perícias</span>
+                            <a href="{{ route('controle-pericias.index') }}" 
+                               class="btn btn-outline-light btn-sm ms-auto d-flex align-items-center">
+                                <i class="fas fa-external-link-alt me-2"></i>Ver Todas
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Métricas Rápidas de Perícias -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card border-0 shadow-sm h-100 bg-danger bg-opacity-10">
+                    <div class="card-body text-center py-3">
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <div class="bg-danger bg-opacity-20 rounded-circle p-2 me-2">
+                                <i class="fas fa-exclamation-triangle fa-lg text-danger"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 text-danger" style="font-size:1.6rem;">{{ $periciasPrazosVencidos }}</h4>
+                                <div class="pericia-metrica-legenda">Prazos vencidos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10">
+                    <div class="card-body text-center py-3">
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <div class="bg-info bg-opacity-20 rounded-circle p-2 me-2">
+                                <i class="fas fa-eye fa-lg text-info"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 text-info" style="font-size:1.6rem;">{{ $periciasPendentesVistoria }}</h4>
+                                <div class="pericia-metrica-legenda">Aguard. vistoria</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10">
+                    <div class="card-body text-center py-3">
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <div class="bg-primary bg-opacity-20 rounded-circle p-2 me-2">
+                                <i class="fas fa-edit fa-lg text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 text-primary" style="font-size:1.6rem;">{{ $periciasEmRedacao }}</h4>
+                                <div class="pericia-metrica-legenda">Em redação</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-0 shadow-sm h-100 bg-success bg-opacity-10">
+                    <div class="card-body text-center py-3">
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <div class="bg-success bg-opacity-20 rounded-circle p-2 me-2">
+                                <i class="fas fa-check-circle fa-lg text-success"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 text-success" style="font-size:1.6rem;">{{ $periciasEntregues }}</h4>
+                                <div class="pericia-metrica-legenda">Entregues</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+        .pericia-metrica-legenda {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            text-transform: none;
+            margin-top: 2px;
+        }
+        </style>
+
+        <!-- Gráficos de Perícias (Apenas Status e Tipo) -->
+        <div class="row mb-4 g-4 align-items-stretch">
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 h-100 bg-white position-relative">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h4 class="card-title mb-4 d-flex align-items-center text-warning">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Distribuição por Status
+                        </h4>
+                        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 320px;">
+                            <canvas id="periciasStatusChart" style="max-height: 260px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 h-100 bg-white position-relative">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h4 class="card-title mb-4 d-flex align-items-center text-info">
+                            <i class="fas fa-chart-donut me-2"></i>
+                            Distribuição por Tipo de Perícia
+                        </h4>
+                        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 320px;">
+                            <canvas id="periciasTipoChart" style="max-height: 260px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
@@ -434,6 +556,244 @@
                     
                     // Chama a função para renderizar o gráfico
                     renderChart();
+                }
+
+                // === GRÁFICOS DE PERÍCIAS (Apenas Status e Tipo) ===
+                // Gráfico de Perícias por Status (Doughnut)
+                const statusCtx = document.getElementById('periciasStatusChart');
+                if (statusCtx) {
+                    const statusData = {!! json_encode($periciasPorStatus) !!};
+                    const statusLabels = statusData.map(item => item.status_atual || 'Sem Status');
+                    const statusValues = statusData.map(item => item.total);
+                    // Cores elegantes para status
+                    const statusColors = [
+                        '#fd7e14', '#198754', '#0dcaf0', '#ffc107', '#dc3545', '#6f42c1', '#20c997', '#6c757d'
+                    ];
+                    new Chart(statusCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabels,
+                            datasets: [{
+                                data: statusValues,
+                                backgroundColor: statusColors.slice(0, statusLabels.length),
+                                borderWidth: 2,
+                                borderColor: '#fff',
+                                hoverOffset: 16
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '70%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        font: { size: 14, weight: 'bold' }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const total = statusValues.reduce((a, b) => a + b, 0);
+                                            const percentage = ((context.raw / total) * 100).toFixed(1);
+                                            return ` ${context.label}: ${context.raw} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                // Gráfico de Perícias por Tipo (Pie)
+                const tipoCtx = document.getElementById('periciasTipoChart');
+                if (tipoCtx) {
+                    const tipoData = {!! json_encode($periciasPorTipo) !!};
+                    const tipoLabels = tipoData.map(item => item.tipo_pericia || 'Não Informado');
+                    const tipoValues = tipoData.map(item => item.total);
+                    const tipoColors = [
+                        '#0d6efd', '#198754', '#dc3545', '#ffc107', '#fd7e14', '#6f42c1', '#20c997', '#6c757d'
+                    ];
+                    new Chart(tipoCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: tipoLabels,
+                            datasets: [{
+                                data: tipoValues,
+                                backgroundColor: tipoColors.slice(0, tipoLabels.length),
+                                borderWidth: 2,
+                                borderColor: '#fff',
+                                hoverOffset: 16
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        font: { size: 14, weight: 'bold' }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const total = tipoValues.reduce((a, b) => a + b, 0);
+                                            const percentage = ((context.raw / total) * 100).toFixed(1);
+                                            return ` ${context.label}: ${context.raw} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Gráfico de Perícias por Responsável (Bar Horizontal)
+                const responsavelCtx = document.getElementById('periciasResponsavelChart');
+                if (responsavelCtx) {
+                    const responsavelData = {!! json_encode($periciasPorResponsavel) !!};
+                    const responsavelLabels = responsavelData.map(item => 
+                        item.responsavel_tecnico ? item.responsavel_tecnico.nome : 'Não Atribuído'
+                    );
+                    const responsavelValues = responsavelData.map(item => item.total);
+
+                    new Chart(responsavelCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: responsavelLabels,
+                            datasets: [{
+                                label: 'Perícias Atribuídas',
+                                data: responsavelValues,
+                                backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                                borderColor: '#0d6efd',
+                                borderWidth: 1,
+                                borderRadius: 6
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return ` ${context.parsed.x} perícias`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: '#e9ecef'
+                                    },
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 11
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Gráfico Timeline de Perícias (Line)
+                const timelineCtx = document.getElementById('periciasTimelineChart');
+                if (timelineCtx) {
+                    const timelineData = {!! json_encode($periciasPorMes) !!};
+                    
+                    // Função para formatar mês/ano
+                    function formatarMes(mesString) {
+                        if (!mesString) return '';
+                        const [ano, mes] = mesString.split('-');
+                        const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                                      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                        return meses[parseInt(mes) - 1] + '/' + ano.slice(2);
+                    }
+
+                    const timelineLabels = timelineData.map(item => formatarMes(item.mes));
+                    const timelineValues = timelineData.map(item => item.total);
+
+                    new Chart(timelineCtx, {
+                        type: 'line',
+                        data: {
+                            labels: timelineLabels,
+                            datasets: [{
+                                label: 'Perícias Criadas',
+                                data: timelineValues,
+                                borderColor: '#198754',
+                                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                                borderWidth: 3,
+                                pointBackgroundColor: '#198754',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return ` ${context.parsed.y} perícias`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 10
+                                        }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: '#e9ecef'
+                                    },
+                                    ticks: {
+                                        stepSize: 1,
+                                        font: {
+                                            size: 10
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
             });
         </script>
@@ -651,6 +1011,86 @@
             color: #ff0;
             /* Muda para amarelo momentaneamente */
             font-weight: bold;
+        }
+
+        /* === ESTILOS PARA GRÁFICOS DE PERÍCIAS === */
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #fd7e14 0%, #fd7e14 100%);
+        }
+
+        /* Cards de métricas de perícias */
+        .card.bg-danger.bg-opacity-10:hover,
+        .card.bg-info.bg-opacity-10:hover,
+        .card.bg-primary.bg-opacity-10:hover,
+        .card.bg-success.bg-opacity-10:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Animação para os números das métricas */
+        .card h3 {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover h3 {
+            transform: scale(1.1);
+        }
+
+        /* Melhorias nos canvas dos gráficos */
+        #periciasStatusChart,
+        #periciasTipoChart,
+        #periciasResponsavelChart,
+        #periciasTimelineChart {
+            transition: all 0.3s ease;
+        }
+
+        /* Header personalizado da seção de perícias */
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #fd7e14, #f58220, #e07b1a);
+        }
+
+        /* Responsividade para gráficos em telas menores */
+        @media (max-width: 768px) {
+            .card .card-body canvas {
+                max-height: 250px !important;
+            }
+            
+            .row.mb-4 .col-md-3 {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Hover effect nos cards de gráficos */
+        .card.shadow-sm:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Estilo para títulos dos gráficos */
+        .card-title i {
+            background: rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 50%;
+            margin-right: 12px !important;
+        }
+
+        /* Loading state para gráficos */
+        .chart-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            color: #6c757d;
+        }
+
+        .chart-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
     {{-- escolher todas as tarefas ou somente a do usuario --}}
