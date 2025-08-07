@@ -115,7 +115,13 @@
                         </h5>
                         <ul class="list-group list-group-flush">
                             @forelse ($proximosCompromissos as $compromisso)
-                                <li class="list-group-item compromisso-item" style="cursor:pointer;"
+                                @php
+                                    $isToday = \Carbon\Carbon::parse($compromisso->data)->isToday();
+                                    $compromissoClass = $isToday
+                                        ? 'compromisso-item compromisso-hoje'
+                                        : 'compromisso-item';
+                                @endphp
+                                <li class="list-group-item {{ $compromissoClass }}" style="cursor:pointer;"
                                     data-titulo="{{ $compromisso->titulo ?? 'Compromisso' }}"
                                     data-data="{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}"
                                     data-descricao="{{ $compromisso->descricao ?? '' }}"
@@ -124,39 +130,56 @@
                                     data-requerido="{{ $compromisso->requerido ?? '' }}"
                                     data-requerente="{{ $compromisso->requerente->nome ?? '' }}"
                                     data-nota="{{ $compromisso->nota ?? '' }}">
-                                    <div class="fw-bold"><i class="fas fa-calendar-check me-1 text-success"></i>
-                                        {{ $compromisso->tipoDeEvento->nome ?? 'Compromisso' }} <span class="compromisso-data-pequena">- <i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}</span></div>
-<style>
-    .compromisso-data-pequena {
-        font-size: 0.92em;
-        color: #888;
-        font-weight: 400;
-        margin-left: 2px;
-        vertical-align: middle;
-    }
-</style>
-                                    
-                                    @if(strtolower($compromisso->tipo ?? '') === 'vistoria')
-                                        @if($compromisso->requerido || $compromisso->requerente)
+                                    <div class="fw-bold d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-calendar-check me-1 text-success"></i>
+                                            {{ $compromisso->tipoDeEvento->nome ?? 'Compromisso' }}
+                                            <span class="compromisso-data-pequena">- <i
+                                                    class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($compromisso->data)->format('d/m/Y') }}</span>
+                                        </div>
+                                        @if ($isToday)
+                                            <span class="badge bg-gradient-primary text-white badge-hoje pulse-animation">
+                                                <i class="fas fa-star me-1"></i>HOJE
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <style>
+                                        .compromisso-data-pequena {
+                                            font-size: 0.92em;
+                                            color: #888;
+                                            font-weight: 400;
+                                            margin-left: 2px;
+                                            vertical-align: middle;
+                                        }
+                                    </style>
+
+                                    @if (strtolower($compromisso->tipo ?? '') === 'vistoria')
+                                        @if ($compromisso->requerido || $compromisso->requerente)
                                             <div class="text-muted" style="font-size: 0.85rem; margin-top: 2px;">
-                                                @if($compromisso->requerido)
-                                                    <div><i class="fas fa-user-tag me-1" style="font-size: 0.8rem;"></i>{{ $compromisso->requerido }}</div>
+                                                @if ($compromisso->requerido)
+                                                    <div><i class="fas fa-user-tag me-1"
+                                                            style="font-size: 0.8rem;"></i>{{ $compromisso->requerido }}
+                                                    </div>
                                                 @endif
-                                                @if($compromisso->requerente)
-                                                    <div><i class="fas fa-user me-1" style="font-size: 0.8rem;"></i>{{ $compromisso->requerente->nome ?? $compromisso->requerente }}</div>
+                                                @if ($compromisso->requerente)
+                                                    <div><i class="fas fa-user me-1"
+                                                            style="font-size: 0.8rem;"></i>{{ $compromisso->requerente->nome ?? $compromisso->requerente }}
+                                                    </div>
                                                 @endif
                                             </div>
                                         @endif
                                     @else
-                                        @if($compromisso->nota)
-                                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 2px; font-style: italic;">
-                                                <i class="fas fa-sticky-note me-1" style="font-size: 0.8rem;"></i>{{ Str::limit($compromisso->nota, 50) }}
+                                        @if ($compromisso->nota)
+                                            <div class="text-muted"
+                                                style="font-size: 0.85rem; margin-top: 2px; font-style: italic;">
+                                                <i class="fas fa-sticky-note me-1"
+                                                    style="font-size: 0.8rem;"></i>{{ Str::limit($compromisso->nota, 50) }}
                                             </div>
                                         @endif
                                     @endif
-                                    
+
                                     <div class="text-muted small mt-1">
-                                       
+
                                     </div>
                                 </li>
                             @empty
@@ -187,16 +210,19 @@
                                                             <div class="col-md-8">
                                                                 <div class="d-flex align-items-center mb-2">
                                                                     <i class="fas fa-tag text-primary me-2"></i>
-                                                                    <small class="text-muted text-uppercase fw-bold">Título</small>
+                                                                    <small
+                                                                        class="text-muted text-uppercase fw-bold">Título</small>
                                                                 </div>
                                                                 <h6 class="mb-0 fw-bold" id="modalCompromissoTitulo"></h6>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="d-flex align-items-center mb-2">
                                                                     <i class="fas fa-bookmark text-warning me-2"></i>
-                                                                    <small class="text-muted text-uppercase fw-bold">Tipo</small>
+                                                                    <small
+                                                                        class="text-muted text-uppercase fw-bold">Tipo</small>
                                                                 </div>
-                                                                <span class="badge bg-primary px-3 py-2 rounded-pill" id="modalCompromissoTipo"></span>
+                                                                <span class="badge bg-primary px-3 py-2 rounded-pill"
+                                                                    id="modalCompromissoTipo"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -223,7 +249,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Informações específicas para vistorias -->
                                         <div id="modalVistoriaInfo" style="display: none;" class="mt-4">
                                             <div class="card border-0 bg-info bg-opacity-10">
@@ -238,7 +264,8 @@
                                                         <div class="col-md-6">
                                                             <div class="d-flex align-items-center mb-2">
                                                                 <i class="fas fa-user-tag text-info me-2"></i>
-                                                                <small class="text-muted text-uppercase fw-bold">Requerido</small>
+                                                                <small
+                                                                    class="text-muted text-uppercase fw-bold">Requerido</small>
                                                             </div>
                                                             <div class="p-2 bg-white rounded border">
                                                                 <span id="modalCompromissoRequerido"></span>
@@ -247,7 +274,8 @@
                                                         <div class="col-md-6">
                                                             <div class="d-flex align-items-center mb-2">
                                                                 <i class="fas fa-user text-info me-2"></i>
-                                                                <small class="text-muted text-uppercase fw-bold">Requerente</small>
+                                                                <small
+                                                                    class="text-muted text-uppercase fw-bold">Requerente</small>
                                                             </div>
                                                             <div class="p-2 bg-white rounded border">
                                                                 <span id="modalCompromissoRequerente"></span>
@@ -257,7 +285,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Nota para outros tipos -->
                                         <div id="modalNotaInfo" style="display: none;" class="mt-4">
                                             <div class="card border-0 bg-warning bg-opacity-10">
@@ -268,27 +296,30 @@
                                                     </h6>
                                                 </div>
                                                 <div class="card-body">
-                                                    <div class="p-3 bg-white rounded border" id="modalCompromissoNota"></div>
+                                                    <div class="p-3 bg-white rounded border" id="modalCompromissoNota">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Descrição -->
                                         <div class="mt-4">
                                             <div class="d-flex align-items-center mb-3">
                                                 <i class="fas fa-file-alt text-secondary me-2"></i>
                                                 <h6 class="mb-0 text-secondary">Descrição</h6>
                                             </div>
-                                            <div class="p-3 bg-light rounded border" id="modalCompromissoDescricao" style="min-height: 60px;"></div>
+                                            <div class="p-3 bg-light rounded border" id="modalCompromissoDescricao"
+                                                style="min-height: 60px;"></div>
                                         </div>
                                     </div>
                                     <div class="modal-footer border-0 bg-light">
-                                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                                        <button type="button" class="btn btn-outline-secondary px-4"
+                                            data-bs-dismiss="modal">
                                             <i class="fas fa-times me-2"></i>Fechar
                                         </button>
                                         <!-- <button type="button" class="btn btn-primary px-4">
-                                            <i class="fas fa-edit me-2"></i>Editar
-                                        </button> -->
+                                                    <i class="fas fa-edit me-2"></i>Editar
+                                                </button> -->
                                     </div>
                                 </div>
                             </div>
@@ -306,8 +337,8 @@
                         <h4 class="mb-0 d-flex align-items-center">
                             <i class="fas fa-gavel me-3"></i>
                             <span>Análise de Perícias</span>
-                            <a href="{{ route('controle-pericias.index') }}" 
-                               class="btn btn-outline-light btn-sm ms-auto d-flex align-items-center">
+                            <a href="{{ route('controle-pericias.index') }}"
+                                class="btn btn-outline-light btn-sm ms-auto d-flex align-items-center">
                                 <i class="fas fa-external-link-alt me-2"></i>Ver Todas
                             </a>
                         </h4>
@@ -341,7 +372,8 @@
                                 <i class="fas fa-eye fa-lg text-info"></i>
                             </div>
                             <div>
-                                <h4 class="mb-0 text-info" style="font-size:1.6rem;">{{ $periciasPendentesVistoria }}</h4>
+                                <h4 class="mb-0 text-info" style="font-size:1.6rem;">{{ $periciasPendentesVistoria }}
+                                </h4>
                                 <div class="pericia-metrica-legenda">Aguard. vistoria</div>
                             </div>
                         </div>
@@ -380,14 +412,14 @@
             </div>
         </div>
         <style>
-        .pericia-metrica-legenda {
-            font-size: 0.95rem;
-            color: #666;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            text-transform: none;
-            margin-top: 2px;
-        }
+            .pericia-metrica-legenda {
+                font-size: 0.95rem;
+                color: #666;
+                font-weight: 500;
+                letter-spacing: 0.01em;
+                text-transform: none;
+                margin-top: 2px;
+            }
         </style>
 
         <!-- Gráficos de Perícias (Apenas Status e Tipo) -->
@@ -399,7 +431,8 @@
                             <i class="fas fa-chart-pie me-2"></i>
                             Distribuição por Status
                         </h4>
-                        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 320px;">
+                        <div class="d-flex flex-column align-items-center justify-content-center"
+                            style="min-height: 320px;">
                             <canvas id="periciasStatusChart" style="max-height: 260px;"></canvas>
                         </div>
                     </div>
@@ -412,7 +445,8 @@
                             <i class="fas fa-chart-donut me-2"></i>
                             Distribuição por Tipo de Perícia
                         </h4>
-                        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 320px;">
+                        <div class="d-flex flex-column align-items-center justify-content-center"
+                            style="min-height: 320px;">
                             <canvas id="periciasTipoChart" style="max-height: 260px;"></canvas>
                         </div>
                     </div>
@@ -439,9 +473,28 @@
                         // Preenche as informações básicas
                         document.getElementById('modalCompromissoTitulo').textContent = titulo;
                         document.getElementById('modalCompromissoTipo').textContent = tipo;
-                        document.getElementById('modalCompromissoData').textContent = data;
+
+                        // Verifica se é hoje e adiciona indicação especial
+                        const modalDataElement = document.getElementById('modalCompromissoData');
+                        const hoje = new Date().toLocaleDateString('pt-BR');
+                        const isHoje = data === hoje;
+
+                        if (isHoje) {
+                            modalDataElement.innerHTML = `
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2">${data}</span>
+                                    <span class="badge bg-gradient-warning text-white pulse-animation">
+                                        <i class="fas fa-star me-1"></i>HOJE
+                                    </span>
+                                </div>
+                            `;
+                        } else {
+                            modalDataElement.textContent = data;
+                        }
+
                         document.getElementById('modalCompromissoLocal').textContent = local || '-';
-                        document.getElementById('modalCompromissoDescricao').textContent = descricao || '-';
+                        document.getElementById('modalCompromissoDescricao').textContent = descricao ||
+                            '-';
 
                         // Controla a exibição das seções específicas
                         const vistoriaInfo = document.getElementById('modalVistoriaInfo');
@@ -449,8 +502,10 @@
 
                         if (tipo && tipo.toLowerCase() === 'vistoria') {
                             // Mostra informações de vistoria
-                            document.getElementById('modalCompromissoRequerido').textContent = requerido || '-';
-                            document.getElementById('modalCompromissoRequerente').textContent = requerente || '-';
+                            document.getElementById('modalCompromissoRequerido').textContent =
+                                requerido || '-';
+                            document.getElementById('modalCompromissoRequerente').textContent =
+                                requerente || '-';
                             vistoriaInfo.style.display = 'block';
                             notaInfo.style.display = 'none';
                         } else {
@@ -562,7 +617,7 @@
                             }
                         });
                     }
-                    
+
                     // Chama a função para renderizar o gráfico
                     renderChart();
                 }
@@ -600,7 +655,10 @@
                                     labels: {
                                         padding: 20,
                                         usePointStyle: true,
-                                        font: { size: 14, weight: 'bold' }
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
                                     }
                                 },
                                 tooltip: {
@@ -646,7 +704,10 @@
                                     labels: {
                                         padding: 20,
                                         usePointStyle: true,
-                                        font: { size: 14, weight: 'bold' }
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
                                     }
                                 },
                                 tooltip: {
@@ -667,7 +728,7 @@
                 const responsavelCtx = document.getElementById('periciasResponsavelChart');
                 if (responsavelCtx) {
                     const responsavelData = {!! json_encode($periciasPorResponsavel) !!};
-                    const responsavelLabels = responsavelData.map(item => 
+                    const responsavelLabels = responsavelData.map(item =>
                         item.responsavel_tecnico ? item.responsavel_tecnico.nome : 'Não Atribuído'
                     );
                     const responsavelValues = responsavelData.map(item => item.total);
@@ -730,13 +791,14 @@
                 const timelineCtx = document.getElementById('periciasTimelineChart');
                 if (timelineCtx) {
                     const timelineData = {!! json_encode($periciasPorMes) !!};
-                    
+
                     // Função para formatar mês/ano
                     function formatarMes(mesString) {
                         if (!mesString) return '';
                         const [ano, mes] = mesString.split('-');
                         const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-                                      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                            'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                        ];
                         return meses[parseInt(mes) - 1] + '/' + ano.slice(2);
                     }
 
@@ -815,10 +877,14 @@
                         <th class="bg-body-secondary">Nome</th>
                         <th class="bg-body-secondary">E-mail</th>
                         <th class="bg-body-secondary text-center">Total</th>
-                        <th class="bg-body-secondary text-center"><i class="fas fa-hourglass-start text-warning"></i> Não iniciada</th>
-                        <th class="bg-body-secondary text-center"><i class="fas fa-spinner text-info"></i> Em andamento</th>
-                        <th class="bg-body-secondary text-center"><i class="fas fa-exclamation-triangle text-danger"></i> Atrasada</th>
-                        <th class="bg-body-secondary text-center"><i class="fas fa-check-circle text-success"></i> Concluída</th>
+                        <th class="bg-body-secondary text-center"><i class="fas fa-hourglass-start text-warning"></i> Não
+                            iniciada</th>
+                        <th class="bg-body-secondary text-center"><i class="fas fa-spinner text-info"></i> Em andamento
+                        </th>
+                        <th class="bg-body-secondary text-center"><i class="fas fa-exclamation-triangle text-danger"></i>
+                            Atrasada</th>
+                        <th class="bg-body-secondary text-center"><i class="fas fa-check-circle text-success"></i>
+                            Concluída</th>
                         <th class="bg-body-secondary text-center">Ações</th>
                     </tr>
                 </thead>
@@ -827,7 +893,9 @@
                         <tr>
                             <td class="text-center">
                                 <div class="avatar avatar-md">
-                                    <img class="avatar-img" src="{{ ($usuario['avatar'] && strpos($usuario['avatar'], 'default.png') === false) ? $usuario['avatar'] : asset('img/user.png') }}" alt="{{ $usuario['nome'] }}">
+                                    <img class="avatar-img"
+                                        src="{{ $usuario['avatar'] && strpos($usuario['avatar'], 'default.png') === false ? $usuario['avatar'] : asset('img/user.png') }}"
+                                        alt="{{ $usuario['nome'] }}">
                                 </div>
                             </td>
                             <td class="fw-semibold">{{ $usuario['nome'] }}</td>
@@ -846,7 +914,8 @@
                                 <span class="badge bg-success">{{ $usuario['concluida'] ?? 0 }}</span>
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('controle_de_tarefas.index', ['user' => $usuario['id']]) }}" class="btn btn-outline-primary btn-sm" title="Ver tarefas do usuário">
+                                <a href="{{ route('controle_de_tarefas.index', ['user' => $usuario['id']]) }}"
+                                    class="btn btn-outline-primary btn-sm" title="Ver tarefas do usuário">
                                     <i class="fas fa-tasks"></i>
                                 </a>
                             </td>
@@ -913,6 +982,100 @@
             transform: translateX(2px);
         }
 
+        /* Estilo especial para compromissos de hoje */
+        .compromisso-hoje {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid #fd7e14 !important;
+            box-shadow: 0 2px 8px rgba(253, 126, 20, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compromisso-hoje::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #fd7e14, #ffc107, #fd7e14);
+            animation: shimmer 2s infinite;
+        }
+
+        .compromisso-hoje:hover {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe082 100%);
+            border-left-color: #fd7e14 !important;
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
+        }
+
+        /* Badge "HOJE" com animação */
+        .badge-hoje {
+            background: linear-gradient(135deg, #fd7e14, #ffc107) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .badge-hoje::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(45deg, #fd7e14, #ffc107, #fd7e14, #ffc107);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .badge-hoje:hover::before {
+            opacity: 1;
+        }
+
+        /* Badge especial para o modal */
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #fd7e14, #ffc107) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(253, 126, 20, 0.3);
+        }
+
+        /* Animação de pulso suave */
+        .pulse-animation {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(253, 126, 20, 0.7);
+            }
+
+            50% {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(253, 126, 20, 0.3);
+            }
+        }
+
+        /* Animação shimmer para a borda superior */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
         .compromisso-item .text-muted {
             line-height: 1.3;
         }
@@ -933,7 +1096,7 @@
 
         .modal-body .card:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .badge.rounded-pill {
@@ -942,13 +1105,21 @@
         }
 
         /* Animação suave para as seções do modal */
-        #modalVistoriaInfo, #modalNotaInfo {
+        #modalVistoriaInfo,
+        #modalNotaInfo {
             animation: fadeIn 0.3s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ajuste mapa */
@@ -1034,7 +1205,7 @@
         .card.bg-success.bg-opacity-10:hover {
             transform: translateY(-2px);
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         /* Animação para os números das métricas */
@@ -1064,7 +1235,7 @@
             .card .card-body canvas {
                 max-height: 250px !important;
             }
-            
+
             .row.mb-4 .col-md-3 {
                 margin-bottom: 1rem;
             }
@@ -1078,7 +1249,7 @@
 
         /* Estilo para títulos dos gráficos */
         .card-title i {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             padding: 8px;
             border-radius: 50%;
             margin-right: 12px !important;
@@ -1098,8 +1269,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
     {{-- escolher todas as tarefas ou somente a do usuario --}}
