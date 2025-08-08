@@ -201,14 +201,19 @@
         }
 
         .photo-caption {
-            font-size: 1.13rem;
-            color: #1769aa;
-            background: #eef3fd;
-            border-radius: 5px;
-            padding: 4px 18px;
+            font-size: 1.18rem;
+            color: #222;
+            /* preto elegante */
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 7px 28px;
             margin: 0 auto;
             display: block;
             text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(34, 34, 34, 0.07);
+            letter-spacing: 0.5px;
+            border: 1.5px solid #e0e0e0;
         }
 
         .photo-page-break {
@@ -641,7 +646,7 @@
             <span class="nome">Amanda da Rocha Silotti</span><br>
             <span class="titulo">Especialista em Engenharia de Avaliações e Perícias</span><br>
             <span class="dados">
-                Arquiteta e Urbanista - CAU-AM Nº157771-9<br>
+                Arquiteta e Urbanista - CAU-AM NºA123105-7<br>
                 IBAPE/SP 2262<br>
                 Perita Judicial
             </span>
