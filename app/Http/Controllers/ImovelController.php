@@ -80,7 +80,7 @@ class ImovelController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+
 
                 // Crie o validador separadamente
         $validator = Validator::make($request->all(), [
@@ -119,8 +119,11 @@ class ImovelController extends Controller
             'vagas_garagem' => 'nullable|integer',
             'gerador' => 'nullable',
             'area_lazer' => 'nullable',
+            'transacao' => 'nullable|string|max:255'
 
         ]);
+
+
 
         // Verifique se falhou
         if ($validator->fails()) {
@@ -260,6 +263,7 @@ public function update(Request $request, Imovel $imovel)
         'vagas_garagem' => 'nullable|integer',
         'gerador' => 'nullable',
         'area_lazer' => 'nullable',
+        'transacao' => 'nullable|string|max:255'
     ]);
 
     if ($validator->fails()) {

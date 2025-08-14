@@ -720,6 +720,25 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
+                                            <div class="mb-2">
+                                                <label for="transacao" class="form-label">Transação</label>
+                                                <select class="form-select @error('transacao') is-invalid @enderror"
+                                                    id="transacao_terreno" name="transacao">
+                                                    <option value="">Selecione</option>
+                                                    <option value="Vendido"
+                                                        {{ old('transacao') == 'Vendido' ? 'selected' : '' }}>Vendido
+                                                    </option>
+                                                    <option value="A venda"
+                                                        {{ old('transacao') == 'A venda' ? 'selected' : '' }}>A venda
+                                                    </option>
+                                                </select>
+                                                @error('transacao')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label for="fator_oferta" class="form-label">Fator de Oferta</label>
                                                 <input type="text"
@@ -1196,56 +1215,145 @@
             });
         });
     </script>
-    <!-- calcula o preço unitario -->
+    <!-- calcula o preço unitario e atualiza fator de oferta -->
     <script>
+        function atualizarFatorOferta() {
+            const transacao = document.getElementById('transacao_terreno').value;
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            if (!transacao) {
+                fatorOfertaInput.value = '';
+                return;
+            }
+            if (transacao === 'Vendido') {
+                fatorOfertaInput.value = '1,00';
+            } else {
+                fatorOfertaInput.value = '0,90';
+            }
+        }
+
         function calcularPrecoUnitario() {
             const tipo = document.getElementById('tipo').value;
             const valorTotalInput = document.getElementById('valor_total_imovel');
             const areaTotalInput = document.getElementById('area_total');
             const areaConstruidaInput = document.getElementById('area_construida');
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            const precoUnitarioInput = document.getElementById('preco_unitario1');
 
-            // Verificar se todos os campos necessários estão preenchidos
-            if (!valorTotalInput.value ||
-                (tipo === 'terreno' && !areaTotalInput.value) ||
-                ((tipo === 'apartamento' || tipo === 'galpao' || tipo === 'sala_comercial' || tipo === 'imovel_urbano') && !
-                    areaConstruidaInput.value)) {
-                return; // Não calcular se campos essenciais estiverem vazios
+            // Função auxiliar para converter valor para float corretamente
+            function parseValor(val) {
+                if (!val) return NaN;
+                // Remove pontos de milhar e troca vírgula por ponto
+                return parseFloat(val.replace(/\./g, '').replace(',', '.'));
             }
 
-            const valorTotalImovel = parseFloat(valorTotalInput.value.replace(/[^0-9,]/g, '').replace(',', '.'));
-            const areaTotal = parseFloat(areaTotalInput.value.replace(/[^0-9,]/g, '').replace(',', '.'));
-            const areaConstruida = parseFloat(areaConstruidaInput.value.replace(/[^0-9,]/g, '').replace(',', '.'));
-            const fatorOferta = 0.90;
+            // Só calcula se o fator de oferta estiver preenchido
+            if (!fatorOfertaInput.value) {
+                precoUnitarioInput.value = '';
+                return;
+            }
 
-            let precoUnitario = 0;
+            const valorTotalImovel = parseValor(valorTotalInput.value);
+            const areaTotal = parseValor(areaTotalInput.value);
+            const areaConstruida = parseValor(areaConstruidaInput.value);
+            let fatorOferta = parseValor(fatorOfertaInput.value);
+            if (isNaN(fatorOferta) || fatorOferta === 0) return;
+
+            let precoUnitario = NaN;
+            let camposFaltando = [];
 
             if (tipo === 'terreno') {
-                if (areaTotal > 0) {
+                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
+                if (isNaN(areaTotal) || areaTotal <= 0) camposFaltando.push('Área Total');
+                if (camposFaltando.length === 0) {
                     precoUnitario = (valorTotalImovel / areaTotal) * fatorOferta;
                 }
             } else if (tipo === 'apartamento' || tipo === 'galpao' || tipo === 'sala_comercial' || tipo ===
                 'imovel_urbano') {
-                if (areaConstruida > 0) {
+                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
+                if (isNaN(areaConstruida) || areaConstruida <= 0) camposFaltando.push('Área Construída/Útil');
+                if (camposFaltando.length === 0) {
                     precoUnitario = (valorTotalImovel / areaConstruida) * fatorOferta;
                 }
             }
 
-            // Atualizar o campo preco_unitario1 apenas se o cálculo for válido
-            if (precoUnitario > 0) {
-                document.getElementById('preco_unitario1').value = precoUnitario.toLocaleString('pt-BR', {
+            if (camposFaltando.length > 0) {
+                precoUnitarioInput.value = '';
+                showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                return;
+            }
+            // Toast elegante para avisos
+            function showToast(message) {
+                // Remove toasts antigos
+                const oldToast = document.getElementById('toast-campos-obrigatorios');
+                if (oldToast) oldToast.remove();
+
+                const toast = document.createElement('div');
+                toast.id = 'toast-campos-obrigatorios';
+                toast.className = 'toast show align-items-center text-white bg-danger border-0';
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.right = '30px';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '320px';
+                toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body fs-6">
+                        <i class='fas fa-exclamation-triangle me-2'></i> ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.parentNode.removeChild(toast);
+                    }, 500);
+                }, 4000);
+            }
+
+            if (isNaN(precoUnitario) || !isFinite(precoUnitario) || precoUnitario <= 0) {
+                precoUnitarioInput.value = '';
+            } else {
+                precoUnitarioInput.value = precoUnitario.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
             }
         }
 
-        // Adicionar eventos de blur (quando o campo perde o foco) para os campos relevantes
-        document.getElementById('valor_total_imovel').addEventListener('blur', calcularPrecoUnitario);
-        document.getElementById('area_total').addEventListener('blur', calcularPrecoUnitario);
-        document.getElementById('area_construida').addEventListener('blur', calcularPrecoUnitario);
+        // Atualiza o fator de oferta ao mudar a transação
+        document.getElementById('transacao_terreno').addEventListener('change', function() {
+            atualizarFatorOferta();
+            calcularPrecoUnitario();
+        });
+
+        // Remover cálculo automático ao digitar. O cálculo será feito apenas ao mudar o campo transação.
 
         // Também recalcular quando o tipo for alterado
         document.getElementById('tipo').addEventListener('change', calcularPrecoUnitario);
+        // Recalcular ao alterar campos necessários
+        document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
+        if (document.getElementById('area_total')) {
+            document.getElementById('area_total').addEventListener('input', calcularPrecoUnitario);
+        }
+        if (document.getElementById('area_construida')) {
+            document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
+        }
+
+        // Inicializa o fator de oferta correto ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ao carregar, se já houver valor selecionado em transação, inicializa o fator de oferta
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            const transacaoInput = document.getElementById('transacao_terreno');
+            if (fatorOfertaInput && transacaoInput) {
+                if (transacaoInput.value) {
+                    atualizarFatorOferta();
+                } else {
+                    fatorOfertaInput.value = '';
+                }
+            }
+        });
     </script>
 
     <!-- aciona o toast quando o usuario digitar um valor fora do padrão -->

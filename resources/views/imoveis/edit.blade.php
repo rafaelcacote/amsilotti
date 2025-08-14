@@ -240,111 +240,111 @@
 
                                 <!-- Seção: Dados do Terreno -->
                                 <!-- <div class="mb-4" id="dados-terreno">
-                                                        <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
-                                                        </h5>
-                                                        <div class="row">
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
+                                                                    <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
+                                                                    </h5>
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
 
 
-                                                                     <label for="area_total" class="form-label">Área
-                                                                        Total</label>
-                                                                    <input type="text"
-                                                                        class="form-control area @error('area_total') is-invalid @enderror"
-                                                                        id="area_total" name="area_total"
-                                                                        value="{{ old('area_total', $imovel->area_total ?? '') }}">
-                                                                    @error('area_total')
+                                                                                 <label for="area_total" class="form-label">Área
+                                                                                    Total</label>
+                                                                                <input type="text"
+                                                                                    class="form-control area @error('area_total') is-invalid @enderror"
+                                                                                    id="area_total" name="area_total"
+                                                                                    value="{{ old('area_total', $imovel->area_total ?? '') }}">
+                                                                                @error('area_total')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
-                                                                    <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                                    <select class="form-select @error('benfeitoria') is-invalid @enderror"
-                                                                        id="benfeitoria_terreno" name="benfeitoria">
-                                                                        <option value="">Selecione</option>
-                                                                        <option value="Possui"
-                                                                            {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
-                                                                            Possui</option>
-                                                                        <option value="Não Possui"
-                                                                            {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
-                                                                            Não Possui</option>
-                                                                    </select>
-                                                                    @error('benfeitoria')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
+                                                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
+                                                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
+                                                                                    id="benfeitoria_terreno" name="benfeitoria">
+                                                                                    <option value="">Selecione</option>
+                                                                                    <option value="Possui"
+                                                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
+                                                                                        Possui</option>
+                                                                                    <option value="Não Possui"
+                                                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
+                                                                                        Não Possui</option>
+                                                                                </select>
+                                                                                @error('benfeitoria')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
+                                                                            </div>
+                                                                        </div>
 
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
-                                                                    <label for="posicao_na_quadra" class="form-label">Posição na
-                                                                        Quadra</label>
-                                                                    <select
-                                                                        class="form-select @error('posicao_na_quadra') is-invalid @enderror"
-                                                                        id="posicao_na_quadra" name="posicao_na_quadra">
-                                                                        <option value="">Selecione</option>
-                                                                        <option value="Esquina"
-                                                                            {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
-                                                                            Esquina</option>
-                                                                        <option value="Meio Quadra"
-                                                                            {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
-                                                                            Meio Quadra</option>
-                                                                    </select>
-                                                                    @error('acessibilidade')
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
+                                                                                <label for="posicao_na_quadra" class="form-label">Posição na
+                                                                                    Quadra</label>
+                                                                                <select
+                                                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
+                                                                                    id="posicao_na_quadra" name="posicao_na_quadra">
+                                                                                    <option value="">Selecione</option>
+                                                                                    <option value="Esquina"
+                                                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
+                                                                                        Esquina</option>
+                                                                                    <option value="Meio Quadra"
+                                                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
+                                                                                        Meio Quadra</option>
+                                                                                </select>
+                                                                                @error('acessibilidade')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
-                                                                    <label for="topologia" class="form-label">Topologia</label>
-                                                                    <select class="form-select @error('topologia') is-invalid @enderror"
-                                                                        id="topologia" name="topologia">
-                                                                        <option value="">Selecione</option>
-                                                                        <option value="Plano"
-                                                                            {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
-                                                                            Plano</option>
-                                                                        <option value="Semi Plano"
-                                                                            {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
-                                                                            Semi Plano</option>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
+                                                                                <label for="topologia" class="form-label">Topologia</label>
+                                                                                <select class="form-select @error('topologia') is-invalid @enderror"
+                                                                                    id="topologia" name="topologia">
+                                                                                    <option value="">Selecione</option>
+                                                                                    <option value="Plano"
+                                                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
+                                                                                        Plano</option>
+                                                                                    <option value="Semi Plano"
+                                                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
+                                                                                        Semi Plano</option>
 
-                                                                    </select>
-                                                                    @error('topologia')
+                                                                                </select>
+                                                                                @error('topologia')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
+                                                                            </div>
+                                                                        </div>
 
 
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
-                                                                    <label for="frente" class="form-label">Frente</label>
-                                                                    <input type="text"
-                                                                        class="form-control @error('frente') is-invalid @enderror"
-                                                                        id="frente" name="frente"
-                                                                        value="{{ old('frente', $imovel->frente ?? '') }}">
-                                                                    @error('frente')
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
+                                                                                <label for="frente" class="form-label">Frente</label>
+                                                                                <input type="text"
+                                                                                    class="form-control @error('frente') is-invalid @enderror"
+                                                                                    id="frente" name="frente"
+                                                                                    value="{{ old('frente', $imovel->frente ?? '') }}">
+                                                                                @error('frente')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <div class="mb-2">
-                                                                    <label for="profundidade_equiv" class="form-label">Prof. Equiv</label>
-                                                                    <input type="text"
-                                                                        class="form-control @error('profundidade_equiv') is-invalid @enderror"
-                                                                        id="profundidade_equiv" name="profundidade_equiv"
-                                                                        value="{{ old('profundidade_equiv', $imovel->profundidade_equiv ?? '') }}">
-                                                                    @error('profundidade_equiv')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <div class="mb-2">
+                                                                                <label for="profundidade_equiv" class="form-label">Prof. Equiv</label>
+                                                                                <input type="text"
+                                                                                    class="form-control @error('profundidade_equiv') is-invalid @enderror"
+                                                                                    id="profundidade_equiv" name="profundidade_equiv"
+                                                                                    value="{{ old('profundidade_equiv', $imovel->profundidade_equiv ?? '') }}">
+                                                                                @error('profundidade_equiv')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                                </div>
-                                                            </div>
+                                                                            </div>
+                                                                        </div>
 
-                                                        </div>
-                                                    </div> -->
+                                                                    </div>
+                                                                </div> -->
 
                                 <!-- Seção: Dados da Construção (aparece para todos exceto terreno) -->
                                 <div class="mb-4" id="dados-construcao">
@@ -682,7 +682,7 @@
                                                 <select
                                                     class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
                                                     id="benfeitoria_terreno" name="benfeitoria_terreno">
-                                                   <option value="">Selecione</option>
+                                                    <option value="">Selecione</option>
                                                     <option value="possui"
                                                         {{ old('benfeitoria_terreno', $imovel->benfeitoria ?? '') == 'possui' ? 'selected' : '' }}>
                                                         Possui
@@ -787,10 +787,32 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-3">
+                                                <label for="transacao" class="form-label">Transação</label>
+                                                <select class="form-select @error('transacao') is-invalid @enderror"
+                                                    id="transacao_terreno" name="transacao">
+                                                    <option value="">Selecione</option>
+                                                    <option value="Vendido"
+                                                        {{ old('transacao', $imovel->transacao ?? '') == 'Vendido' ? 'selected' : '' }}>
+                                                        Vendido
+                                                    </option>
+                                                    <option value="A venda"
+                                                        {{ old('transacao', $imovel->transacao ?? '') == 'A venda' ? 'selected' : '' }}>
+                                                        A venda
+                                                    </option>
+                                                </select>
+                                                @error('transacao')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="mb-3">
                                                 <label for="fator_oferta" class="form-label">Fator de Oferta</label>
                                                 <input type="text"
                                                     class="form-control money @error('fator_oferta') is-invalid @enderror"
-                                                    id="fator_oferta" name="fator_oferta" value="0,90" readonly>
+                                                    id="fator_oferta" name="fator_oferta"
+                                                    value="{{ old('fator_oferta', $imovel->fator_oferta ?? '0,90') }}"
+                                                    readonly>
                                                 @error('fator_oferta')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -809,124 +831,125 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Seção: Fonte de Informação -->
-                                <div class="mb-4" id="fonte-informacao">
-                                    <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Fonte de
-                                        Informação</h5>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="fonte_informacao" class="form-label">Fonte de
-                                                    Informação</label>
-                                                <input type="text"
-                                                    class="form-control @error('fonte_informacao') is-invalid @enderror"
-                                                    id="fonte_informacao" name="fonte_informacao"
-                                                    value="{{ old('fonte_informacao', $imovel->fonte_informacao ?? '') }}">
-                                                @error('fonte_informacao')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                    <!-- Seção: Fonte de Informação -->
+                                    <div class="mb-4" id="fonte-informacao">
+                                        <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Fonte de
+                                            Informação</h5>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="fonte_informacao" class="form-label">Fonte de
+                                                        Informação</label>
+                                                    <input type="text"
+                                                        class="form-control @error('fonte_informacao') is-invalid @enderror"
+                                                        id="fonte_informacao" name="fonte_informacao"
+                                                        value="{{ old('fonte_informacao', $imovel->fonte_informacao ?? '') }}">
+                                                    @error('fonte_informacao')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="contato" class="form-label">Contato</label>
-                                                <input type="text"
-                                                    class="form-control @error('contato') is-invalid @enderror"
-                                                    id="contato" name="contato"
-                                                    value="{{ old('contato', $imovel->contato ?? '') }}">
-                                                @error('contato')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="contato" class="form-label">Contato</label>
+                                                    <input type="text"
+                                                        class="form-control @error('contato') is-invalid @enderror"
+                                                        id="contato" name="contato"
+                                                        value="{{ old('contato', $imovel->contato ?? '') }}">
+                                                    @error('contato')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="link" class="form-label">Link</label>
-                                                <input type="text"
-                                                    class="form-control @error('link') is-invalid @enderror"
-                                                    id="link" name="link"
-                                                    value="{{ old('link', $imovel->link ?? '') }}">
-                                                @error('link')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="link" class="form-label">Link</label>
+                                                    <input type="text"
+                                                        class="form-control @error('link') is-invalid @enderror"
+                                                        id="link" name="link"
+                                                        value="{{ old('link', $imovel->link ?? '') }}">
+                                                    @error('link')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-images me-2"></i>Upload de Imagens (Mínimo 3)
-                                    <small id="contador-imagens" class="text-muted">(Faltam 3 imagens)</small>
-                                </h5>
-                                <!-- Seção: Upload de imagens -->
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-images me-2"></i>Upload de Imagens (Mínimo 3)
+                                        <small id="contador-imagens" class="text-muted">(Faltam 3 imagens)</small>
+                                    </h5>
+                                    <!-- Seção: Upload de imagens -->
 
-                                <div class="mb-4" id="upload-imagens">
-                                    {{-- <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Upload de Imagens
+                                    <div class="mb-4" id="upload-imagens">
+                                        {{-- <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Upload de Imagens
                                         (Mínimo 3)</h5> --}}
 
-                                    <div class="row" id="imagens-container">
-                                        <!-- As miniaturas das imagens serão adicionadas aqui -->
+                                        <div class="row" id="imagens-container">
+                                            <!-- As miniaturas das imagens serão adicionadas aqui -->
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label for="imagem_upload" class="form-label">Adicionar Imagem</label>
+                                                    <input type="file" class="form-control" id="imagem_upload"
+                                                        accept="image/*">
+                                                    <small class="text-muted">Selecione imagens para upload (JPEG, PNG,
+                                                        etc.)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" id="imagens_data" name="imagens_data">
                                     </div>
 
-                                    <div class="row mt-3">
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="imagem_upload" class="form-label">Adicionar Imagem</label>
-                                                <input type="file" class="form-control" id="imagem_upload"
-                                                    accept="image/*">
-                                                <small class="text-muted">Selecione imagens para upload (JPEG, PNG,
-                                                    etc.)</small>
-                                            </div>
+                                    <!-- Imagens Cadastradas -->
+                                    <div class="mb-4">
+                                        <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Imagens
+                                            Cadastradas
+                                        </h5>
+                                        <div class="row" id="imagens-cadastradas-container">
+                                            @if (isset($imovel) && $imovel->fotos && $imovel->fotos->count())
+                                                @foreach ($imovel->fotos as $foto)
+                                                    <div class="col-md-4 mb-3 imagem-cadastrada"
+                                                        data-id="{{ $foto->id }}">
+                                                        <div class="card h-100">
+                                                            <img src="{{ asset('storage/' . $foto->caminho) }}"
+                                                                class="card-img-top"
+                                                                style="height: 200px; object-fit: cover;"
+                                                                alt="{{ $foto->descricao }}">
+                                                            <div class="card-body">
+                                                                <input type="text" class="form-control mb-2"
+                                                                    name="imagens[{{ $foto->id }}][descricao]"
+                                                                    value="{{ $foto->descricao }}"
+                                                                    placeholder="Descrição da imagem">
+                                                                <input type="hidden"
+                                                                    name="imagens[{{ $foto->id }}][remover]"
+                                                                    value="0" class="remover-imagem-input">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm w-100 btn-excluir-imagem">
+                                                                    <i class="fas fa-trash me-1"></i> Excluir
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
 
-                                    <input type="hidden" id="imagens_data" name="imagens_data">
-                                </div>
-
-                                <!-- Imagens Cadastradas -->
-                                <div class="mb-4">
-                                    <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Imagens Cadastradas
-                                    </h5>
-                                    <div class="row" id="imagens-cadastradas-container">
-                                        @if (isset($imovel) && $imovel->fotos && $imovel->fotos->count())
-                                            @foreach ($imovel->fotos as $foto)
-                                                <div class="col-md-4 mb-3 imagem-cadastrada"
-                                                    data-id="{{ $foto->id }}">
-                                                    <div class="card h-100">
-                                                        <img src="{{ asset('storage/' . $foto->caminho) }}"
-                                                            class="card-img-top" style="height: 200px; object-fit: cover;"
-                                                            alt="{{ $foto->descricao }}">
-                                                        <div class="card-body">
-                                                            <input type="text" class="form-control mb-2"
-                                                                name="imagens[{{ $foto->id }}][descricao]"
-                                                                value="{{ $foto->descricao }}"
-                                                                placeholder="Descrição da imagem">
-                                                            <input type="hidden"
-                                                                name="imagens[{{ $foto->id }}][remover]"
-                                                                value="0" class="remover-imagem-input">
-                                                            <button type="button"
-                                                                class="btn btn-danger btn-sm w-100 btn-excluir-imagem">
-                                                                <i class="fas fa-trash me-1"></i> Excluir
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        @endif
+                                    <!-- Botões de Ação -->
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Salvar
+                                        </button>
+                                        <a href="{{ route('imoveis.index') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-times me-2"></i>Cancelar
+                                        </a>
                                     </div>
-                                </div>
-
-                                <!-- Botões de Ação -->
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Salvar
-                                    </button>
-                                    <a href="{{ route('imoveis.index') }}" class="btn btn-outline-secondary">
-                                        <i class="fas fa-times me-2"></i>Cancelar
-                                    </a>
-                                </div>
                             </form>
                         </div>
                     </div>
@@ -1861,7 +1884,7 @@
     </script>
 
     <!-- Antes do fechamento do script principal
-                         Impede envio do campo imagens_data se não houver alteração nas imagens -->
+                                     Impede envio do campo imagens_data se não houver alteração nas imagens -->
     <script>
         $(document).ready(function() {
             var imagensDataInput = document.getElementById('imagens_data');
@@ -1876,6 +1899,134 @@
                     imagensDataInput.setAttribute('name', 'imagens_data');
                 }
             });
+        });
+    </script>
+    <script>
+        function atualizarFatorOferta() {
+            const transacao = document.getElementById('transacao_terreno').value;
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            if (!transacao) {
+                fatorOfertaInput.value = '';
+                return;
+            }
+            if (transacao === 'Vendido') {
+                fatorOfertaInput.value = '1,00';
+            } else {
+                fatorOfertaInput.value = '0,90';
+            }
+        }
+
+        function calcularPrecoUnitario() {
+            const tipo = document.getElementById('tipo').value;
+            const valorTotalInput = document.getElementById('valor_total_imovel');
+            const areaTotalInput = document.getElementById('area_total');
+            const areaConstruidaInput = document.getElementById('area_construida');
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            const precoUnitarioInput = document.getElementById('preco_unitario1');
+
+            function parseValor(val) {
+                if (!val) return NaN;
+                return parseFloat(val.replace(/\./g, '').replace(',', '.'));
+            }
+
+            if (!fatorOfertaInput.value) {
+                precoUnitarioInput.value = '';
+                return;
+            }
+
+            const valorTotalImovel = parseValor(valorTotalInput.value);
+            const areaTotal = parseValor(areaTotalInput ? areaTotalInput.value : '');
+            const areaConstruida = parseValor(areaConstruidaInput ? areaConstruidaInput.value : '');
+            let fatorOferta = parseValor(fatorOfertaInput.value);
+            if (isNaN(fatorOferta) || fatorOferta === 0) return;
+
+            let precoUnitario = NaN;
+            let camposFaltando = [];
+
+            if (tipo === 'terreno') {
+                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
+                if (isNaN(areaTotal) || areaTotal <= 0) camposFaltando.push('Área Total');
+                if (camposFaltando.length === 0) {
+                    precoUnitario = (valorTotalImovel / areaTotal) * fatorOferta;
+                }
+            } else if (tipo === 'apartamento' || tipo === 'galpao' || tipo === 'sala_comercial' || tipo ===
+                'imovel_urbano') {
+                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
+                if (isNaN(areaConstruida) || areaConstruida <= 0) camposFaltando.push('Área Construída/Útil');
+                if (camposFaltando.length === 0) {
+                    precoUnitario = (valorTotalImovel / areaConstruida) * fatorOferta;
+                }
+            }
+
+            if (camposFaltando.length > 0) {
+                precoUnitarioInput.value = '';
+                showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                return;
+            }
+
+            function showToast(message) {
+                const oldToast = document.getElementById('toast-campos-obrigatorios');
+                if (oldToast) oldToast.remove();
+
+                const toast = document.createElement('div');
+                toast.id = 'toast-campos-obrigatorios';
+                toast.className = 'toast show align-items-center text-white bg-danger border-0';
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.right = '30px';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '320px';
+                toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body fs-6">
+                        <i class='fas fa-exclamation-triangle me-2'></i> ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.parentNode.removeChild(toast);
+                    }, 500);
+                }, 4000);
+            }
+
+            if (isNaN(precoUnitario) || !isFinite(precoUnitario) || precoUnitario <= 0) {
+                precoUnitarioInput.value = '';
+            } else {
+                precoUnitarioInput.value = precoUnitario.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+        }
+
+        document.getElementById('transacao_terreno').addEventListener('change', function() {
+            atualizarFatorOferta();
+            calcularPrecoUnitario();
+        });
+
+        document.getElementById('tipo').addEventListener('change', calcularPrecoUnitario);
+        document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
+        if (document.getElementById('area_total')) {
+            document.getElementById('area_total').addEventListener('input', calcularPrecoUnitario);
+        }
+        if (document.getElementById('area_construida')) {
+            document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fatorOfertaInput = document.getElementById('fator_oferta');
+            const transacaoInput = document.getElementById('transacao_terreno');
+            if (fatorOfertaInput && transacaoInput) {
+                if (transacaoInput.value) {
+                    atualizarFatorOferta();
+                } else {
+                    fatorOfertaInput.value = '';
+                }
+            }
         });
     </script>
 @endsection

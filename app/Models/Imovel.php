@@ -56,7 +56,8 @@ class Imovel extends Model
         'gerador',
         'vagas_garagem',
         'area_lazer',
-        'preco_venda_amostra'
+        'preco_venda_amostra',
+        'transacao'
     ];
 
     public function bairro()
@@ -78,7 +79,7 @@ class Imovel extends Model
     {
         return $this->hasMany(FotosDeImovel::class, 'imovel_id');
     }
-    
+
         public function imagens()
     {
         return $this->hasMany(FotosDeImovel::class, 'imovel_id');
