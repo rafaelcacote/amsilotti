@@ -80,8 +80,6 @@ class ImovelController extends Controller
 
     public function store(Request $request)
     {
-
-
                 // Crie o validador separadamente
         $validator = Validator::make($request->all(), [
             'tipo' => 'required|string|max:255',
@@ -93,7 +91,10 @@ class ImovelController extends Controller
             'pgm' => 'nullable|regex:/^\d+(,\d{1,2})?$/',
             'latitude' => 'nullable|string|max:255',
             'longitude' => 'nullable|string|max:255',
-            'area_total' => 'nullable|numeric',
+            'area_total' => 'nullable|numeric', // Campo original (não mais usado diretamente)
+            'area_total_dados_terreno' => 'nullable|numeric', // Para seção Dados do Terreno
+            'area_terreno_construcao' => 'nullable|numeric', // Para Área Terreno na construção
+            'area_total_terreno' => 'nullable|numeric', // Para seção específica de terreno
             'area_construida' => 'nullable|numeric',
             'frente' => 'nullable|numeric',
             'profundidade_equiv' => 'nullable|numeric',
@@ -140,6 +141,23 @@ class ImovelController extends Controller
             // Obter os dados validados
             $validated = $validator->validated();
 
+            // Unificar os campos de área em area_total baseado no tipo
+            if ($request->tipo === 'terreno') {
+                // Para terreno, usa area_total_terreno
+                $validated['area_total'] = $validated['area_total_terreno'] ?? null;
+            } elseif ($request->tipo === 'galpao' || $request->tipo === 'imovel_urbano') {
+                // Para galpão e imóvel urbano, usa area_terreno_construcao
+                $validated['area_total'] = $validated['area_terreno_construcao'] ?? null;
+            } else {
+                // Para outros tipos (apartamento, sala_comercial), usa area_total_dados_terreno
+                $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
+            }
+
+            // Remove os campos específicos para não tentar salvar no banco
+            unset($validated['area_total_dados_terreno']);
+            unset($validated['area_terreno_construcao']);
+            unset($validated['area_total_terreno']);
+
             // Converter valores decimais (substituir vírgula por ponto)
                 if (!empty($validated['pgm'])) {
                     $validated['pgm'] = str_replace(',', '.', $validated['pgm']);
@@ -152,6 +170,8 @@ class ImovelController extends Controller
                 } elseif ($request->tipo === 'sala_comercial') {
                     $validated['vagas_garagem'] = $request->vagas_garagem_sala;
                 }
+
+                dd($validated);
 
             // Criar o imóvel
             $imovel = Imovel::create($validated);

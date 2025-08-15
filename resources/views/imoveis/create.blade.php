@@ -22,34 +22,38 @@
                                 <div class="mb-6">
                                     <h5 class="text-primary mb-3"><i class="fas fa-house me-2"></i>Tipo do Imóvel</h5>
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="tipo" class="form-label">Tipo</label>
-                                                <select class="form-select @error('tipo') is-invalid @enderror"
-                                                    id="tipo" name="tipo" onchange="toggleSections()">
-                                                    <option value="">Selecione o Tipo</option>
+                                                <label for="tipo" class="form-label fw-bold">Primeiro, selecione o tipo
+                                                    do imóvel <span class="text-danger">*</span></label>
+                                                <select
+                                                    class="form-select form-select-lg @error('tipo') is-invalid @enderror"
+                                                    id="tipo" name="tipo" onchange="handleTipoChange()">
+                                                    <option value="">🏠 Escolha o tipo do imóvel...</option>
                                                     <option value="apartamento"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'apartamento' ? 'selected' : '' }}>
-                                                        Apartamento</option>
+                                                        🏢 Apartamento</option>
                                                     <option value="imovel_urbano"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'imovel_urbano' ? 'selected' : '' }}>
-                                                        Imóvel Urbano</option>
+                                                        🏘️ Imóvel Urbano</option>
                                                     <option value="galpao"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'galpao' ? 'selected' : '' }}>
-                                                        Galpão</option>
+                                                        🏭 Galpão</option>
                                                     <option value="sala_comercial"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'sala_comercial' ? 'selected' : '' }}>
-                                                        Sala Comercial</option>
+                                                        🏢 Sala Comercial</option>
                                                     <option value="terreno"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'terreno' ? 'selected' : '' }}>
-                                                        Terreno</option>
+                                                        🌿 Terreno</option>
                                                 </select>
                                                 @error('tipo')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
+                                                <div class="form-text">Esta seleção determinará quais campos aparecerão no
+                                                    formulário</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" id="fator-fundamentacao-container" style="display: none;">
                                             <div class="mb-3">
                                                 <label for="fator_fundamentacao" class="form-label">Fator de
                                                     Fundamentação</label>
@@ -75,9 +79,34 @@
                                     </div>
                                 </div>
 
+                                <!-- Loading Animation -->
+                                <div id="loading-container" style="display: none;">
+                                    <div class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Carregando...</span>
+                                        </div>
+                                        <p class="mt-3 text-muted">Preparando formulário para <span
+                                                id="tipo-selecionado"></span>...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Tipo selecionado badge -->
+                                <div id="tipo-badge-container" style="display: none;" class="mb-4">
+                                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <div>
+                                            <strong>Tipo selecionado:</strong> <span id="tipo-badge-text"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-primary ms-3"
+                                                onclick="resetForm()">
+                                                <i class="fas fa-edit me-1"></i>Alterar tipo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <!-- Seção: Endereço do Imóvel -->
-                                <div class="mb-4" id="endereco-imovel">
+                                <div class="mb-4 form-section" id="endereco-imovel" style="display: none;">
                                     <h5 class="text-primary mb-3">
                                         <i class="fas fa-map-marker-alt me-2"></i>Endereço do Imóvel
                                     </h5>
@@ -204,17 +233,19 @@
 
 
                                 <!-- Seção: Dados do Terreno -->
-                                <div class="mb-4" id="dados-terreno">
+                                <div class="mb-4 form-section" id="dados-terreno" style="display: none;">
                                     <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
                                     </h5>
                                     <div class="row">
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="area_total" class="form-label">Área Total</label>
+                                                <label for="area_total_dados_terreno" class="form-label">Área
+                                                    Total</label>
                                                 <input type="text"
-                                                    class="form-control area @error('area_total') is-invalid @enderror"
-                                                    id="area_total" name="area_total" value="{{ old('area_total') }}">
-                                                @error('area_total')
+                                                    class="form-control area @error('area_total_dados_terreno') is-invalid @enderror"
+                                                    id="area_total_dados_terreno" name="area_total_dados_terreno"
+                                                    value="{{ old('area_total_dados_terreno') }}">
+                                                @error('area_total_dados_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -307,13 +338,13 @@
                                 </div>
 
                                 <!-- Seção: Dados da Construção (aparece para todos exceto terreno) -->
-                                <div class="mb-4" id="dados-construcao">
+                                <div class="mb-4 form-section" id="dados-construcao" style="display: none;">
                                     <h5 class="text-primary mb-3"><i class="fas fa-building me-2"></i>Dados da Construção
                                     </h5>
                                     <div class="row">
                                         <!-- Área (Construída/Útil) -->
                                         <div class="col-md-2">
-                                            <div class="mb-3">
+                                            <div class="mb-2">
                                                 <label for="area_construida" class="form-label" id="label-area">Área
                                                     Construída</label>
                                                 <input type="text"
@@ -323,6 +354,20 @@
                                                 @error('area_construida')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="area_terreno_col" style="display: none;">
+                                            <div class="mb-2">
+                                                <label for="area_terreno_construcao" class="form-label">Área
+                                                    Terreno</label>
+                                                <input type="text"
+                                                    class="form-control area @error('area_terreno_construcao') is-invalid @enderror"
+                                                    id="area_terreno" name="area_terreno_construcao"
+                                                    value="{{ old('area_terreno_construcao') }}">
+                                                @error('area_terreno_construcao')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+
                                             </div>
                                         </div>
 
@@ -608,11 +653,12 @@
                                     <div class="row">
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label for="area_total" class="form-label">Área Total</label>
+                                                <label for="area_total_terreno" class="form-label">Área Total</label>
                                                 <input type="text"
-                                                    class="form-control area @error('area_total') is-invalid @enderror"
-                                                    id="area_total" name="area_total" value="{{ old('area_total') }}">
-                                                @error('area_total')
+                                                    class="form-control area @error('area_total_terreno') is-invalid @enderror"
+                                                    id="area_total_terreno" name="area_total_terreno"
+                                                    value="{{ old('area_total_terreno') }}">
+                                                @error('area_total_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -703,7 +749,7 @@
                                 </div>
 
                                 <!-- Seção: Dados Econômicos -->
-                                <div class="mb-4" id="dados-economicos">
+                                <div class="mb-4 form-section" id="dados-economicos" style="display: none;">
                                     <h5 class="text-primary mb-3"><i class="fas fa-coins me-2"></i>Dados Econômicos</h5>
                                     <div class="row">
                                         <div class="col-md-2">
@@ -765,7 +811,7 @@
                                 </div>
 
                                 <!-- Seção: Fonte de Informação -->
-                                <div class="mb-4" id="fonte-informacao">
+                                <div class="mb-4 form-section" id="fonte-informacao" style="display: none;">
                                     <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Fonte de
                                         Informação</h5>
                                     <div class="row">
@@ -807,37 +853,39 @@
                                     </div>
                                 </div>
 
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-images me-2"></i>Upload de Imagens (Mínimo 3)
-                                    <small id="contador-imagens" class="text-muted">(Faltam 3 imagens)</small>
-                                </h5>
                                 <!-- Seção: Upload de imagens -->
+                                <div class="form-section" style="display: none;" id="upload-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-images me-2"></i>Upload de Imagens (Mínimo 3)
+                                        <small id="contador-imagens" class="text-muted">(Faltam 3 imagens)</small>
+                                    </h5>
 
-                                <div class="mb-4" id="upload-imagens">
-                                    {{-- <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Upload de Imagens
+                                    <div class="mb-4" id="upload-imagens">
+                                        {{-- <h5 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Upload de Imagens
                                         (Mínimo 3)</h5> --}}
 
-                                    <div class="row" id="imagens-container">
-                                        <!-- As miniaturas das imagens serão adicionadas aqui -->
-                                    </div>
+                                        <div class="row" id="imagens-container">
+                                            <!-- As miniaturas das imagens serão adicionadas aqui -->
+                                        </div>
 
-                                    <div class="row mt-3">
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="imagem_upload" class="form-label">Adicionar Imagem</label>
-                                                <input type="file" class="form-control" id="imagem_upload"
-                                                    accept="image/*">
-                                                <small class="text-muted">Selecione imagens para upload (JPEG, PNG,
-                                                    etc.)</small>
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label for="imagem_upload" class="form-label">Adicionar Imagem</label>
+                                                    <input type="file" class="form-control" id="imagem_upload"
+                                                        accept="image/*">
+                                                    <small class="text-muted">Selecione imagens para upload (JPEG, PNG,
+                                                        etc.)</small>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <input type="hidden" id="imagens_data" name="imagens_data">
+                                        <input type="hidden" id="imagens_data" name="imagens_data">
+                                    </div>
                                 </div>
 
                                 <!-- Botões de Ação -->
-                                <div class="d-flex gap-2">
+                                <div class="d-flex gap-2 form-section" id="botoes-acao" style="display: none;">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Salvar
                                     </button>
@@ -988,17 +1036,170 @@
         #vagas-garagem-container {
             transition: all 0.3s ease;
         }
+
+        /* Estilos para o formulário progressivo */
+        .form-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .form-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading animation */
+        #loading-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        /* Tipo badge styling */
+        #tipo-badge-container .alert {
+            border-left: 4px solid #198754;
+            background: linear-gradient(135deg, #d1e7dd 0%, #f8f9fa 100%);
+        }
+
+        /* Select tipo styling melhorado */
+        #tipo.form-select-lg {
+            font-size: 1.1rem;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #tipo.form-select-lg:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Botão de reset elegante */
+        .btn-outline-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+        }
     </style>
 
-    {{-- controle de campos dependendo do tipo do imovel  --}}
+    {{-- Controle UX do formulário progressivo --}}
     <script>
-        function toggleSections() {
+        // Mapeamento de tipos para labels amigáveis
+        const tipoLabels = {
+            'apartamento': '🏢 Apartamento',
+            'imovel_urbano': '🏘️ Imóvel Urbano',
+            'galpao': '🏭 Galpão',
+            'sala_comercial': '🏢 Sala Comercial',
+            'terreno': '🌿 Terreno'
+        };
+
+        // Função principal para mudança de tipo
+        function handleTipoChange() {
             const tipo = document.getElementById('tipo').value;
+
+            if (!tipo) {
+                hideAllSections();
+                return;
+            }
+
+            // Mostra loading
+            showLoading(tipo);
+
+            // Simula carregamento (pode ser removido se não quiser delay)
+            setTimeout(() => {
+                hideLoading();
+                showFormSections(tipo);
+                showTypeBadge(tipo);
+            }, 800);
+        }
+
+        function showLoading(tipo) {
+            const loadingContainer = document.getElementById('loading-container');
+            const tipoSelecionado = document.getElementById('tipo-selecionado');
+
+            hideAllSections();
+            tipoSelecionado.textContent = tipoLabels[tipo];
+            loadingContainer.style.display = 'block';
+        }
+
+        function hideLoading() {
+            const loadingContainer = document.getElementById('loading-container');
+            loadingContainer.style.display = 'none';
+        }
+
+        function showTypeBadge(tipo) {
+            const badgeContainer = document.getElementById('tipo-badge-container');
+            const badgeText = document.getElementById('tipo-badge-text');
+            const fatorContainer = document.getElementById('fator-fundamentacao-container');
+
+            badgeText.textContent = tipoLabels[tipo];
+            badgeContainer.style.display = 'block';
+            fatorContainer.style.display = 'block';
+        }
+
+        function hideAllSections() {
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Oculta seções específicas também
             const dadosTerreno = document.getElementById('dados-terreno');
             const dadosConstrucao = document.getElementById('dados-construcao');
+
+            if (dadosTerreno) dadosTerreno.style.display = 'none';
+            if (dadosConstrucao) dadosConstrucao.style.display = 'none';
+
+            document.getElementById('tipo-badge-container').style.display = 'none';
+            document.getElementById('fator-fundamentacao-container').style.display = 'none';
+            document.getElementById('loading-container').style.display = 'none';
+        }
+
+        function showFormSections(tipo) {
+            // Define quais seções devem aparecer para cada tipo
+            const sectionsToShow = ['endereco-imovel', 'dados-economicos', 'fonte-informacao', 'upload-section',
+                'botoes-acao'
+            ];
+
+            // Adiciona seções específicas baseado no tipo
+            if (tipo === 'terreno') {
+                sectionsToShow.push('dados-terreno');
+                // Terreno NÃO tem dados-construcao
+            } else {
+                sectionsToShow.push('dados-construcao');
+                // Outros tipos NÃO tem dados-terreno
+            }
+
+            // Mostra apenas as seções necessárias com animação
+            sectionsToShow.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    setTimeout(() => {
+                        section.style.display = 'block';
+                        section.style.opacity = '0';
+                        section.style.transform = 'translateY(20px)';
+
+                        // Animação de entrada
+                        setTimeout(() => {
+                            section.style.transition = 'all 0.3s ease';
+                            section.style.opacity = '1';
+                            section.style.transform = 'translateY(0)';
+                        }, 50);
+                    }, index * 100);
+                }
+            });
+
+            // Configura campos específicos do tipo
+            configureTypeSpecificFields(tipo);
+        }
+
+        function configureTypeSpecificFields(tipo) {
             const apartamentoCampos = document.getElementById('apartamento-campos');
             const salaComercialCampos = document.getElementById('sala-comercial-campos');
             const areaLabel = document.getElementById('label-area');
+            const areaTerrenoCol = document.getElementById('area_terreno_col');
 
             // Campos alternados
             const benfeitoriaContainer = document.getElementById('benfeitoria-container');
@@ -1009,65 +1210,60 @@
             const geradorContainer = document.getElementById('gerador-container');
             const descricaoContainer = document.getElementById('descricao-container');
 
-            // Controle das seções principais
-            if (tipo === 'terreno') {
-                dadosTerreno.style.display = 'block';
-                dadosConstrucao.style.display = 'none';
+            // Controle dos campos específicos dentro das seções
+            if (tipo === 'apartamento') {
+                apartamentoCampos.style.display = 'block';
+                salaComercialCampos.style.display = 'none';
+            } else if (tipo === 'sala_comercial') {
+                apartamentoCampos.style.display = 'none';
+                salaComercialCampos.style.display = 'block';
+            } else {
                 apartamentoCampos.style.display = 'none';
                 salaComercialCampos.style.display = 'none';
-                descricaoContainer.style.display = 'block';
-            } else {
-                dadosTerreno.style.display = 'none';
-                dadosConstrucao.style.display = 'block';
-
-                if (tipo === 'apartamento') {
-                    apartamentoCampos.style.display = 'block';
-                    salaComercialCampos.style.display = 'none';
-                } else if (tipo === 'sala_comercial') {
-                    apartamentoCampos.style.display = 'none';
-                    salaComercialCampos.style.display = 'block';
-                } else {
-                    apartamentoCampos.style.display = 'none';
-                    salaComercialCampos.style.display = 'none';
-                }
             }
 
-            // Controle dos campos comuns
+            // Controla campo Área Terreno (só para galpão e imóvel urbano)
+            if (areaTerrenoCol) {
+                areaTerrenoCol.style.display = (tipo === 'imovel_urbano' || tipo === 'galpao') ? 'block' : 'none';
+            }
+
+            // Controle dos campos específicos por tipo
             switch (tipo) {
                 case 'apartamento':
-                    // Área
                     areaLabel.textContent = 'Área Útil';
-
-                    // Campos alternados
                     benfeitoriaContainer.style.display = 'none';
                     mobiliadoContainer.style.display = 'block';
                     posicaoQuadraContainer.style.display = 'none';
                     banheirosContainer.style.display = 'block';
                     topologiaContainer.style.display = 'none';
                     geradorContainer.style.display = 'block';
-                    descricaoContainer.style.display = 'block';
+                    descricaoContainer.style.display = 'none';
                     break;
 
                 case 'sala_comercial':
-                    // Área
                     areaLabel.textContent = 'Área Útil';
-
-                    // Campos alternados
                     benfeitoriaContainer.style.display = 'none';
                     mobiliadoContainer.style.display = 'block';
-                    posicaoQuadraContainer.style.display = 'none';
-                    banheirosContainer.style.display = 'block';
-                    topologiaContainer.style.display = 'none';
-                    geradorContainer.style.display = 'block';
+                    posicaoQuadraContainer.style.display = 'block';
+                    banheirosContainer.style.display = 'none';
+                    topologiaContainer.style.display = 'block';
+                    geradorContainer.style.display = 'none';
+                    descricaoContainer.style.display = 'block';
+                    break;
+
+                case 'galpao':
+                    areaLabel.textContent = 'Área Construída';
+                    benfeitoriaContainer.style.display = 'block';
+                    mobiliadoContainer.style.display = 'none';
+                    posicaoQuadraContainer.style.display = 'block';
+                    banheirosContainer.style.display = 'none';
+                    topologiaContainer.style.display = 'block';
+                    geradorContainer.style.display = 'none';
                     descricaoContainer.style.display = 'block';
                     break;
 
                 case 'imovel_urbano':
-                case 'galpao':
-                    // Área
                     areaLabel.textContent = 'Área Construída';
-
-                    // Campos alternados
                     benfeitoriaContainer.style.display = 'block';
                     mobiliadoContainer.style.display = 'none';
                     posicaoQuadraContainer.style.display = 'block';
@@ -1078,12 +1274,65 @@
                     break;
 
                 case 'terreno':
-                    // Nada a fazer aqui, os campos do terreno são independentes
+                    // Para terreno, os campos ficam na seção dados-terreno
+                    descricaoContainer.style.display = 'block';
                     break;
+
+                default:
+                    areaLabel.textContent = 'Área Construída';
+                    benfeitoriaContainer.style.display = 'block';
+                    mobiliadoContainer.style.display = 'none';
+                    posicaoQuadraContainer.style.display = 'block';
+                    banheirosContainer.style.display = 'none';
+                    topologiaContainer.style.display = 'block';
+                    geradorContainer.style.display = 'none';
+                    descricaoContainer.style.display = 'block';
             }
         }
-        // Inicializar ao carregar a página
-        document.addEventListener('DOMContentLoaded', toggleSections);
+
+        function resetForm() {
+            const tipoSelect = document.getElementById('tipo');
+            tipoSelect.value = '';
+            hideAllSections();
+
+            // Foca no select
+            tipoSelect.focus();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            const tipoSelect = document.getElementById('tipo');
+
+            // Se já tem um valor (old input), mostra o formulário
+            if (tipoSelect.value) {
+                handleTipoChange();
+            } else {
+                hideAllSections();
+            }
+        });
+
+        // Compatibilidade com funções antigas
+        function toggleSections() {
+            handleTipoChange();
+        }
+
+        function toggleAreaTerreno() {
+            // Já incluído na nova lógica
+        }
+    </script>
+
+    <script>
+        function toggleAreaTotalFields() {
+            // Agora não precisa mais dessa função pois cada campo tem nome único
+            // Mantendo só para compatibilidade
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var tipoSelect = document.getElementById('tipo');
+            if (tipoSelect) {
+                tipoSelect.addEventListener('change', toggleAreaTotalFields);
+                toggleAreaTotalFields();
+            }
+        });
     </script>
 
     {{-- bairro - zona - pgm --}}
@@ -1234,7 +1483,15 @@
         function calcularPrecoUnitario() {
             const tipo = document.getElementById('tipo').value;
             const valorTotalInput = document.getElementById('valor_total_imovel');
-            const areaTotalInput = document.getElementById('area_total');
+            // Busca o campo de área correto baseado no tipo
+            let areaInput;
+            if (tipo === 'terreno') {
+                areaInput = document.getElementById('area_total_terreno');
+            } else if (tipo === 'imovel_urbano' || tipo === 'galpao') {
+                areaInput = document.getElementById('area_terreno');
+            } else {
+                areaInput = document.getElementById('area_total_dados_terreno');
+            }
             const areaConstruidaInput = document.getElementById('area_construida');
             const fatorOfertaInput = document.getElementById('fator_oferta');
             const precoUnitarioInput = document.getElementById('preco_unitario1');
@@ -1253,7 +1510,7 @@
             }
 
             const valorTotalImovel = parseValor(valorTotalInput.value);
-            const areaTotal = parseValor(areaTotalInput.value);
+            const areaTotal = areaInput ? parseValor(areaInput.value) : NaN;
             const areaConstruida = parseValor(areaConstruidaInput.value);
             let fatorOferta = parseValor(fatorOfertaInput.value);
             if (isNaN(fatorOferta) || fatorOferta === 0) return;
@@ -1334,8 +1591,15 @@
         document.getElementById('tipo').addEventListener('change', calcularPrecoUnitario);
         // Recalcular ao alterar campos necessários
         document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
-        if (document.getElementById('area_total')) {
-            document.getElementById('area_total').addEventListener('input', calcularPrecoUnitario);
+        // Adiciona listeners para todos os campos de área
+        if (document.getElementById('area_total_terreno')) {
+            document.getElementById('area_total_terreno').addEventListener('input', calcularPrecoUnitario);
+        }
+        if (document.getElementById('area_terreno')) {
+            document.getElementById('area_terreno').addEventListener('input', calcularPrecoUnitario);
+        }
+        if (document.getElementById('area_total_dados_terreno')) {
+            document.getElementById('area_total_dados_terreno').addEventListener('input', calcularPrecoUnitario);
         }
         if (document.getElementById('area_construida')) {
             document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
