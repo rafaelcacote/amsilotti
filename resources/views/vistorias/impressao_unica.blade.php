@@ -22,10 +22,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f7f9fb;
-            color: #222;
-            font-size: 1.02rem;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            font-size: 12px;
+            line-height: 1.6;
             padding: 0;
         }
 
@@ -34,186 +35,183 @@
             footer: html_myFooter;
             margin-top: 100px;
             margin-bottom: 60px;
-            margin-left: 22px;
-            margin-right: 22px;
+            margin-left: 20px;
+            margin-right: 20px;
         }
 
         .container {
-            max-width: 900px;
-            margin: 0 auto 30px auto;
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 2px 18px rgba(0, 35, 80, 0.08);
-            padding: 22px 30px 28px 30px;
+            max-width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 15px;
         }
 
-        /* Section Title */
+        /* Section Title - Elegante e minimalista */
         .section-title {
-            font-size: 1.5rem;
-            color: #1b3970;
+            font-size: 16px;
+            color: #1a1a1a;
             font-weight: 700;
-            margin-top: 40px;
-            margin-bottom: 16px;
-            border-left: 7px solid #1976d2;
-            background: #f0f4fc;
-            padding: 6px 0 6px 18px;
-            letter-spacing: .4px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 12px 0;
+            border-bottom: 2px solid #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: left;
         }
 
-        /* Card (Group of Info) */
+        /* Card - Design limpo */
         .card {
-            background: #f7faff;
-            border-radius: 12px;
-            box-shadow: 0 1px 7px rgba(25, 118, 210, 0.07);
-            margin-bottom: 22px;
-            padding: 18px 26px 8px 26px;
-            border-left: 4px solid #1976d2;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            padding: 15px;
         }
 
         .card-header {
-            color: #1976d2;
-            font-size: 1.1rem;
+            color: #1a1a1a;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #e3eafc;
-            padding-bottom: 5px;
-            letter-spacing: .2px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Info Table */
+        /* Info Table - Clean design */
         .info-table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 10px;
         }
 
         .info-table th,
         .info-table td {
-            padding: 7px 4px;
-            border-bottom: 1px solid #f0f2f7;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
             text-align: left;
-            font-size: 1.02rem;
+            font-size: 12px;
         }
 
         .info-table th {
-            background: #eef3fd;
-            color: #295897;
+            background: #f8f8f8;
+            color: #1a1a1a;
             font-weight: 600;
-            width: 30%;
+            width: 35%;
         }
 
         .info-table td.label {
-            color: #4e647a;
-            font-weight: 500;
-            width: 30%;
-            background: #f6f8fd;
+            color: #1a1a1a;
+            font-weight: 600;
+            width: 35%;
+            background: #f8f8f8;
+            vertical-align: top;
         }
 
         .info-table td.value {
-            font-size: 1.08rem;
-            font-weight: 500;
-            color: #292929;
-            background: #fff;
+            font-size: 12px;
+            font-weight: 400;
+            color: #1a1a1a;
+            background: #ffffff;
+            vertical-align: top;
         }
 
         /* Observations */
         .observations {
-            background: #f6fafd;
-            border-left: 5px solid #1976d2;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 24px;
-            margin-bottom: 32px;
-            font-size: 1.06rem;
-            font-style: italic;
-            color: #345;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 12px;
+            color: #1a1a1a;
+            text-align: justify;
         }
 
         /* Technical Team */
         .team-table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 12px 8px;
-            margin-bottom: 30px;
+            border-spacing: 10px;
+            margin-bottom: 25px;
         }
 
         .team-member {
-            border: 1px solid #e3eafc;
-            border-radius: 8px;
-            background: #fcfdff;
-            padding: 11px 14px;
-            box-shadow: 0 1px 4px rgba(25, 118, 210, 0.06);
+            border: 1px solid #e0e0e0;
+            background: #f8f8f8;
+            padding: 12px;
+            text-align: center;
         }
 
         .team-member h4 {
-            margin: 0 0 3px 0;
-            color: #1565c0;
-            font-size: 1.05rem;
+            margin: 0 0 5px 0;
+            color: #1a1a1a;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .team-member p {
             margin: 0;
-            color: #405068;
-            font-size: 0.96rem;
+            color: #1a1a1a;
+            font-size: 11px;
+            font-style: italic;
         }
 
         /* Croqui */
         .croqui-container {
             text-align: center;
-            margin: 28px 0 30px 0;
+            margin: 25px 0;
+            page-break-inside: avoid;
         }
 
         .croqui-img {
-            max-width: 94%;
-            max-height: 350px;
-            border-radius: 10px;
-            box-shadow: 0 2px 14px rgba(25, 118, 210, 0.09);
-            border: 1.5px solid #d6e0f3;
+            max-width: 100%;
+            max-height: 400px;
+            border: 1px solid #e0e0e0;
+            object-fit: contain;
         }
 
         /* Photos */
         .photo-table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 15px;
-            margin-bottom: 25px;
+            border-spacing: 0 10px;
+            margin-bottom: 20px;
         }
 
         .photo-item {
-            background: #fcfdff;
-            border-radius: 9px;
-            box-shadow: 0 1px 6px rgba(25, 118, 210, 0.07);
-            padding: 12px 8px 10px 8px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
         }
 
         .photo-img {
             display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 98%;
-            max-width: 580px;
-            max-height: 320px;
-            border-radius: 8px;
-            border: 2px solid #e3eafc;
+            margin: 0 auto 10px auto;
+            width: 100%;
+            max-width: 600px;
+            max-height: 350px;
+            border: 1px solid #e0e0e0;
             object-fit: contain;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
         }
 
         .photo-caption {
-            font-size: 1.18rem;
-            color: #222;
-            /* preto elegante */
-            background: #f5f5f5;
-            border-radius: 8px;
-            padding: 7px 28px;
+            font-size: 12px;
+            color: #1a1a1a;
+            background: #f8f8f8;
+            padding: 8px 15px;
             margin: 0 auto;
             display: block;
             text-align: center;
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(34, 34, 34, 0.07);
+            border: 1px solid #e0e0e0;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
-            border: 1.5px solid #e0e0e0;
         }
 
         .photo-page-break {
@@ -222,27 +220,34 @@
 
         /* Signature */
         .assinatura-final {
-            padding-top: 50px;
+            padding-top: 40px;
             text-align: left;
-            font-size: 1.12rem;
-            color: #222;
+            font-size: 12px;
+            color: #1a1a1a;
+            page-break-inside: avoid;
+            border-top: 2px solid #1a1a1a;
+            margin-top: 30px;
+            padding-top: 20px;
         }
 
         .assinatura-final .nome {
             font-weight: bold;
-            font-size: 1.13rem;
-            margin-top: 16px;
+            font-size: 14px;
+            margin-top: 15px;
+            text-transform: uppercase;
         }
 
         .assinatura-final .titulo {
             font-style: italic;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            font-size: 11px;
         }
 
         .assinatura-final .dados {
-            color: #555;
-            margin-bottom: 16px;
-            font-size: 1.01rem;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-size: 11px;
+            line-height: 1.4;
         }
 
         /* Header/Footer for PDF (mPDF) */
@@ -259,39 +264,64 @@
 
         .header-meta {
             text-align: right;
-            font-size: 0.73rem;
-            color: #7e8790;
+            font-size: 10px;
+            color: #666666;
             margin-right: 5px;
         }
 
         .footer-bar {
-            background: #6277a7;
-            color: #fff;
+            background: #1a1a1a;
+            color: #ffffff;
             width: 100%;
-            height: 34px;
-            line-height: 34px;
-            font-size: 1.06rem;
+            height: 30px;
+            line-height: 30px;
+            font-size: 11px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 32px;
-            letter-spacing: .5px;
+            padding: 0 20px;
         }
 
         .footer-bar .left {
             position: absolute;
-            left: 32px;
+            left: 20px;
         }
 
         .footer-bar .right {
             position: absolute;
-            right: 32px;
+            right: 20px;
         }
 
         /* Page break for print/pdf */
         pagebreak,
         .page-break {
             page-break-before: always;
+        }
+
+        /* Typography improvements */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Enhanced spacing */
+        .card-body {
+            padding: 0;
+        }
+
+        /* No data message */
+        .no-data {
+            color: #666666;
+            font-style: italic;
+            text-align: center;
+            padding: 15px;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
         }
 
         /* Responsive for screen viewing (optional) */
@@ -305,6 +335,97 @@
             }
         }
     </style>
+</head>
+
+.photo-page-break {
+page-break-before: always;
+}
+
+/* Signature */
+.assinatura-final {
+padding-top: 50px;
+text-align: left;
+font-size: 1.12rem;
+color: #222;
+}
+
+.assinatura-final .nome {
+font-weight: bold;
+font-size: 1.13rem;
+margin-top: 16px;
+}
+
+.assinatura-final .titulo {
+font-style: italic;
+margin-bottom: 2px;
+}
+
+.assinatura-final .dados {
+color: #555;
+margin-bottom: 16px;
+font-size: 1.01rem;
+}
+
+/* Header/Footer for PDF (mPDF) */
+.header-bar {
+text-align: center;
+margin-bottom: 4px;
+}
+
+.header-bar img {
+width: 100%;
+max-width: 650px;
+margin: 0 auto;
+}
+
+.header-meta {
+text-align: right;
+font-size: 0.73rem;
+color: #7e8790;
+margin-right: 5px;
+}
+
+.footer-bar {
+background: #6277a7;
+color: #fff;
+width: 100%;
+height: 34px;
+line-height: 34px;
+font-size: 1.06rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 32px;
+letter-spacing: .5px;
+}
+
+.footer-bar .left {
+position: absolute;
+left: 32px;
+}
+
+.footer-bar .right {
+position: absolute;
+right: 32px;
+}
+
+/* Page break for print/pdf */
+pagebreak,
+.page-break {
+page-break-before: always;
+}
+
+/* Responsive for screen viewing (optional) */
+@media print {
+body {
+background: #fff;
+}
+
+.container {
+box-shadow: none;
+}
+}
+</style>
 </head>
 
 <body>
@@ -321,12 +442,11 @@
     </htmlpageheader>
     <!-- FOOTER (mPDF) -->
     <htmlpagefooter name="myFooter">
-        <div
-            style="background: #6277a7; color: #fff; width: 100%; height: 20px; font-size: 1.06rem; letter-spacing: 0.5px; ">
+        <div style="background: #1a1a1a; color: #ffffff; width: 100%; height: 20px; font-size: 11px;">
             <table style="width: 100%; height: 100%; border-collapse: collapse;">
                 <tr style="vertical-align: middle;">
-                    <td style="text-align: left; padding-left: 32px; color: #fff;">www.amsilotti.com</td>
-                    <td style="text-align: right; padding-right: 32px; color: #fff;">MANAUS/AMAZONAS</td>
+                    <td style="text-align: left; padding-left: 20px; color: #ffffff;">www.amsilotti.com</td>
+                    <td style="text-align: right; padding-right: 20px; color: #ffffff;">MANAUS/AMAZONAS</td>
                 </tr>
             </table>
         </div>
@@ -341,10 +461,10 @@
         <div class="section-title">Informações Básicas</div>
         <div class="card">
             <table class="info-table">
-                <tr>
+                {{-- <tr>
                     <td class="label">Código:</td>
                     <td class="value">{{ $vistoria->id }}</td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <td class="label">Processo:</td>
                     <td class="value">{{ $vistoria->num_processo }}</td>
@@ -409,23 +529,23 @@
                     <table class="info-table">
                         <tr>
                             <td class="label">Norte:</td>
-                            <td class="value">{{ $vistoria->limites_confrontacoes['norte'] ?? 'N/A' }}</td>
+                            <td class="value">{{ $vistoria->limites_confrontacoes['norte'] ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="label">Sul:</td>
-                            <td class="value">{{ $vistoria->limites_confrontacoes['sul'] ?? 'N/A' }}</td>
+                            <td class="value">{{ $vistoria->limites_confrontacoes['sul'] ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="label">Leste:</td>
-                            <td class="value">{{ $vistoria->limites_confrontacoes['leste'] ?? 'N/A' }}</td>
+                            <td class="value">{{ $vistoria->limites_confrontacoes['leste'] ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="label">Oeste:</td>
-                            <td class="value">{{ $vistoria->limites_confrontacoes['oeste'] ?? 'N/A' }}</td>
+                            <td class="value">{{ $vistoria->limites_confrontacoes['oeste'] ?? '-' }}</td>
                         </tr>
                     </table>
                 @else
-                    <div style="color: #8792a1; font-style: italic; text-align: center;">
+                    <div class="no-data">
                         Nenhuma informação registrada
                     </div>
                 @endif
@@ -438,19 +558,19 @@
                 <table class="info-table">
                     <tr>
                         <td class="label">Topografia:</td>
-                        <td class="value">{{ $vistoria->topografia ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->topografia ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Formato:</td>
-                        <td class="value">{{ $vistoria->formato_terreno ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->formato_terreno ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Superfície:</td>
-                        <td class="value">{{ $vistoria->superficie ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->superficie ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Documentação:</td>
-                        <td class="value">{{ $vistoria->documentacao ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->documentacao ?? '-' }}</td>
                     </tr>
                 </table>
             </div>
@@ -467,12 +587,12 @@
                     <tr>
                         <td class="label">Data de Ocupação:</td>
                         <td class="value">
-                            {{ $vistoria->data_ocupacao ? \Carbon\Carbon::parse($vistoria->data_ocupacao)->format('d/m/Y') : 'N/A' }}
+                            {{ $vistoria->data_ocupacao ? \Carbon\Carbon::parse($vistoria->data_ocupacao)->format('d/m/Y') : '-' }}
                         </td>
                     </tr>
                     <tr>
                         <td class="label">Tipo de Ocupação:</td>
-                        <td class="value">{{ $vistoria->tipo_ocupacao ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->tipo_ocupacao ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Exerce Pacificamente:</td>
@@ -480,7 +600,7 @@
                     </tr>
                     <tr>
                         <td class="label">Utilização:</td>
-                        <td class="value">{{ $vistoria->utiliza_benfeitoria ?? 'N/A' }}</td>
+                        <td class="value">{{ $vistoria->utiliza_benfeitoria ?? '-' }}</td>
                     </tr>
                 </table>
             </div>
@@ -494,19 +614,19 @@
             <table class="info-table">
                 <tr>
                     <td class="label">Tipo:</td>
-                    <td class="value">{{ $vistoria->tipo_construcao ?? 'N/A' }}</td>
+                    <td class="value">{{ $vistoria->tipo_construcao ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Padrão Acabamento:</td>
-                    <td class="value">{{ $vistoria->padrao_acabamento ?? 'N/A' }}</td>
+                    <td class="value">{{ $vistoria->padrao_acabamento ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Idade Aparente:</td>
-                    <td class="value">{{ $vistoria->idade_aparente ?? 'N/A' }}</td>
+                    <td class="value">{{ $vistoria->idade_aparente ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Estado Conservação:</td>
-                    <td class="value">{{ $vistoria->estado_conservacao ?? 'N/A' }}</td>
+                    <td class="value">{{ $vistoria->estado_conservacao ?? '-' }}</td>
                 </tr>
             </table>
         </div>
@@ -523,7 +643,7 @@
             <table class="info-table">
                 <tr>
                     <td class="label">Nome do Acompanhante:</td>
-                    <td class="value">{{ $vistoria->acompanhamento_vistoria ?? 'N/A' }}</td>
+                    <td class="value">{{ $vistoria->acompanhamento_vistoria ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">CPF do Acompanhante:</td>
@@ -531,7 +651,7 @@
                         @if ($vistoria->cpf_acompanhante)
                             {{ substr($vistoria->cpf_acompanhante, 0, 3) }}.{{ substr($vistoria->cpf_acompanhante, 3, 3) }}.{{ substr($vistoria->cpf_acompanhante, 6, 3) }}-{{ substr($vistoria->cpf_acompanhante, 9, 2) }}
                         @else
-                            N/A
+                            -
                         @endif
                     </td>
                 </tr>
@@ -541,7 +661,7 @@
                         @if ($vistoria->telefone_acompanhante)
                             {{ substr($vistoria->telefone_acompanhante, 0, 2) }}.{{ substr($vistoria->telefone_acompanhante, 2, 5) }}-{{ substr($vistoria->telefone_acompanhante, 7, 4) }}
                         @else
-                            N/A
+                            -
                         @endif
                     </td>
                 </tr>
@@ -573,7 +693,7 @@
         </tr>
         </table>
     @else
-        <div style="color: #8792a1; font-style: italic; text-align: center; padding: 10mm;">
+        <div class="no-data">
             Nenhum membro registrado
         </div>
         @endif
@@ -621,7 +741,7 @@
                                             <img src="{{ public_path('storage/' . $foto->url) }}" class="photo-img"
                                                 alt="Foto da vistoria">
                                         @else
-                                            <div style="color: #c0392b; text-align: center; padding: 20px;">
+                                            <div class="no-data">
                                                 Imagem não encontrada
                                             </div>
                                         @endif
@@ -634,7 +754,7 @@
                 </table>
             @endfor
         @else
-            <div style="color: #8792a1; font-style: italic; text-align: center; padding: 10mm;">
+            <div class="no-data">
                 Nenhuma foto adicionada
             </div>
         @endif

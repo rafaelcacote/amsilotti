@@ -171,7 +171,7 @@ class ImovelController extends Controller
                     $validated['vagas_garagem'] = $request->vagas_garagem_sala;
                 }
 
-                dd($validated);
+                //dd($validated);
 
             // Criar o imóvel
             $imovel = Imovel::create($validated);
