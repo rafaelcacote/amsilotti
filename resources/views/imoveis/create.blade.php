@@ -1480,19 +1480,28 @@
             }
         }
 
-        function calcularPrecoUnitario() {
+        function calcularPrecoUnitario(mostrarErros = true) {
             const tipo = document.getElementById('tipo').value;
             const valorTotalInput = document.getElementById('valor_total_imovel');
+            
             // Busca o campo de área correto baseado no tipo
             let areaInput;
             if (tipo === 'terreno') {
-                areaInput = document.getElementById('area_total_terreno');
+                areaInput = document.getElementById('area_total_dados_terreno'); // Campo correto para terreno
+                // Se o campo não foi encontrado, pode ser porque a seção ainda está carregando
+                if (!areaInput) {
+                    // Tenta novamente em 300ms
+                    setTimeout(() => calcularPrecoUnitario(mostrarErros), 300);
+                    return;
+                }
             } else if (tipo === 'imovel_urbano' || tipo === 'galpao') {
                 areaInput = document.getElementById('area_terreno');
             } else {
                 areaInput = document.getElementById('area_total_dados_terreno');
             }
-            const areaConstruidaInput = document.getElementById('area_construida');
+            
+            // Só busca o campo area_construida se não for terreno
+            const areaConstruidaInput = tipo === 'terreno' ? null : document.getElementById('area_construida');
             const fatorOfertaInput = document.getElementById('fator_oferta');
             const precoUnitarioInput = document.getElementById('preco_unitario1');
 
@@ -1511,22 +1520,52 @@
 
             const valorTotalImovel = parseValor(valorTotalInput.value);
             const areaTotal = areaInput ? parseValor(areaInput.value) : NaN;
-            const areaConstruida = parseValor(areaConstruidaInput.value);
+            const areaConstruida = areaConstruidaInput ? parseValor(areaConstruidaInput.value) : NaN;
             let fatorOferta = parseValor(fatorOfertaInput.value);
+            
+            // Debug logs temporários
+            console.log('=== DEBUG CÁLCULO ===');
+            console.log('Tipo:', tipo);
+            console.log('Valor Total:', valorTotalImovel);
+            console.log('Area Input Element:', areaInput);
+            console.log('Area Input Value (raw):', areaInput ? areaInput.value : 'null');
+            console.log('Area Input Value (length):', areaInput ? areaInput.value.length : 'null');
+            console.log('Área Total:', areaTotal);
+            console.log('Fator Oferta:', fatorOferta);
+            console.log('===================');
+            
             if (isNaN(fatorOferta) || fatorOferta === 0) return;
 
             let precoUnitario = NaN;
+
+            // Só tenta calcular e mostrar erros se temos os dados básicos
+            const temDadosBasicos = !isNaN(valorTotalImovel) && valorTotalImovel > 0;
+
+            if (!temDadosBasicos) {
+                precoUnitarioInput.value = '';
+                return;
+            }
+
             let camposFaltando = [];
 
             if (tipo === 'terreno') {
-                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
-                if (isNaN(areaTotal) || areaTotal <= 0) camposFaltando.push('Área Total');
+                console.log('Entrando na seção TERRENO do cálculo');
+                if (isNaN(areaTotal) || areaTotal <= 0) {
+                    console.log('Área Total inválida:', areaTotal);
+                    camposFaltando.push('Área Total');
+                } else {
+                    console.log('Área Total válida:', areaTotal);
+                }
                 if (camposFaltando.length === 0) {
+                    console.log('Calculando preço unitário...');
+                    console.log('Fórmula: (', valorTotalImovel, '/', areaTotal, ') *', fatorOferta);
                     precoUnitario = (valorTotalImovel / areaTotal) * fatorOferta;
+                    console.log('Preço unitário calculado:', precoUnitario);
+                } else {
+                    console.log('Campos faltando:', camposFaltando);
                 }
             } else if (tipo === 'apartamento' || tipo === 'galpao' || tipo === 'sala_comercial' || tipo ===
                 'imovel_urbano') {
-                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
                 if (isNaN(areaConstruida) || areaConstruida <= 0) camposFaltando.push('Área Construída/Útil');
                 if (camposFaltando.length === 0) {
                     precoUnitario = (valorTotalImovel / areaConstruida) * fatorOferta;
@@ -1535,7 +1574,10 @@
 
             if (camposFaltando.length > 0) {
                 precoUnitarioInput.value = '';
-                showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                // Só mostra o toast se mostrarErros for true e o usuário realmente está tentando calcular
+                if (mostrarErros && valorTotalImovel > 0) {
+                    showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                }
                 return;
             }
             // Toast elegante para avisos
@@ -1570,39 +1612,63 @@
             }
 
             if (isNaN(precoUnitario) || !isFinite(precoUnitario) || precoUnitario <= 0) {
+                console.log('Preço unitário inválido:', precoUnitario, '- Limpando campo');
                 precoUnitarioInput.value = '';
             } else {
-                precoUnitarioInput.value = precoUnitario.toLocaleString('pt-BR', {
+                console.log('Preço unitário válido:', precoUnitario, '- Formatando e inserindo no campo');
+                const valorFormatado = precoUnitario.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
+                console.log('Valor formatado:', valorFormatado);
+                precoUnitarioInput.value = valorFormatado;
+                console.log('Campo preço unitário atualizado com:', precoUnitarioInput.value);
             }
         }
 
         // Atualiza o fator de oferta ao mudar a transação
         document.getElementById('transacao_terreno').addEventListener('change', function() {
             atualizarFatorOferta();
-            calcularPrecoUnitario();
+            
+            // Para terreno, aguarda um pouco antes de calcular para garantir que a seção esteja visível
+            // Mas não mostra erros (false no parâmetro)
+            const tipo = document.getElementById('tipo').value;
+            if (tipo === 'terreno') {
+                setTimeout(() => calcularPrecoUnitario(false), 500);
+            } else {
+                calcularPrecoUnitario(false);
+            }
         });
 
         // Remover cálculo automático ao digitar. O cálculo será feito apenas ao mudar o campo transação.
 
         // Também recalcular quando o tipo for alterado
-        document.getElementById('tipo').addEventListener('change', calcularPrecoUnitario);
+        document.getElementById('tipo').addEventListener('change', function() {
+            calcularPrecoUnitario(false); // Não mostra erros quando muda tipo
+            // Adiciona listeners dinâmicos após mudança de tipo
+            setTimeout(() => {
+                addDynamicListeners();
+            }, 1000); // Aguarda as seções aparecerem
+        });
+        
         // Recalcular ao alterar campos necessários
         document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
-        // Adiciona listeners para todos os campos de área
-        if (document.getElementById('area_total_terreno')) {
-            document.getElementById('area_total_terreno').addEventListener('input', calcularPrecoUnitario);
-        }
-        if (document.getElementById('area_terreno')) {
-            document.getElementById('area_terreno').addEventListener('input', calcularPrecoUnitario);
-        }
-        if (document.getElementById('area_total_dados_terreno')) {
-            document.getElementById('area_total_dados_terreno').addEventListener('input', calcularPrecoUnitario);
-        }
-        if (document.getElementById('area_construida')) {
-            document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
+        
+        // Função para adicionar listeners dinamicamente
+        function addDynamicListeners() {
+            // Para terreno, usa area_total_dados_terreno (seção "Dados do Terreno")
+            if (document.getElementById('area_total_dados_terreno')) {
+                document.getElementById('area_total_dados_terreno').removeEventListener('input', calcularPrecoUnitario);
+                document.getElementById('area_total_dados_terreno').addEventListener('input', calcularPrecoUnitario);
+            }
+            if (document.getElementById('area_terreno')) {
+                document.getElementById('area_terreno').removeEventListener('input', calcularPrecoUnitario);
+                document.getElementById('area_terreno').addEventListener('input', calcularPrecoUnitario);
+            }
+            if (document.getElementById('area_construida')) {
+                document.getElementById('area_construida').removeEventListener('input', calcularPrecoUnitario);
+                document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
+            }
         }
 
         // Inicializa o fator de oferta correto ao carregar a página
