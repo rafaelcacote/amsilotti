@@ -1483,7 +1483,7 @@
         function calcularPrecoUnitario(mostrarErros = true) {
             const tipo = document.getElementById('tipo').value;
             const valorTotalInput = document.getElementById('valor_total_imovel');
-            
+
             // Busca o campo de área correto baseado no tipo
             let areaInput;
             if (tipo === 'terreno') {
@@ -1499,7 +1499,7 @@
             } else {
                 areaInput = document.getElementById('area_total_dados_terreno');
             }
-            
+
             // Só busca o campo area_construida se não for terreno
             const areaConstruidaInput = tipo === 'terreno' ? null : document.getElementById('area_construida');
             const fatorOfertaInput = document.getElementById('fator_oferta');
@@ -1522,7 +1522,7 @@
             const areaTotal = areaInput ? parseValor(areaInput.value) : NaN;
             const areaConstruida = areaConstruidaInput ? parseValor(areaConstruidaInput.value) : NaN;
             let fatorOferta = parseValor(fatorOfertaInput.value);
-            
+
             // Debug logs temporários
             console.log('=== DEBUG CÁLCULO ===');
             console.log('Tipo:', tipo);
@@ -1533,7 +1533,7 @@
             console.log('Área Total:', areaTotal);
             console.log('Fator Oferta:', fatorOferta);
             console.log('===================');
-            
+
             if (isNaN(fatorOferta) || fatorOferta === 0) return;
 
             let precoUnitario = NaN;
@@ -1629,7 +1629,7 @@
         // Atualiza o fator de oferta ao mudar a transação
         document.getElementById('transacao_terreno').addEventListener('change', function() {
             atualizarFatorOferta();
-            
+
             // Para terreno, aguarda um pouco antes de calcular para garantir que a seção esteja visível
             // Mas não mostra erros (false no parâmetro)
             const tipo = document.getElementById('tipo').value;
@@ -1650,10 +1650,10 @@
                 addDynamicListeners();
             }, 1000); // Aguarda as seções aparecerem
         });
-        
+
         // Recalcular ao alterar campos necessários
         document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
-        
+
         // Função para adicionar listeners dinamicamente
         function addDynamicListeners() {
             // Para terreno, usa area_total_dados_terreno (seção "Dados do Terreno")
