@@ -169,6 +169,10 @@
             max-height: 400px;
             border: 1px solid #e0e0e0;
             object-fit: contain;
+            /* Garantir que a orientação seja respeitada */
+            image-orientation: from-image;
+            /* Reset de transformações que possam causar rotação */
+            transform: none !important;
         }
 
         /* Photos */
@@ -196,6 +200,10 @@
             max-height: 350px;
             border: 1px solid #e0e0e0;
             object-fit: contain;
+            /* Garantir que a orientação seja respeitada */
+            image-orientation: from-image;
+            /* Reset de transformações que possam causar rotação */
+            transform: none !important;
         }
 
         }
