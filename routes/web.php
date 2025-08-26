@@ -37,7 +37,12 @@ Route::get('/storage/fotos_imoveis/{filename}', function ($filename) {
 
 Route::post('/print-map', [\App\Http\Controllers\ImovelController::class, 'printMap'])->name('print.map');
 
+// Rotas específicas do usuário devem vir ANTES da rota resource
+Route::get('users/change-password', [\App\Http\Controllers\UserController::class, 'editPassword'])->name('users.edit-password')->middleware('auth');
+Route::put('users/change-password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update-password')->middleware('auth');
+
 Route::resource('users', \App\Http\Controllers\UserController::class)->middleware('auth');
+
 Route::resource('ordens-de-servico', \App\Http\Controllers\OrdemDeServicoController::class)->parameters(['ordens-de-servico' => 'ordemDeServico'])->middleware('auth');
 
 Route::resource('zonas', \App\Http\Controllers\ZonaController::class)->middleware('auth');

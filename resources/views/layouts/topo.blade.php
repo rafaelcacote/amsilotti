@@ -10,7 +10,7 @@
     </button>
     <ul class="header-nav d-none d-lg-flex">
         <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Perfil Usuário</a></li>
+        {{-- <li class="nav-item"><a class="nav-link" href="#">Perfil Usuário</a></li> --}}
     </ul>
     <ul class="header-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="#">
@@ -19,8 +19,19 @@
                 <i class="fas fa-list fa-lg"></i></a></li>
         <li class="nav-item"><a class="nav-link" href="#">
                 <i class="far fa-envelope-open fa-lg"></i></a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('users.edit', auth()->user()->id) }}">
-                <strong>{{ auth()->user()->name }}</strong></a></li>
+        <li class="nav-item dropdown"><a class="nav-link" data-coreui-toggle="dropdown" href="#"
+                role="button" aria-haspopup="true" aria-expanded="false">
+                <strong>{{ auth()->user()->name }}</strong></a>
+            <div class="dropdown-menu dropdown-menu-end pt-0">
+                <div class="dropdown-divider"></div><a class="dropdown-item" href="{{ route('users.edit-password') }}">
+                    <i class="fas fa-key me-2"></i> Alterar Senha</a><a class="dropdown-item" href="#"
+                    onclick="event.preventDefault(); document.getElementById('logout-form-name').submit();">
+                    <i class="fas fa-sign-out-alt me-2"></i> Sair</a>
+                <form id="logout-form-name" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </li>
     </ul>
 
     <ul class="header-nav">
@@ -37,9 +48,8 @@
             </a>
             <div class="dropdown-menu dropdown-menu-end pt-0">
 
-                <div class="dropdown-divider"></div><a class="dropdown-item"
-                    href="{{ route('users.edit', auth()->user()->id) }}">
-                    <i class="fas fa-user me-2"></i> Perfil Usuário</a><a class="dropdown-item" href="#"
+                <div class="dropdown-divider"></div><a class="dropdown-item" href="{{ route('users.edit-password') }}">
+                    <i class="fas fa-user me-2"></i> Alterar Senha</a><a class="dropdown-item" href="#"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt me-2"></i> Sair</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

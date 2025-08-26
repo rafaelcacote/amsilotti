@@ -53,7 +53,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'cpf' => 'nullable|digits:11|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
             'roles' => 'array',
             'roles.*' => 'exists:roles,name'
         ]);
@@ -106,7 +106,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'cpf' => 'nullable|digits:11|unique:users,cpf,'.$user->id,
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:6|confirmed',
             'roles' => 'array',
             'roles.*' => 'exists:roles,name',
             'status' => 'required|in:A,I',
@@ -141,5 +141,20 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index')
                         ->with('success', 'Usuário excluído com sucesso!');
+    }
+    public function editPassword()
+    {
+        return view('users.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        $user = auth()->user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect()->back()->with('success', 'Senha alterada com sucesso!');
     }
 }

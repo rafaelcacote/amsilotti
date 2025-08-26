@@ -13,21 +13,17 @@ return [
         'status' => [
             'required' => 'Por favor, selecione um status.',
         ],
-
+        'password' => [
+            'required' => 'O campo senha é obrigatório.',
+        ],
+        'password_confirmation' => [
+            'confirmed' => 'A confirmação da senha não confere.',
+        ],
     ],
 
     'attributes' => [
         'email' => 'e-mail',
         'password' => 'senha',
-    ],
-
-    'custom' => [
-        'email' => [
-            'required' => 'O campo e-mail é obrigatório.',
-            'email' => 'Por favor, insira um endereço de e-mail válido.',
-        ],
-        'password' => [
-            'required' => 'O campo senha é obrigatório.',
-        ],
+        'password_confirmation' => 'confirmação da senha',
     ],
 ];
