@@ -65,7 +65,8 @@
                                             <th class="px-4 py-3 border-bottom-0">Email</th>
                                             <th class="px-4 py-3 border-bottom-0">CPF</th>
                                             <th class="px-4 py-3 border-bottom-0">Perfis</th>
-                                            <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
+                                            <th class="px-4 py-3 border-bottom-0">Status</th>
+                                            <th class="px-4 py-3 border-bottom-0 text-center" style="width: 220px;">Ações
                                             </th>
                                         </tr>
                                     </thead>
@@ -78,12 +79,20 @@
                                                     <td class="px-4">{{ $user->cpf ?? '-' }}</td>
                                                     <td class="px-4">
                                                         @forelse($user->roles as $role)
-                                                            <span class="badge bg-primary me-1">{{ ucfirst($role->name) }}</span>
+                                                            <span
+                                                                class="badge bg-primary me-1">{{ ucfirst($role->name) }}</span>
                                                         @empty
                                                             <span class="text-muted small">Sem perfil</span>
                                                         @endforelse
                                                     </td>
                                                     <td class="px-4">
+                                                        @if ($user->status === 'A')
+                                                            <span class="badge bg-success">Ativo</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Inativo</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="px-4 d-flex gap-2">
                                                         <x-action-buttons showRoute="users.show" editRoute="users.edit"
                                                             destroyRoute="users.destroy" :itemId="$user->id" :showButton="true"
                                                             :deleteButton="$user->email !== 'admin@admin.com'" />

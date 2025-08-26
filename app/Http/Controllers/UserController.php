@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
+
 {
     public function index(Request $request)
     {
@@ -38,7 +39,7 @@ class UserController extends Controller
         if (!auth()->user()->can('create users')) {
             abort(403, 'Você não tem permissão para criar usuários.');
         }
-        
+
         $roles = Role::all();
         return view('users.create', compact('roles'));
     }
@@ -61,7 +62,8 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'cpf' => $validated['cpf'],
-            'password' => Hash::make($validated['password'])
+            'password' => Hash::make($validated['password']),
+            'status' => 'A',
         ]);
 
         // Atribuir roles se fornecidas
@@ -78,7 +80,7 @@ class UserController extends Controller
         if (!auth()->user()->can('view users')) {
             abort(403, 'Você não tem permissão para visualizar usuários.');
         }
-        
+
         $user->load('roles', 'permissions');
         return view('users.show', compact('user'));
     }
@@ -88,7 +90,7 @@ class UserController extends Controller
         if (!auth()->user()->can('edit users')) {
             abort(403, 'Você não tem permissão para editar usuários.');
         }
-        
+
         $roles = Role::all();
         $userRoles = $user->roles->pluck('name')->toArray();
         return view('users.edit', compact('user', 'roles', 'userRoles'));
@@ -99,19 +101,22 @@ class UserController extends Controller
         if (!auth()->user()->can('edit users')) {
             abort(403, 'Você não tem permissão para editar usuários.');
         }
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'cpf' => 'nullable|digits:11|unique:users,cpf,'.$user->id,
             'password' => 'nullable|string|min:6',
             'roles' => 'array',
-            'roles.*' => 'exists:roles,name'
+            'roles.*' => 'exists:roles,name',
+            'status' => 'required|in:A,I',
         ]);
 
         $updateData = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'cpf' => $data['cpf']
+            'cpf' => $data['cpf'],
+            'status' => $data['status'],
         ];
 
         if (!empty($data['password'])) {
@@ -132,7 +137,7 @@ class UserController extends Controller
         if (!auth()->user()->can('delete users')) {
             abort(403, 'Você não tem permissão para excluir usuários.');
         }
-        
+
         $user->delete();
         return redirect()->route('users.index')
                         ->with('success', 'Usuário excluído com sucesso!');
