@@ -253,7 +253,8 @@
                                         <div class="col-md-2">
                                             <div class="mb-2">
                                                 <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                <select class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
+                                                <select
+                                                    class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
                                                     id="benfeitoria_terreno" name="benfeitoria_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Possui"
@@ -292,7 +293,8 @@
                                         <div class="col-md-2">
                                             <div class="mb-2">
                                                 <label for="topologia_terreno" class="form-label">Topologia</label>
-                                                <select class="form-select @error('topologia_terreno') is-invalid @enderror"
+                                                <select
+                                                    class="form-select @error('topologia_terreno') is-invalid @enderror"
                                                     id="topologia_terreno" name="topologia_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Plano"
@@ -1030,7 +1032,7 @@
             if (tipoSelecionado && tipoLabels[tipo]) {
                 tipoSelecionado.textContent = tipoLabels[tipo];
             }
-            
+
             if (loadingContainer) {
                 loadingContainer.style.display = 'block';
             }
@@ -1077,11 +1079,11 @@
             if (badgeText && tipoLabels[tipo]) {
                 badgeText.textContent = tipoLabels[tipo];
             }
-            
+
             if (badgeContainer) {
                 badgeContainer.style.display = 'block';
             }
-            
+
             // Garantir que o campo Fator de Fundamentação seja visível
             if (fatorContainer) {
                 fatorContainer.style.display = 'block';

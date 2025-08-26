@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Carregamento de Campos</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            display: none;
+        }
+        .section.visible {
+            display: block;
+            background-color: #f8f9fa;
+        }
+        .debug-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste de Carregamento de Campos</h1>
+
+        <div class="form-group">
+            <label for="tipo">Tipo do Imóvel:</label>
+            <select id="tipo" name="tipo" onchange="handleTipoChange()">
+                <option value="">Selecione o tipo</option>
+                <option value="terreno">🌿 Terreno</option>
+                <option value="apartamento">🏢 Apartamento</option>
+                <option value="casa">🏠 Casa</option>
+                <option value="galpao">🏭 Galpão</option>
+                <option value="sala_comercial">🏢 Sala Comercial</option>
+            </select>
+        </div>
+
+        <div id="loading-container" style="display: none;">
+            <p>⏳ Carregando formulário...</p>
+        </div>
+
+        <div id="tipo-badge-container" style="display: none;">
+            <p><strong>Tipo selecionado:</strong> <span id="tipo-badge-text"></span></p>
+        </div>
+
+        <div id="fator-fundamentacao-container" style="display: none;" class="form-group">
+            <label for="fator_fundamentacao">Fator de Fundamentação:</label>
+            <select id="fator_fundamentacao" name="fator_fundamentacao">
+                <option value="">Selecione</option>
+                <option value="Grau I">Grau I</option>
+                <option value="Grau II">Grau II</option>
+                <option value="Grau III">Grau III</option>
+            </select>
+        </div>
+
+        <!-- Seções do formulário -->
+        <div id="endereco-imovel" class="section">
+            <h3>📍 Endereço do Imóvel</h3>
+            <input type="text" placeholder="Endereço..." name="endereco">
+        </div>
+
+        <div id="dados-terreno" class="section">
+            <h3>🌿 Dados do Terreno</h3>
+            <input type="text" placeholder="Área total..." name="area_total_dados_terreno">
+            <select name="benfeitoria_terreno">
+                <option value="">Benfeitoria</option>
+                <option value="Possui">Possui</option>
+                <option value="Não Possui">Não Possui</option>
+            </select>
+        </div>
+
+        <div id="dados-construcao" class="section">
+            <h3>🏗️ Dados da Construção</h3>
+            <input type="text" placeholder="Área construída..." name="area_construida">
+            <select name="benfeitoria">
+                <option value="">Benfeitoria</option>
+                <option value="possui">Possui</option>
+                <option value="nao possui">Não Possui</option>
+            </select>
+        </div>
+
+        <div id="dados-economicos" class="section">
+            <h3>💰 Dados Econômicos</h3>
+            <input type="text" placeholder="Valor do imóvel..." name="valor_total_imovel">
+        </div>
+
+        <div id="fonte-informacao" class="section">
+            <h3>ℹ️ Fonte de Informação</h3>
+            <input type="text" placeholder="Fonte..." name="fonte_informacao">
+        </div>
+
+        <div id="upload-section" class="section">
+            <h3>📷 Upload de Imagens</h3>
+            <input type="file" multiple>
+        </div>
+
+        <div id="botoes-acao" class="section">
+            <h3>⚡ Ações</h3>
+            <button type="button">Salvar</button>
+            <button type="button">Cancelar</button>
+        </div>
+
+        <div id="debug-area" class="debug-area">
+            <strong>Debug Log:</strong>
+        </div>
+    </div>
+
+    <script>
+        // Labels dos tipos
+        const tipoLabels = {
+            'apartamento': '🏢 Apartamento',
+            'casa': '🏠 Casa',
+            'galpao': '🏭 Galpão',
+            'sala_comercial': '🏢 Sala Comercial',
+            'terreno': '🌿 Terreno'
+        };
+
+        function debugLog(message) {
+            const debugArea = document.getElementById('debug-area');
+            const timestamp = new Date().toLocaleTimeString();
+            debugArea.innerHTML += `\n[${timestamp}] ${message}`;
+            console.log(message);
+        }
+
+        // Função principal para mudança de tipo
+        function handleTipoChange() {
+            const tipo = document.getElementById('tipo').value;
+            debugLog(`handleTipoChange chamada com tipo: "${tipo}"`);
+
+            if (!tipo) {
+                hideAllSections();
+                clearFormFields();
+                return;
+            }
+
+            // Limpa os campos quando troca de tipo
+            clearFormFields();
+
+            // Mostra o campo Fator de Fundamentação imediatamente
+            showTypeBadge(tipo);
+
+            // Mostra loading para as outras seções
+            showLoading(tipo);
+
+            // Simula carregamento para as outras seções
+            setTimeout(() => {
+                hideLoading();
+                showFormSections(tipo);
+            }, 300);
+        }
+
+        function showLoading(tipo) {
+            const loadingContainer = document.getElementById('loading-container');
+
+            debugLog(`Mostrando loading para tipo: ${tipo}`);
+
+            // Oculta todas as seções primeiro
+            hideAllFormSections();
+
+            loadingContainer.style.display = 'block';
+        }
+
+        function hideAllFormSections() {
+            debugLog('Ocultando todas as seções');
+
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('visible');
+            });
+        }
+
+        function hideLoading() {
+            const loadingContainer = document.getElementById('loading-container');
+            loadingContainer.style.display = 'none';
+            debugLog('Loading ocultado');
+        }
+
+        function showTypeBadge(tipo) {
+            const badgeContainer = document.getElementById('tipo-badge-container');
+            const badgeText = document.getElementById('tipo-badge-text');
+            const fatorContainer = document.getElementById('fator-fundamentacao-container');
+
+            badgeText.textContent = tipoLabels[tipo];
+            badgeContainer.style.display = 'block';
+
+            fatorContainer.style.display = 'block';
+
+            debugLog(`Badge e fator de fundamentação mostrados para: ${tipo}`);
+        }
+
+        function hideAllSections() {
+            debugLog('Ocultando todas as seções e containers');
+
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('visible');
+            });
+
+            document.getElementById('tipo-badge-container').style.display = 'none';
+            document.getElementById('fator-fundamentacao-container').style.display = 'none';
+            document.getElementById('loading-container').style.display = 'none';
+        }
+
+        function showFormSections(tipo) {
+            debugLog(`showFormSections chamada com tipo: ${tipo}`);
+
+            // Define quais seções devem aparecer para cada tipo
+            const sectionsToShow = ['endereco-imovel', 'dados-economicos', 'fonte-informacao', 'upload-section', 'botoes-acao'];
+
+            // Adiciona seções específicas baseado no tipo
+            if (tipo === 'terreno') {
+                sectionsToShow.push('dados-terreno');
+                debugLog('Adicionando dados-terreno para terreno');
+            } else {
+                sectionsToShow.push('dados-construcao');
+                debugLog(`Adicionando dados-construcao para ${tipo}`);
+            }
+
+            debugLog(`Seções que serão mostradas: ${sectionsToShow.join(', ')}`);
+
+            // Mostra apenas as seções necessárias
+            sectionsToShow.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    setTimeout(() => {
+                        section.style.display = 'block';
+                        section.classList.add('visible');
+                        debugLog(`Seção mostrada: ${sectionId}`);
+                    }, index * 100);
+                } else {
+                    debugLog(`ERRO: Seção não encontrada: ${sectionId}`);
+                }
+            });
+        }
+
+        function clearFormFields() {
+            debugLog('Limpando campos do formulário');
+
+            // Limpa todos os campos de input
+            const inputs = document.querySelectorAll('input:not([type="hidden"])');
+            inputs.forEach(input => {
+                if (input.type !== 'file') {
+                    input.value = '';
+                }
+            });
+
+            // Limpa todos os selects exceto o tipo
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                if (select.id !== 'tipo') {
+                    select.value = '';
+                }
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('DOM carregado, inicializando...');
+
+            const tipoSelect = document.getElementById('tipo');
+
+            // Se já tem um valor, mostra o formulário
+            if (tipoSelect.value) {
+                debugLog(`Valor inicial encontrado: ${tipoSelect.value}`);
+                handleTipoChange();
+            } else {
+                debugLog('Nenhum valor inicial, ocultando seções');
+                hideAllSections();
+            }
+        });
+    </script>
+</body>
+</html>

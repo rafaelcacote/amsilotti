@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Campos Terreno</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste Campos: Benfeitoria, Posição na Quadra, Topologia</h1>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecione</option>
+                    <option value="terreno">Terreno</option>
+                    <option value="apartamento">Apartamento</option>
+                    <option value="casa">Casa</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="fator_fundamentacao">Fator de Fundamentação:</label>
+                <select id="fator_fundamentacao" name="fator_fundamentacao" required>
+                    <option value="">Selecione</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Médio">Médio</option>
+                    <option value="Baixo">Baixo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="endereco" value="Rua Teste, 123" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bairro_id">Bairro:</label>
+                <input type="number" id="bairro_id" name="bairro_id" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="zona_id">Zona:</label>
+                <input type="number" id="zona_id" name="zona_id" value="1" required>
+            </div>
+
+            <!-- Campos de Terreno -->
+            <div id="campos-terreno" style="display: none;">
+                <h3>Campos de Terreno</h3>
+
+                <div class="form-group">
+                    <label for="benfeitoria_terreno">Benfeitoria (Terreno):</label>
+                    <select id="benfeitoria_terreno" name="benfeitoria_terreno">
+                        <option value="">Selecione</option>
+                        <option value="Possui">Possui</option>
+                        <option value="Não Possui">Não Possui</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="posicao_na_quadra_terreno">Posição na Quadra (Terreno):</label>
+                    <select id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
+                        <option value="">Selecione</option>
+                        <option value="Esquina">Esquina</option>
+                        <option value="Meio Quadra">Meio Quadra</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="topologia_terreno">Topologia (Terreno):</label>
+                    <select id="topologia_terreno" name="topologia_terreno">
+                        <option value="">Selecione</option>
+                        <option value="Plano">Plano</option>
+                        <option value="Semi Plano">Semi Plano</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="area_total_dados_terreno">Área Total:</label>
+                    <input type="number" id="area_total_dados_terreno" name="area_total_dados_terreno" step="0.01" value="500.50">
+                </div>
+            </div>
+
+            <!-- Campos de Construção -->
+            <div id="campos-construcao" style="display: none;">
+                <h3>Campos de Construção</h3>
+
+                <div class="form-group">
+                    <label for="benfeitoria">Benfeitoria (Construção):</label>
+                    <select id="benfeitoria" name="benfeitoria">
+                        <option value="">Selecione</option>
+                        <option value="possui">Possui</option>
+                        <option value="nao possui">Não Possui</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="posicao_na_quadra">Posição na Quadra (Construção):</label>
+                    <select id="posicao_na_quadra" name="posicao_na_quadra">
+                        <option value="">Selecione</option>
+                        <option value="esquina">Esquina</option>
+                        <option value="meio quadra">Meio Quadra</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="topologia">Topologia (Construção):</label>
+                    <select id="topologia" name="topologia">
+                        <option value="">Selecione</option>
+                        <option value="Plano">Plano</option>
+                        <option value="Semi Plano">Semi Plano</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="imagens_data">Imagens (JSON - simulado):</label>
+                <input type="hidden" id="imagens_data" name="imagens_data" value='[{"data":"data:image/jpeg;base64,/9j/test1","descricao":"Teste 1","ordem":1},{"data":"data:image/jpeg;base64,/9j/test2","descricao":"Teste 2","ordem":2},{"data":"data:image/jpeg;base64,/9j/test3","descricao":"Teste 3","ordem":3}]'>
+                <span style="color: #666;">3 imagens simuladas</span>
+            </div>
+
+            <button type="submit">Testar Envio</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;">
+            <h3>Dados que serão enviados:</h3>
+            <pre id="resultData"></pre>
+        </div>
+    </div>
+
+    <script>
+        const tipoSelect = document.getElementById('tipo');
+        const camposTerreno = document.getElementById('campos-terreno');
+        const camposConstrucao = document.getElementById('campos-construcao');
+
+        tipoSelect.addEventListener('change', function() {
+            if (this.value === 'terreno') {
+                camposTerreno.style.display = 'block';
+                camposConstrucao.style.display = 'none';
+
+                // Preencher campos de terreno para teste
+                document.getElementById('benfeitoria_terreno').value = 'Possui';
+                document.getElementById('posicao_na_quadra_terreno').value = 'Esquina';
+                document.getElementById('topologia_terreno').value = 'Plano';
+            } else {
+                camposTerreno.style.display = 'none';
+                camposConstrucao.style.display = 'block';
+
+                // Preencher campos de construção para teste
+                document.getElementById('benfeitoria').value = 'possui';
+                document.getElementById('posicao_na_quadra').value = 'esquina';
+                document.getElementById('topologia').value = 'Plano';
+            }
+        });
+
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            // Simular CSRF token
+            data['_token'] = 'test_token';
+
+            document.getElementById('resultData').textContent = JSON.stringify(data, null, 2);
+            document.getElementById('result').style.display = 'block';
+
+            console.log('Dados que seriam enviados:', data);
+
+            // Aqui você pode enviar para o servidor real se quiser
+            /*
+            fetch('/imoveis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+              .then(data => console.log(data));
+            */
+        });
+
+        // Selecionar terreno por padrão para teste
+        document.getElementById('tipo').value = 'terreno';
+        document.getElementById('tipo').dispatchEvent(new Event('change'));
+    </script>
+</body>
+</html>

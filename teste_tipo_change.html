@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Função handleTipoChange</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .hidden { display: none; }
+        select, input { margin: 5px; padding: 8px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste - Troca de Tipo e Limpeza de Campos</h1>
+
+    <div class="debug">
+        <strong>Instruções de teste:</strong>
+        <ol>
+            <li>Selecione um tipo de imóvel</li>
+            <li>Preencha alguns campos que aparecem</li>
+            <li>Troque o tipo do imóvel</li>
+            <li>Verifique se os campos foram limpos e as seções corretas apareceram</li>
+        </ol>
+        <p><strong>Abra o console do navegador (F12) para ver os logs de debug.</strong></p>
+    </div>
+
+    <div>
+        <label for="tipo">Tipo do Imóvel:</label>
+        <select id="tipo" onchange="handleTipoChange()">
+            <option value="">🏠 Escolha o tipo do imóvel...</option>
+            <option value="apartamento">🏢 Apartamento</option>
+            <option value="imovel_urbano">🏘️ Imóvel Urbano</option>
+            <option value="galpao">🏭 Galpão</option>
+            <option value="sala_comercial">🏢 Sala Comercial</option>
+            <option value="terreno">🌿 Terreno</option>
+        </select>
+    </div>
+
+    <div id="fator-fundamentacao-container" style="display: none;">
+        <label for="fator_fundamentacao">Fator de Fundamentação:</label>
+        <select id="fator_fundamentacao">
+            <option value="">Selecione o Fator</option>
+            <option value="Grau I">Grau I</option>
+            <option value="Grau II">Grau II</option>
+            <option value="Grau III">Grau III</option>
+        </select>
+    </div>
+
+    <div id="tipo-badge-container" style="display: none;" class="debug">
+        <strong>Tipo selecionado:</strong> <span id="tipo-badge-text"></span>
+    </div>
+
+    <div id="loading-container" style="display: none;" class="debug">
+        <p>🔄 Carregando formulário para <span id="tipo-selecionado"></span>...</p>
+    </div>
+
+    <!-- Seções do formulário -->
+    <div class="form-section" id="endereco-imovel" style="display: none;">
+        <h3>📍 Endereço do Imóvel</h3>
+        <input type="text" placeholder="Endereço" id="endereco">
+        <input type="text" placeholder="Número" id="numero">
+    </div>
+
+    <div class="form-section" id="dados-terreno" style="display: none;">
+        <h3>🌿 Dados do Terreno</h3>
+        <input type="text" placeholder="Área Total" id="area_total_dados_terreno">
+        <input type="text" placeholder="Frente" id="frente">
+    </div>
+
+    <div class="form-section" id="dados-construcao" style="display: none;">
+        <h3>🏗️ Dados da Construção</h3>
+        <input type="text" placeholder="Área Construída" id="area_construida">
+        <input type="text" placeholder="Padrão" id="padrao">
+    </div>
+
+    <div class="form-section" id="dados-economicos" style="display: none;">
+        <h3>💰 Dados Econômicos</h3>
+        <input type="text" placeholder="Valor Total" id="valor_total_imovel">
+    </div>
+
+    <div class="form-section" id="upload-section" style="display: none;">
+        <h3>📷 Upload de Imagens</h3>
+        <p>Seção de upload...</p>
+    </div>
+
+    <div class="form-section" id="botoes-acao" style="display: none;">
+        <h3>⚡ Botões de Ação</h3>
+        <button type="button">Salvar</button>
+        <button type="button">Cancelar</button>
+    </div>
+
+    <script>
+        const tipoLabels = {
+            'apartamento': '🏢 Apartamento',
+            'imovel_urbano': '🏘️ Imóvel Urbano',
+            'galpao': '🏭 Galpão',
+            'sala_comercial': '🏢 Sala Comercial',
+            'terreno': '🌿 Terreno'
+        };
+
+        function handleTipoChange() {
+            const tipo = document.getElementById('tipo').value;
+            console.log('handleTipoChange chamado com tipo:', tipo);
+
+            if (!tipo) {
+                console.log('Nenhum tipo selecionado, ocultando seções');
+                hideAllSections();
+                clearFormFields();
+                return;
+            }
+
+            console.log('Limpando campos do formulário');
+            clearFormFields();
+
+            console.log('Mostrando badge do tipo');
+            showTypeBadge(tipo);
+
+            console.log('Iniciando loading');
+            showLoading(tipo);
+
+            console.log('Agendando showFormSections para 300ms');
+            setTimeout(() => {
+                console.log('Executando após timeout - ocultando loading e mostrando seções');
+                hideLoading();
+                showFormSections(tipo);
+            }, 300);
+        }
+
+        function clearFormFields() {
+            console.log('Limpando todos os campos');
+            const inputs = document.querySelectorAll('input:not([type="hidden"]), textarea');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else if (input.id !== 'tipo') {
+                    input.value = '';
+                }
+            });
+
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                if (select.id !== 'tipo') {
+                    select.value = '';
+                }
+            });
+        }
+
+        function showTypeBadge(tipo) {
+            console.log('Mostrando badge para tipo:', tipo);
+            const badgeContainer = document.getElementById('tipo-badge-container');
+            const badgeText = document.getElementById('tipo-badge-text');
+            const fatorContainer = document.getElementById('fator-fundamentacao-container');
+
+            badgeText.textContent = tipoLabels[tipo];
+            badgeContainer.style.display = 'block';
+            fatorContainer.style.display = 'block';
+            fatorContainer.style.opacity = '1';
+            fatorContainer.style.visibility = 'visible';
+        }
+
+        function showLoading(tipo) {
+            console.log('Mostrando loading para tipo:', tipo);
+            const loadingContainer = document.getElementById('loading-container');
+            const tipoSelecionado = document.getElementById('tipo-selecionado');
+
+            hideAllFormSections();
+            tipoSelecionado.textContent = tipoLabels[tipo];
+            loadingContainer.style.display = 'block';
+        }
+
+        function hideLoading() {
+            console.log('Ocultando loading');
+            const loadingContainer = document.getElementById('loading-container');
+            loadingContainer.style.display = 'none';
+        }
+
+        function hideAllFormSections() {
+            console.log('Ocultando todas as form-sections');
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+
+        function hideAllSections() {
+            console.log('Ocultando todas as seções');
+            hideAllFormSections();
+            document.getElementById('tipo-badge-container').style.display = 'none';
+            document.getElementById('fator-fundamentacao-container').style.display = 'none';
+            document.getElementById('loading-container').style.display = 'none';
+        }
+
+        function showFormSections(tipo) {
+            console.log('showFormSections chamado para tipo:', tipo);
+
+            const sectionsToShow = ['endereco-imovel', 'dados-economicos', 'upload-section', 'botoes-acao'];
+
+            if (tipo === 'terreno') {
+                sectionsToShow.push('dados-terreno');
+                console.log('Adicionando dados-terreno para tipo terreno');
+            } else {
+                sectionsToShow.push('dados-construcao');
+                console.log('Adicionando dados-construcao para tipo:', tipo);
+            }
+
+            console.log('Seções a mostrar:', sectionsToShow);
+
+            sectionsToShow.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    console.log('Mostrando seção:', sectionId);
+                    setTimeout(() => {
+                        section.style.display = 'block';
+                        section.style.opacity = '0';
+                        setTimeout(() => {
+                            section.style.transition = 'all 0.3s ease';
+                            section.style.opacity = '1';
+                        }, 50);
+                    }, index * 100);
+                } else {
+                    console.log('Seção não encontrada:', sectionId);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
