@@ -110,8 +110,11 @@ class ImovelController extends Controller
             'fator_oferta' => 'nullable',
             'via_especifica_id' => 'nullable',
             'benfeitoria' => 'nullable|string|',
+            'benfeitoria_terreno' => 'nullable|string|',
             'posicao_na_quadra' => 'nullable|string|max:255',
+            'posicao_na_quadra_terreno' => 'nullable|string|max:255',
             'topologia' => 'nullable|string',
+            'topologia_terreno' => 'nullable|string',
             'andar' => 'nullable|integer',
             'idade_predio' => 'nullable|integer',
             'quantidade_suites' => 'nullable|integer',
@@ -143,8 +146,8 @@ class ImovelController extends Controller
 
             // Unificar os campos de área em area_total baseado no tipo
             if ($request->tipo === 'terreno') {
-                // Para terreno, usa area_total_terreno
-                $validated['area_total'] = $validated['area_total_terreno'] ?? null;
+                // Para terreno, usa area_total_dados_terreno
+                $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
             } elseif ($request->tipo === 'galpao' || $request->tipo === 'imovel_urbano') {
                 // Para galpão e imóvel urbano, usa area_terreno_construcao
                 $validated['area_total'] = $validated['area_terreno_construcao'] ?? null;
@@ -157,6 +160,22 @@ class ImovelController extends Controller
             unset($validated['area_total_dados_terreno']);
             unset($validated['area_terreno_construcao']);
             unset($validated['area_total_terreno']);
+
+            // Mapear campos de terreno se o tipo for 'terreno'
+            if ($request->tipo === 'terreno') {
+                if (isset($validated['benfeitoria_terreno'])) {
+                    $validated['benfeitoria'] = $validated['benfeitoria_terreno'];
+                    unset($validated['benfeitoria_terreno']);
+                }
+                if (isset($validated['posicao_na_quadra_terreno'])) {
+                    $validated['posicao_na_quadra'] = $validated['posicao_na_quadra_terreno'];
+                    unset($validated['posicao_na_quadra_terreno']);
+                }
+                if (isset($validated['topologia_terreno'])) {
+                    $validated['topologia'] = $validated['topologia_terreno'];
+                    unset($validated['topologia_terreno']);
+                }
+            }
 
             // Converter valores decimais (substituir vírgula por ponto)
                 if (!empty($validated['pgm'])) {
@@ -257,6 +276,9 @@ public function update(Request $request, Imovel $imovel)
         'latitude' => 'nullable|string|max:255',
         'longitude' => 'nullable|string|max:255',
         'area_total' => 'nullable|numeric',
+        'area_total_dados_terreno' => 'nullable|numeric', // Para seção Dados do Terreno
+        'area_terreno_construcao' => 'nullable|numeric', // Para Área Terreno na construção
+        'area_total_terreno' => 'nullable|numeric', // Para seção específica de terreno
         'area_construida' => 'nullable|numeric',
         'frente' => 'nullable|numeric',
         'profundidade_equiv' => 'nullable|numeric',
@@ -294,6 +316,23 @@ public function update(Request $request, Imovel $imovel)
 
     // Obter os dados validados
     $validated = $validator->validated();
+
+    // Unificar os campos de área em area_total baseado no tipo
+    if ($request->tipo === 'terreno') {
+        // Para terreno, usa area_total_dados_terreno
+        $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
+    } elseif ($request->tipo === 'galpao' || $request->tipo === 'imovel_urbano') {
+        // Para galpão e imóvel urbano, usa area_terreno_construcao
+        $validated['area_total'] = $validated['area_terreno_construcao'] ?? null;
+    } else {
+        // Para outros tipos (apartamento, sala_comercial), usa area_total_dados_terreno
+        $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
+    }
+
+    // Remove os campos específicos para não tentar salvar no banco
+    unset($validated['area_total_dados_terreno']);
+    unset($validated['area_terreno_construcao']);
+    unset($validated['area_total_terreno']);
 
 
 

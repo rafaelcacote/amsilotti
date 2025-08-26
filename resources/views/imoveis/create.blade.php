@@ -253,17 +253,17 @@
                                         <div class="col-md-2">
                                             <div class="mb-2">
                                                 <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
-                                                    id="benfeitoria_terreno" name="benfeitoria">
+                                                <select class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
+                                                    id="benfeitoria_terreno" name="benfeitoria_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Possui"
-                                                        {{ old('benfeitoria') == 'Possui' ? 'selected' : '' }}>
+                                                        {{ old('benfeitoria_terreno') == 'Possui' ? 'selected' : '' }}>
                                                         Possui</option>
                                                     <option value="Não Possui"
-                                                        {{ old('benfeitoria') == 'Não Possui' ? 'selected' : '' }}>
+                                                        {{ old('benfeitoria_terreno') == 'Não Possui' ? 'selected' : '' }}>
                                                         Não Possui</option>
                                                 </select>
-                                                @error('benfeitoria')
+                                                @error('benfeitoria_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -271,39 +271,39 @@
 
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="posicao_na_quadra" class="form-label">Posição na
+                                                <label for="posicao_na_quadra_terreno" class="form-label">Posição na
                                                     Quadra</label>
                                                 <select
-                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
-                                                    id="posicao_na_quadra" name="posicao_na_quadra">
+                                                    class="form-select @error('posicao_na_quadra_terreno') is-invalid @enderror"
+                                                    id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Esquina"
-                                                        {{ old('posicao_na_quadra') == 'Esquina' ? 'selected' : '' }}>
+                                                        {{ old('posicao_na_quadra_terreno') == 'Esquina' ? 'selected' : '' }}>
                                                         Esquina</option>
                                                     <option value="Meio Quadra"
-                                                        {{ old('posicao_na_quadra') == 'Meio Quadra' ? 'selected' : '' }}>
+                                                        {{ old('posicao_na_quadra_terreno') == 'Meio Quadra' ? 'selected' : '' }}>
                                                         Meio Quadra</option>
                                                 </select>
-                                                @error('acessibilidade')
+                                                @error('posicao_na_quadra_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="topologia" class="form-label">Topologia</label>
-                                                <select class="form-select @error('topologia') is-invalid @enderror"
-                                                    id="topologia" name="topologia">
+                                                <label for="topologia_terreno" class="form-label">Topologia</label>
+                                                <select class="form-select @error('topologia_terreno') is-invalid @enderror"
+                                                    id="topologia_terreno" name="topologia_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Plano"
-                                                        {{ old('topologia') == 'Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia_terreno') == 'Plano' ? 'selected' : '' }}>
                                                         Plano</option>
                                                     <option value="Semi Plano"
-                                                        {{ old('topologia') == 'Semi Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia_terreno') == 'Semi Plano' ? 'selected' : '' }}>
                                                         Semi Plano</option>
 
                                                 </select>
-                                                @error('topologia')
+                                                @error('topologia_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -640,107 +640,6 @@
                                                 <textarea class="form-control @error('descricao_imovel') is-invalid @enderror" id="descricao_imovel"
                                                     name="descricao_imovel">{{ old('descricao_imovel') }}</textarea>
                                                 @error('descricao_imovel')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Seção: Dados do Terreno (aparece apenas para terreno) -->
-                                <div class="mb-4" id="dados-terreno" style="display: none;">
-                                    <h5 class="text-primary mb-3"><i class="fas fa-map me-2"></i>Dados do Terreno</h5>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="area_total_terreno" class="form-label">Área Total</label>
-                                                <input type="text"
-                                                    class="form-control area @error('area_total_terreno') is-invalid @enderror"
-                                                    id="area_total_terreno" name="area_total_terreno"
-                                                    value="{{ old('area_total_terreno') }}">
-                                                @error('area_total_terreno')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                <select
-                                                    class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
-                                                    id="benfeitoria_terreno" name="benfeitoria_terreno">
-                                                    <option value="">Selecione</option>
-                                                    <option value="possui"
-                                                        {{ old('benfeitoria_terreno') == 'possui' ? 'selected' : '' }}>
-                                                        Possui</option>
-                                                    <option value="nao possui"
-                                                        {{ old('benfeitoria_terreno') == 'nao possui' ? 'selected' : '' }}>
-                                                        Não Possui</option>
-                                                </select>
-                                                @error('benfeitoria_terreno')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="posicao_na_quadra_terreno" class="form-label">Posição na
-                                                    Quadra</label>
-                                                <select
-                                                    class="form-select @error('posicao_na_quadra_terreno') is-invalid @enderror"
-                                                    id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
-                                                    <option value="">Selecione</option>
-                                                    <option value="esquina"
-                                                        {{ old('posicao_na_quadra_terreno') == 'esquina' ? 'selected' : '' }}>
-                                                        Esquina</option>
-                                                    <option value="meio quadra"
-                                                        {{ old('posicao_na_quadra_terreno') == 'meio quadra' ? 'selected' : '' }}>
-                                                        Meio Quadra</option>
-                                                </select>
-                                                @error('posicao_na_quadra_terreno')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="topologia_terreno" class="form-label">Topologia</label>
-                                                <select
-                                                    class="form-select @error('topologia_terreno') is-invalid @enderror"
-                                                    id="topologia_terreno" name="topologia_terreno">
-                                                    <option value="">Selecione</option>
-                                                    <option value="Plano"
-                                                        {{ old('topologia_terreno') == 'Plano' ? 'selected' : '' }}>Plano
-                                                    </option>
-                                                    <option value="Semi Plano"
-                                                        {{ old('topologia_terreno') == 'Semi Plano' ? 'selected' : '' }}>
-                                                        Semi Plano</option>
-                                                </select>
-                                                @error('topologia_terreno')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="frente" class="form-label">Frente</label>
-                                                <input type="text"
-                                                    class="form-control @error('frente') is-invalid @enderror"
-                                                    id="frente" name="frente" value="{{ old('frente') }}">
-                                                @error('frente')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="profundidade_equivalente" class="form-label">Prof.
-                                                    Equiv.</label>
-                                                <input type="text"
-                                                    class="form-control @error('profundidade_equivalente') is-invalid @enderror"
-                                                    id="profundidade_equivalente" name="profundidade_equivalente"
-                                                    value="{{ old('profundidade_equivalente') }}">
-                                                @error('profundidade_equivalente')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -1101,27 +1000,68 @@
 
             if (!tipo) {
                 hideAllSections();
+                clearFormFields(); // Limpa os campos quando não há tipo selecionado
                 return;
             }
 
-            // Mostra loading
+            // Limpa os campos quando troca de tipo
+            clearFormFields();
+
+            // Mostra o campo Fator de Fundamentação imediatamente
+            showTypeBadge(tipo);
+
+            // Mostra loading para as outras seções
             showLoading(tipo);
 
-            // Simula carregamento (pode ser removido se não quiser delay)
+            // Simula carregamento para as outras seções (pode ser removido se não quiser delay)
             setTimeout(() => {
                 hideLoading();
                 showFormSections(tipo);
-                showTypeBadge(tipo);
-            }, 800);
+            }, 300); // Reduzido de 800ms para 300ms
         }
 
         function showLoading(tipo) {
             const loadingContainer = document.getElementById('loading-container');
             const tipoSelecionado = document.getElementById('tipo-selecionado');
 
-            hideAllSections();
-            tipoSelecionado.textContent = tipoLabels[tipo];
-            loadingContainer.style.display = 'block';
+            // Oculta todas as form-sections primeiro
+            hideAllFormSections();
+
+            if (tipoSelecionado && tipoLabels[tipo]) {
+                tipoSelecionado.textContent = tipoLabels[tipo];
+            }
+            
+            if (loadingContainer) {
+                loadingContainer.style.display = 'block';
+            }
+        }
+
+        function hideAllFormSections() {
+            // Oculta apenas as form-sections, não o badge nem o fator de fundamentação
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+                section.style.opacity = '';
+                section.style.transform = '';
+                section.style.transition = '';
+            });
+
+            // Oculta seções específicas também
+            const dadosTerreno = document.getElementById('dados-terreno');
+            const dadosConstrucao = document.getElementById('dados-construcao');
+
+            if (dadosTerreno) {
+                dadosTerreno.style.display = 'none';
+                dadosTerreno.style.opacity = '';
+                dadosTerreno.style.transform = '';
+                dadosTerreno.style.transition = '';
+            }
+            if (dadosConstrucao) {
+                dadosConstrucao.style.display = 'none';
+                dadosConstrucao.style.opacity = '';
+                dadosConstrucao.style.transform = '';
+                dadosConstrucao.style.transition = '';
+            }
         }
 
         function hideLoading() {
@@ -1134,9 +1074,20 @@
             const badgeText = document.getElementById('tipo-badge-text');
             const fatorContainer = document.getElementById('fator-fundamentacao-container');
 
-            badgeText.textContent = tipoLabels[tipo];
-            badgeContainer.style.display = 'block';
-            fatorContainer.style.display = 'block';
+            if (badgeText && tipoLabels[tipo]) {
+                badgeText.textContent = tipoLabels[tipo];
+            }
+            
+            if (badgeContainer) {
+                badgeContainer.style.display = 'block';
+            }
+            
+            // Garantir que o campo Fator de Fundamentação seja visível
+            if (fatorContainer) {
+                fatorContainer.style.display = 'block';
+                fatorContainer.style.opacity = '1';
+                fatorContainer.style.visibility = 'visible';
+            }
         }
 
         function hideAllSections() {
@@ -1230,63 +1181,63 @@
             // Controle dos campos específicos por tipo
             switch (tipo) {
                 case 'apartamento':
-                    areaLabel.textContent = 'Área Útil';
-                    benfeitoriaContainer.style.display = 'none';
-                    mobiliadoContainer.style.display = 'block';
-                    posicaoQuadraContainer.style.display = 'none';
-                    banheirosContainer.style.display = 'block';
-                    topologiaContainer.style.display = 'none';
-                    geradorContainer.style.display = 'block';
-                    descricaoContainer.style.display = 'none';
+                    if (areaLabel) areaLabel.textContent = 'Área Útil';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'none';
+                    if (banheirosContainer) banheirosContainer.style.display = 'block';
+                    if (topologiaContainer) topologiaContainer.style.display = 'none';
+                    if (geradorContainer) geradorContainer.style.display = 'block';
+                    if (descricaoContainer) descricaoContainer.style.display = 'none';
                     break;
 
                 case 'sala_comercial':
-                    areaLabel.textContent = 'Área Útil';
-                    benfeitoriaContainer.style.display = 'none';
-                    mobiliadoContainer.style.display = 'block';
-                    posicaoQuadraContainer.style.display = 'block';
-                    banheirosContainer.style.display = 'none';
-                    topologiaContainer.style.display = 'block';
-                    geradorContainer.style.display = 'none';
-                    descricaoContainer.style.display = 'block';
+                    if (areaLabel) areaLabel.textContent = 'Área Útil';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 case 'galpao':
-                    areaLabel.textContent = 'Área Construída';
-                    benfeitoriaContainer.style.display = 'block';
-                    mobiliadoContainer.style.display = 'none';
-                    posicaoQuadraContainer.style.display = 'block';
-                    banheirosContainer.style.display = 'none';
-                    topologiaContainer.style.display = 'block';
-                    geradorContainer.style.display = 'none';
-                    descricaoContainer.style.display = 'block';
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 case 'imovel_urbano':
-                    areaLabel.textContent = 'Área Construída';
-                    benfeitoriaContainer.style.display = 'block';
-                    mobiliadoContainer.style.display = 'none';
-                    posicaoQuadraContainer.style.display = 'block';
-                    banheirosContainer.style.display = 'none';
-                    topologiaContainer.style.display = 'block';
-                    geradorContainer.style.display = 'none';
-                    descricaoContainer.style.display = 'block';
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 case 'terreno':
                     // Para terreno, os campos ficam na seção dados-terreno
-                    descricaoContainer.style.display = 'block';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 default:
-                    areaLabel.textContent = 'Área Construída';
-                    benfeitoriaContainer.style.display = 'block';
-                    mobiliadoContainer.style.display = 'none';
-                    posicaoQuadraContainer.style.display = 'block';
-                    banheirosContainer.style.display = 'none';
-                    topologiaContainer.style.display = 'block';
-                    geradorContainer.style.display = 'none';
-                    descricaoContainer.style.display = 'block';
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
             }
         }
 
@@ -1294,9 +1245,42 @@
             const tipoSelect = document.getElementById('tipo');
             tipoSelect.value = '';
             hideAllSections();
+            clearFormFields();
 
             // Foca no select
             tipoSelect.focus();
+        }
+
+        function clearFormFields() {
+            // Limpa todos os campos de input e textarea
+            const inputs = document.querySelectorAll('input:not([type="hidden"]), textarea');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else if (input.id !== 'tipo') { // Não limpa o campo tipo
+                    input.value = '';
+                }
+            });
+
+            // Limpa todos os selects exceto o tipo
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                if (select.id !== 'tipo') {
+                    select.value = '';
+                }
+            });
+
+            // Limpa container de imagens se existir
+            const imagensContainer = document.getElementById('imagens-container');
+            if (imagensContainer) {
+                imagensContainer.innerHTML = '';
+            }
+
+            // Reset do contador de imagens
+            const contadorImagens = document.getElementById('contador-imagens');
+            if (contadorImagens) {
+                contadorImagens.textContent = '(Faltam 3 imagens)';
+            }
         }
 
         // Inicialização
@@ -1326,13 +1310,7 @@
             // Agora não precisa mais dessa função pois cada campo tem nome único
             // Mantendo só para compatibilidade
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            var tipoSelect = document.getElementById('tipo');
-            if (tipoSelect) {
-                tipoSelect.addEventListener('change', toggleAreaTotalFields);
-                toggleAreaTotalFields();
-            }
-        });
+        // Removido o addEventListener duplicado que estava causando conflito
     </script>
 
     {{-- bairro - zona - pgm --}}
