@@ -19,8 +19,8 @@
                 <i class="fas fa-list fa-lg"></i></a></li>
         <li class="nav-item"><a class="nav-link" href="#">
                 <i class="far fa-envelope-open fa-lg"></i></a></li>
-        <li class="nav-item dropdown"><a class="nav-link" data-coreui-toggle="dropdown" href="#"
-                role="button" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown"><a class="nav-link" data-coreui-toggle="dropdown" href="#" role="button"
+                aria-haspopup="true" aria-expanded="false">
                 <strong>{{ auth()->user()->name }}</strong></a>
             <div class="dropdown-menu dropdown-menu-end pt-0">
                 <div class="dropdown-divider"></div><a class="dropdown-item" href="{{ route('users.edit-password') }}">
