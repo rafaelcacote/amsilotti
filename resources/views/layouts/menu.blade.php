@@ -81,6 +81,24 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('vigencia_pgm.index') }}">
+                            <i class="fa fa-calendar nav-icon"></i> Vigência PGM
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('valores_pgm.index') }}">
+                            <i class="fa fa-dollar-sign nav-icon"></i> Valores PGM
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('valores_pgm.upload') }}">
+                            <i class="fa fa-upload nav-icon"></i> Upload em Massa PGM
+                        </a>
+                    </li>
+
                     <li class="nav-item"><a class="nav-link" href="{{ route('vias-especificas.index') }}" target="_top">
                             <i class="fa fa-road nav-icon"></i> PGM - Vias Específicas</a>
                     </li>
@@ -117,10 +135,10 @@
                         </li>
                     @endcan
                     <!-- <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user-permissions.index') }}">
-                                <i class="fa fa-user-lock nav-icon"></i> Usuários & Permissões
-                            </a>
-                        </li> -->
+                                <a class="nav-link" href="{{ route('user-permissions.index') }}">
+                                    <i class="fa fa-user-lock nav-icon"></i> Usuários & Permissões
+                                </a>
+                            </li> -->
                 </ul>
             </li>
         @endcan

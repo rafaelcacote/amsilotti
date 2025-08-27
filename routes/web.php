@@ -38,6 +38,19 @@ Route::get('/storage/fotos_imoveis/{filename}', function ($filename) {
 Route::post('/print-map', [\App\Http\Controllers\ImovelController::class, 'printMap'])->name('print.map');
 
 // Rotas específicas do usuário devem vir ANTES da rota resource
+
+use App\Http\Controllers\BairroController;
+use App\Http\Controllers\VigenciaPgmController;
+use App\Http\Controllers\ValoresPgmController;
+
+Route::resource('bairros', BairroController::class);
+Route::resource('vigencia_pgm', VigenciaPgmController::class);
+
+// Upload em massa de valores PGM (ANTES da rota resource)
+Route::get('valores_pgm/upload', [ValoresPgmController::class, 'upload'])->name('valores_pgm.upload')->middleware('auth');
+Route::post('valores_pgm/upload', [ValoresPgmController::class, 'storeUpload'])->name('valores_pgm.upload.store')->middleware('auth');
+
+Route::resource('valores_pgm', ValoresPgmController::class);
 Route::get('users/change-password', [\App\Http\Controllers\UserController::class, 'editPassword'])->name('users.edit-password')->middleware('auth');
 Route::put('users/change-password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update-password')->middleware('auth');
 
