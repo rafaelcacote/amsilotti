@@ -595,7 +595,7 @@ box-shadow: none;
                     <tr>
                         <td class="label">Data de Ocupação:</td>
                         <td class="value">
-                            {{ $vistoria->data_ocupacao ? \Carbon\Carbon::parse($vistoria->data_ocupacao)->format('d/m/Y') : '-' }}
+                            {{ $vistoria->data_ocupacao ?? '-' }}
                         </td>
                     </tr>
                     <tr>

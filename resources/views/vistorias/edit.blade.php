@@ -712,29 +712,29 @@
                                         </div>
 
                                         <!-- <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="lado_direito" class="form-label">Lado Direito</label>
-                                                        <input type="text"
-                                                            class="form-control @error('lado_direito') is-invalid @enderror"
-                                                            id="lado_direito" name="lado_direito"
-                                                            value="{{ old('lado_direito', $vistoria->lado_direito) }}">
-                                                        @error('lado_direito')
+                                                        <div class="mb-3">
+                                                            <label for="lado_direito" class="form-label">Lado Direito</label>
+                                                            <input type="text"
+                                                                class="form-control @error('lado_direito') is-invalid @enderror"
+                                                                id="lado_direito" name="lado_direito"
+                                                                value="{{ old('lado_direito', $vistoria->lado_direito) }}">
+                                                            @error('lado_direito')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="lado_esquerdo" class="form-label">Lado Esquerdo</label>
-                                                        <input type="text"
-                                                            class="form-control @error('lado_esquerdo') is-invalid @enderror"
-                                                            id="lado_esquerdo" name="lado_esquerdo"
-                                                            value="{{ old('lado_esquerdo', $vistoria->lado_esquerdo) }}">
-                                                        @error('lado_esquerdo')
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label for="lado_esquerdo" class="form-label">Lado Esquerdo</label>
+                                                            <input type="text"
+                                                                class="form-control @error('lado_esquerdo') is-invalid @enderror"
+                                                                id="lado_esquerdo" name="lado_esquerdo"
+                                                                value="{{ old('lado_esquerdo', $vistoria->lado_esquerdo) }}">
+                                                            @error('lado_esquerdo')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-                                                    </div>
-                                                </div>  -->
+                                                        </div>
+                                                    </div>  -->
 
                                         <div class="col-md-4">
                                             <div class="mb-3">
@@ -818,7 +818,7 @@
                                         <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label for="data_ocupacao" class="form-label">Data de Ocupação</label>
-                                                <input type="date"
+                                                <input type="text"
                                                     class="form-control @error('data_ocupacao') is-invalid @enderror"
                                                     id="data_ocupacao" name="data_ocupacao"
                                                     value="{{ old('data_ocupacao', $vistoria->data_ocupacao) }}">

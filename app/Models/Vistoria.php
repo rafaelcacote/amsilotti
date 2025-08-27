@@ -48,10 +48,9 @@ class Vistoria extends Model
     ];
 
     protected $casts = [
-        'reside_no_imovel' => 'boolean',
-        'exerce_pacificamente_posse' => 'boolean',
-        'data_ocupacao' => 'date',
-        'limites_confrontacoes' => 'array',
+    'reside_no_imovel' => 'boolean',
+    'exerce_pacificamente_posse' => 'boolean',
+    'limites_confrontacoes' => 'array',
     ];
 
     public function agenda()

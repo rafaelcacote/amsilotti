@@ -217,7 +217,7 @@
                                     <div class="mb-3">
                                         <label class="form-label text-muted">Data de Ocupação:</label>
                                         <p class="fw-bold">
-                                            {{ $vistoria->data_ocupacao ? \Carbon\Carbon::parse($vistoria->data_ocupacao)->format('d/m/Y') : 'N/A' }}
+                                            {{ $vistoria->data_ocupacao ?? 'N/A' }}
                                         </p>
                                     </div>
                                 </div>

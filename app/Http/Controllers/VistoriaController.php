@@ -111,7 +111,7 @@ class VistoriaController extends Controller
             'superficie' => 'nullable|in:Seca,Brejosa,Alagada',
             'documentacao' => 'nullable|string',
             'reside_no_imovel' => 'boolean',
-            'data_ocupacao' => 'nullable|date',
+            'data_ocupacao' => 'nullable|string',
             'tipo_ocupacao' => 'nullable|in:Residencial,Comercial,Mista',
             'exerce_pacificamente_posse' => 'boolean',
             'utiliza_benfeitoria' => 'nullable|',
@@ -172,7 +172,7 @@ class VistoriaController extends Controller
             foreach ($request->file('fotos') as $key => $foto) {
                 // Processar a imagem para corrigir orientação EXIF
                 $imagemProcessada = $this->processarImagemOrientacao($foto);
-                
+
                 $path = $imagemProcessada['path'];
                 $descricao = $request->descricoes[$key] ?? null;
 
@@ -190,7 +190,7 @@ class VistoriaController extends Controller
                 if (!empty($fotoBase64)) {
                     // Processar a imagem base64 para corrigir orientação
                     $imagemProcessada = $this->processarImagemBase64Orientacao($fotoBase64, $key, $request->nomes_arquivos);
-                    
+
                     if ($imagemProcessada) {
                         $descricao = $request->descricoes[$key] ?? null;
 
@@ -269,7 +269,7 @@ class VistoriaController extends Controller
             'superficie' => 'nullable|in:Seca,Brejosa,Alagada',
             'documentacao' => 'nullable|string',
             'reside_no_imovel' => 'boolean',
-            'data_ocupacao' => 'nullable|date',
+            'data_ocupacao' => 'nullable',
             'tipo_ocupacao' => 'nullable|in:Residencial,Comercial,Mista',
             'exerce_pacificamente_posse' => 'boolean',
             'utiliza_benfeitoria' => 'nullable|string',
@@ -351,7 +351,7 @@ class VistoriaController extends Controller
             foreach ($request->file('fotos') as $key => $foto) {
                 // Processar a imagem para corrigir orientação EXIF
                 $imagemProcessada = $this->processarImagemOrientacao($foto);
-                
+
                 $path = $imagemProcessada['path'];
                 $descricao = $request->descricoes[$key] ?? null;
 
@@ -369,7 +369,7 @@ class VistoriaController extends Controller
                 if (!empty($fotoBase64)) {
                     // Processar a imagem base64 para corrigir orientação
                     $imagemProcessada = $this->processarImagemBase64Orientacao($fotoBase64, $key, $request->nomes_arquivos);
-                    
+
                     if ($imagemProcessada) {
                         $descricao = $request->descricoes[$key] ?? null;
 
@@ -513,7 +513,7 @@ class VistoriaController extends Controller
         if (!auth()->user()->can('imprimir vistoria')) {
             abort(403, 'Você não tem permissão para visualizar a agenda.');
         }
-        
+
         $query = Agenda::where('tipo', 'vistoria');
 
         // Aplicar os mesmos filtros da listagem
@@ -658,10 +658,10 @@ class VistoriaController extends Controller
         try {
             // Criar manager do Intervention Image
             $manager = new ImageManager(new Driver());
-            
+
             // Ler a imagem
             $image = $manager->read($foto->getPathname());
-            
+
             // Tentar corrigir orientação baseada nos dados EXIF se disponível
             try {
                 $image = $image->orient();
@@ -672,39 +672,39 @@ class VistoriaController extends Controller
                     'erro' => $e->getMessage()
                 ]);
             }
-            
+
             // Redimensionar se muito grande (otimização para PDF)
             $width = $image->width();
             $height = $image->height();
-            
+
             if ($width > 1920 || $height > 1920) {
                 // Calcular proporção
                 $ratio = min(1920 / $width, 1920 / $height);
                 $newWidth = (int) ($width * $ratio);
                 $newHeight = (int) ($height * $ratio);
-                
+
                 $image = $image->resize($newWidth, $newHeight);
             }
-            
+
             // Gerar nome do arquivo
             $nomeArquivo = 'vistorias/' . uniqid() . '_' . $foto->getClientOriginalName();
-            
+
             // Salvar a imagem processada
             $imagemProcessada = $image->toJpeg(85); // Qualidade 85%
             Storage::disk('public')->put($nomeArquivo, $imagemProcessada);
-            
+
             return [
                 'path' => $nomeArquivo,
                 'success' => true
             ];
-            
+
         } catch (\Exception $e) {
             // Em caso de erro, salvar normalmente como fallback
             \Log::warning('Erro ao processar orientação da imagem, salvando normalmente', [
                 'error' => $e->getMessage(),
                 'arquivo' => $foto->getClientOriginalName()
             ]);
-            
+
             return [
                 'path' => $foto->store('vistorias', 'public'),
                 'success' => false
@@ -720,17 +720,17 @@ class VistoriaController extends Controller
         try {
             // Decodificar base64
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $fotoBase64));
-            
+
             if (!$imageData) {
                 return null;
             }
-            
+
             // Criar manager do Intervention Image
             $manager = new ImageManager(new Driver());
-            
+
             // Ler a imagem dos dados binários
             $image = $manager->read($imageData);
-            
+
             // Tentar corrigir orientação baseada nos dados EXIF se disponível
             try {
                 $image = $image->orient();
@@ -741,47 +741,47 @@ class VistoriaController extends Controller
                     'erro' => $e->getMessage()
                 ]);
             }
-            
+
             // Redimensionar se muito grande (otimização para PDF)
             $width = $image->width();
             $height = $image->height();
-            
+
             if ($width > 1920 || $height > 1920) {
                 // Calcular proporção
                 $ratio = min(1920 / $width, 1920 / $height);
                 $newWidth = (int) ($width * $ratio);
                 $newHeight = (int) ($height * $ratio);
-                
+
                 $image = $image->resize($newWidth, $newHeight);
             }
-            
+
             // Gerar nome único para o arquivo
             $nomeArquivo = $nomesArquivos[$key] ?? 'foto_' . time() . '_' . $key . '.jpg';
             $nomeArquivo = 'vistorias/' . uniqid() . '_' . $nomeArquivo;
-            
+
             // Salvar a imagem processada
             $imagemProcessada = $image->toJpeg(85); // Qualidade 85%
             Storage::disk('public')->put($nomeArquivo, $imagemProcessada);
-            
+
             return [
                 'path' => $nomeArquivo,
                 'success' => true
             ];
-            
+
         } catch (\Exception $e) {
             // Em caso de erro, salvar normalmente como fallback
             \Log::warning('Erro ao processar orientação da imagem base64, salvando normalmente', [
                 'error' => $e->getMessage(),
                 'key' => $key
             ]);
-            
+
             try {
                 // Fallback: salvar sem processamento
                 $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $fotoBase64));
                 $nomeArquivo = $nomesArquivos[$key] ?? 'foto_' . time() . '_' . $key . '.jpg';
                 $nomeArquivo = 'vistorias/' . uniqid() . '_' . $nomeArquivo;
                 Storage::disk('public')->put($nomeArquivo, $imageData);
-                
+
                 return [
                     'path' => $nomeArquivo,
                     'success' => false
