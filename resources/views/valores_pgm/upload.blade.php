@@ -73,17 +73,36 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="mb-3">
-                                            <label for="dados" class="form-label">Dados dos Valores</label>
-                                            <textarea class="form-control @error('dados') is-invalid @enderror" name="dados" rows="15" required
-                                                placeholder="Cole os dados aqui (Zona, Bairro, Valor - separados por tabulação ou espaços, um por linha):&#10;SUL	Centro	562.82&#10;SUL	N. S. Aparecida	217.82&#10;CENTRO-SUL	Adrianópolis	550.00">{{ old('dados') }}</textarea>
-                                            @error('dados')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            <div class="form-text">
-                                                <strong>Formato:</strong> Zona [TAB/ESPAÇOS] Bairro [TAB/ESPAÇOS] Valor<br>
-                                                <strong>Exemplo:</strong> SUL Centro 562.82
-                                            </div>
+                                            <div class="mb-3">
+                                                <label for="csv_file" class="form-label">Importar dados</label>
+                                                <div class="mb-2">
+                                                    <input type="file" class="form-control @error('csv_file') is-invalid @enderror" name="csv_file" accept=".csv">
+                                                    @error('csv_file')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-2 text-center">ou</div>
+                                                    <textarea class="form-control @error('dados') is-invalid @enderror" name="dados" rows="10"
+                                                        placeholder="Cole aqui os dados em formato CSV, separado por vírgula, tabulação ou espaços, um por linha.
+        Exemplo:
+        SUL,Centro,562.82
+        SUL,N. S. Aparecida,217.82
+        CENTRO-SUL,Adrianópolis,550.00
+        Ou:
+        SUL	Centro	562.82">{{ old('dados') }}</textarea>
+                                                @error('dados')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                                <div class="form-text">
+                                                    <strong>Você pode:</strong><br>
+                                                    - Fazer upload de um arquivo <b>CSV</b> exportado do Excel/Google Sheets (colunas: Zona, Bairro, Valor)<br>
+                                                    - Ou colar os dados manualmente no campo acima.<br>
+                                                    <strong>Formato aceito:</strong> Zona, Bairro, Valor <b>ou</b> Zona [TAB] Bairro [TAB] Valor <b>ou</b> Zona [ESPAÇOS] Bairro [ESPAÇOS] Valor<br>
+                                                    <strong>Exemplo CSV:</strong> SUL,Centro,562.82<br>
+                                                    <strong>Exemplo com tabulação:</strong> SUL&nbsp;&nbsp;&nbsp;Centro&nbsp;&nbsp;&nbsp;562.82<br>
+                                                    <strong>Exemplo com espaços:</strong> SUL Centro 562.82<br>
+                                                    <span class="text-muted">Você pode copiar e colar direto de uma planilha (Excel, Google Sheets, etc).</span>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>

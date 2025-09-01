@@ -25,6 +25,10 @@ class VigenciaPgmController extends Controller
             'data_fim' => 'required|date',
             'ativo' => 'required|boolean',
         ]);
+        if ($request->ativo) {
+            // Desativa todas as outras vigências
+            VigenciaPgm::where('ativo', 1)->update(['ativo' => 0]);
+        }
         VigenciaPgm::create($request->all());
         return redirect()->route('vigencia_pgm.index');
     }
@@ -42,6 +46,10 @@ class VigenciaPgmController extends Controller
             'data_fim' => 'required|date',
             'ativo' => 'required|boolean',
         ]);
+        if ($request->ativo) {
+            // Desativa todas as outras vigências, exceto a atual
+            VigenciaPgm::where('id', '!=', $vigencia_pgm->id)->where('ativo', 1)->update(['ativo' => 0]);
+        }
         $vigencia_pgm->update($request->all());
         return redirect()->route('vigencia_pgm.index');
     }

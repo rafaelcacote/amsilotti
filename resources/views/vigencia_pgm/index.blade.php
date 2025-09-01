@@ -57,6 +57,10 @@
                                                             class="btn btn-outline-warning btn-sm" title="Editar">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
+                                                        <a href="{{ route('valores_pgm.index', ['vigencia_id' => $vigencia->id]) }}"
+                                                            class="btn btn-outline-info btn-sm" title="Ver Valores">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
                                                         <form action="{{ route('vigencia_pgm.destroy', $vigencia) }}"
                                                             method="POST" style="display:inline;"
                                                             onsubmit="return confirm('Tem certeza que deseja excluir?')">

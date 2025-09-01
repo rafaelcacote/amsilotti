@@ -73,12 +73,21 @@ class ValoresPgmController extends Controller
         public function storeUpload(Request $request)
         {
             $request->validate([
-                'descricao' => 'required',
+                'descricao' => 'nullable|string|max:255',
                 'data_inicio' => 'required|date',
                 'data_fim' => 'required|date',
                 'ativo' => 'required|boolean',
-                'dados' => 'required|string',
+                // Não exige mais 'dados' obrigatório
             ]);
+
+            // Verifica se pelo menos um dos campos foi enviado
+            $dados = $request->input('dados');
+            if ($request->hasFile('csv_file') && $request->file('csv_file')->isValid()) {
+                $dados = file_get_contents($request->file('csv_file')->getRealPath());
+            }
+            if (empty($dados)) {
+                return back()->withErrors(['dados' => 'É necessário colar os dados ou enviar um arquivo CSV.'])->withInput();
+            }
 
             // Cria a vigência
             $vigencia = VigenciaPgm::create([
@@ -88,16 +97,22 @@ class ValoresPgmController extends Controller
                 'ativo' => $request->ativo,
             ]);
 
-            $linhas = preg_split('/\r?\n/', $request->dados);
+            $linhas = preg_split('/\r?\n/', $dados);
             foreach ($linhas as $linha) {
                 $linha = trim($linha);
                 if (empty($linha)) continue;
-                // Aceita tabulação ou múltiplos espaços
-                $partes = preg_split('/\t|\s{2,}|\s(?=\S*\s)/', $linha);
+                if (strpos($linha, ',') !== false) {
+                    $partes = array_map('trim', explode(',', $linha));
+                } elseif (strpos($linha, "\t") !== false) {
+                    $partes = array_map('trim', explode("\t", $linha));
+                } else {
+                    $partes = preg_split('/\s{2,}/', $linha);
+                    $partes = array_map('trim', $partes);
+                }
                 if (count($partes) < 3) continue;
-                $zonaNome = trim($partes[0]);
-                $bairroNome = trim($partes[1]);
-                $valor = str_replace(',', '.', trim($partes[2]));
+                $zonaNome = $partes[0];
+                $bairroNome = $partes[1];
+                $valor = str_replace(',', '.', $partes[2]);
 
                 // Busca ou cria zona
                 $zona = \App\Models\Zona::firstOrCreate(['nome' => $zonaNome]);
@@ -107,12 +122,16 @@ class ValoresPgmController extends Controller
                     'zona_id' => $zona->id
                 ]);
 
-                // Cria valor
-                ValoresPgm::create([
-                    'bairro_id' => $bairro->id,
-                    'vigencia_id' => $vigencia->id,
-                    'valor' => floatval($valor),
-                ]);
+                // Cria ou atualiza valor para o mesmo bairro e vigência
+                \App\Models\ValoresPgm::updateOrCreate(
+                    [
+                        'bairro_id' => $bairro->id,
+                        'vigencia_id' => $vigencia->id,
+                    ],
+                    [
+                        'valor' => floatval($valor),
+                    ]
+                );
             }
 
             return redirect()->route('valores_pgm.index')->with('success', 'Upload realizado com sucesso!');
