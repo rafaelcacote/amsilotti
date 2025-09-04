@@ -61,7 +61,6 @@ Route::resource('ordens-de-servico', \App\Http\Controllers\OrdemDeServicoControl
 Route::resource('zonas', \App\Http\Controllers\ZonaController::class)->middleware('auth');
 
 Route::resource('bairros', \App\Http\Controllers\BairroController::class)->middleware('auth');
-Route::get('/bairro/{id}', [\App\Http\Controllers\BairroController::class, 'getBairroData'])->name('getBairroData')->middleware('auth');
 
 
 Route::get('vistorias/{id}/imprimir', [\App\Http\Controllers\VistoriaController::class, 'imprimirIndividual'])->name('vistorias.imprimir_unica')->middleware('auth');
