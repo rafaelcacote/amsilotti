@@ -198,4 +198,8 @@ Route::middleware(['auth', 'role:cliente_amostra'])->group(function () {
     Route::get('/carrinho/contador', [CarrinhoController::class, 'contador'])->name('carrinho.contador');
 });
 
+// AJAX
+Route::get('/bairros/data/{id}', [BairroController::class, 'getBairroData'])->name('getBairroData');
+Route::get('/vigencia/nome/{bairro_id}', [\App\Http\Controllers\VigenciaController::class, 'getVigenciaNome'])->name('getVigenciaNome');
+
 require __DIR__ . '/auth.php';

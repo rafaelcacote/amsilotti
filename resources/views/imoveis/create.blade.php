@@ -112,8 +112,8 @@
                                     </h5>
 
                                     <div class="row g-3">
-                                        <!-- Endereço (ocupa 8 colunas) -->
-                                        <div class="col-12 col-md-8">
+                                        <!-- Endereço (ocupa 6 colunas) -->
+                                        <div class="col-12 col-md-5">
                                             <label for="endereco" class="form-label">Endereço</label>
                                             <input type="text"
                                                 class="form-control @error('endereco') is-invalid @enderror" id="endereco"
@@ -123,8 +123,8 @@
                                             @enderror
                                         </div>
 
-                                        <!-- Número (ocupa 4 colunas) -->
-                                        <div class="col-12 col-md-4">
+                                        <!-- Número (ocupa 2 colunas) -->
+                                        <div class="col-12 col-md-2">
                                             <label for="numero" class="form-label">Número</label>
                                             <input type="text" class="form-control @error('numero') is-invalid @enderror"
                                                 id="numero" name="numero" value="{{ old('numero') }}">
@@ -134,68 +134,32 @@
                                         </div>
 
                                         <!-- Bairro -->
-                                        <div class="col-12 col-md-2">
-                                            <label for="bairro_id" class="form-label">Bairro</label>
+                                        <div class="col-12 col-md-5">
+                                            <label for="bairro_id" class="form-label">Bairro / Via Especifica</label>
                                             <select
                                                 class="form-select js-example-basic-single @error('bairro_id') is-invalid @enderror"
                                                 id="bairro_id" name="bairro_id">
-                                                <option value="">Selecione o Bairro</option>
+                                                <option value="">Selecione</option>
                                                 @foreach ($bairros as $bairro)
                                                     <option value="{{ $bairro->id }}"
                                                         {{ old('bairro_id') == $bairro->id ? 'selected' : '' }}>
-                                                        {{ $bairro->nome }}</option>
+                                                        {{ $bairro->zona->nome ?? '' }} - {{ $bairro->nome }}</option>
                                                 @endforeach
                                             </select>
                                             @error('bairro_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                        </div>
-
-                                        <!-- Zona -->
-                                        <div class="col-12 col-md-2">
-                                            <label for="zona" class="form-label">Zona</label>
-                                            <select class="form-select @error('zona_id') is-invalid @enderror"
-                                                id="zona" name="zona_id">
-                                                <option value="">Selecione a Zona</option>
-                                                @foreach ($zonas as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ old('zona_id') == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->nome }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('zona_id')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Via Específica Checkbox -->
-                                        <div class="col-12 col-md-2 d-flex align-items-center pt-4">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                    id="via_especifica_checkbox">
-                                                <label class="form-check-label" for="via_especifica_checkbox">Via
-                                                    Específica</label>
+                                            <div class="mt-2 d-flex gap-2 align-items-center">
+                                                <span id="span-loading" style="display:none;">
+                                                    <span class="spinner-border spinner-border-sm text-primary align-middle" role="status"></span>
+                                                    <span class="text-muted ms-2 align-middle">Carregando informações...</span>
+                                                </span>
+                                                <span id="valor-pgm" class="badge bg-warning text-dark" style="display:none;"></span>
+                                                <span id="vigencia-pgm" class="badge bg-success text-dark" style="display:none;"></span>
                                             </div>
                                         </div>
 
-                                        <!-- Campo Via Específica -->
-                                        <div class="col-12 col-md-3" id="via_especifica_field" style="display: none;">
-                                            <label for="via_especifica" class="form-label">Via Específica</label>
-                                            <input type="text" class="form-control" id="via_especifica">
-                                            <input type="hidden" id="via_especifica_id" name="via_especifica_id">
-                                        </div>
-
-                                        <!-- Campo PGM -->
-                                        <div class="col-12 col-md-1">
-                                            <label for="pgm" class="form-label">PGM</label>
-                                            <input type="text" class="form-control @error('pgm') is-invalid @enderror"
-                                                id="pgm" name="pgm" value="{{ old('pgm') }}">
-                                            @error('pgm')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="row">
+                                        <div class="row" style="margin-top: 35px;">
                                             <!-- Botão -->
                                             <div class="col-auto d-flex align-items-end">
                                                 <button type="button" id="verNoMapaBtn" class="btn btn-primary"
@@ -238,11 +202,15 @@
                                     </h5>
                                     <div class="row">
                                         <div class="col-md-2">
-                                            <div class="mb-2">
-                                                <label for="area_total_dados_terreno" class="form-label">Área
-                                                    Total</label>
-                                                <input type="text"
-                                                    class="form-control area @error('area_total_dados_terreno') is-invalid @enderror"
+                                            <div class="mt-2">
+                                                <span id="zona-nome" class="badge bg-info text-dark" style="display:none;"></span>
+                                                <span id="valor-pgm" class="badge bg-warning text-dark" style="display:none;"></span>
+                                                <span id="vigencia-pgm" class="badge bg-success text-dark" style="display:none;"></span>
+                                                <span id="span-loading" style="display:none;">
+                                                    <span class="spinner-border spinner-border-sm text-primary align-middle" role="status"></span>
+                                                    <span class="text-muted ms-2 align-middle">Carregando informações...</span>
+                                                </span>
+                                            </div>
                                                     id="area_total_dados_terreno" name="area_total_dados_terreno"
                                                     value="{{ old('area_total_dados_terreno') }}">
                                                 @error('area_total_dados_terreno')
@@ -1319,32 +1287,67 @@
     <script>
         // Defina a URL da rota nomeada em uma variável JavaScript
         const bairroDataUrl = "{{ route('getBairroData', ['id' => ':id']) }}";
+        const vigenciaDataUrl = "{{ route('getVigenciaNome', ['bairro_id' => ':id']) }}";
         $(document).ready(function() {
             $('#bairro_id').change(function() {
                 var bairroId = $(this).val();
 
+                // Mostra animação de carregamento
+                $('#zona-nome').hide();
+                $('#valor-pgm').hide();
+                $('#vigencia-pgm').hide();
+                $('#span-loading').show();
+
                 if (bairroId) {
                     const url = bairroDataUrl.replace(':id', bairroId);
-
                     $.ajax({
                         url: url,
                         type: 'GET',
                         success: function(data) {
-                            console.log(data);
-                            // Atualiza o campo Zona (select)
-                            $('#zona').val(data.zona_id);
-
-                            // Remove qualquer formatação existente e mantém o valor original
-                            $('#pgm').val(data.pgm);
+                            // Atualiza badges
+                            $('#span-loading').hide();
+                            if (data.zona_nome) {
+                                $('#zona-nome').text('Zona: ' + data.zona_nome).show();
+                            } else {
+                                $('#zona-nome').hide();
+                            }
+                            if (data.pgm) {
+                                $('#valor-pgm').text('PGM: ' + data.pgm).show();
+                            } else {
+                                $('#valor-pgm').hide();
+                            }
+                            // Busca vigência ativa
+                            $('#vigencia-pgm').hide();
+                            $('#span-loading').show();
+                            const vigUrl = vigenciaDataUrl.replace(':id', bairroId);
+                            $.ajax({
+                                url: vigUrl,
+                                type: 'GET',
+                                success: function(vigData) {
+                                    $('#span-loading').hide();
+                                    if (vigData && vigData.nome) {
+                                        $('#vigencia-pgm').text('Vigência: ' + vigData.nome).show();
+                                    } else {
+                                        $('#vigencia-pgm').hide();
+                                    }
+                                },
+                                error: function() {
+                                    $('#span-loading').hide();
+                                    $('#vigencia-pgm').hide();
+                                }
+                            });
                         },
                         error: function() {
+                            $('#span-loading').hide();
                             alert('Erro ao carregar os dados do bairro.');
                         }
                     });
                 } else {
                     // Limpa os campos se nenhum bairro for selecionado
-                    $('#zona').val('');
-                    $('#pgm').val('');
+                    $('#span-loading').hide();
+                    $('#zona-nome').hide();
+                    $('#valor-pgm').hide();
+                    $('#vigencia-pgm').hide();
                 }
             });
         });
