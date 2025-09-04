@@ -171,8 +171,9 @@
                                             <th class="bg-body-secondary">Bairro</th>
                                             <th class="bg-body-secondary">Valor (R$)</th>
                                             <th class="bg-body-secondary">Área Total</th>
-                                            <th class="bg-body-secondary">Cadastrado em</th>
                                             <th class="bg-body-secondary">Transação</th>
+                                            <th class="bg-body-secondary">Cadastrado em</th>
+                                            <th class="bg-body-secondary">Link</th>
                                             <th class="bg-body-secondary text-center" style="width: 160px;">Ações</th>
                                         </tr>
                                     </thead>
@@ -230,6 +231,24 @@
                                                         @endif
                                                     </td>
                                                     <td class="px-4">{{ $imovel->created_at->format('d/m/Y H:i') }}</td>
+                                                    <td class="px-4">
+                                                        @php
+                                                            $rawLink = $imovel->link ?? '';
+                                                            $hasLink = filled($rawLink);
+                                                            if ($hasLink && !preg_match('/^https?:\/\//i', $rawLink)) {
+                                                                $rawLink = 'http://' . $rawLink;
+                                                            }
+                                                        @endphp
+                                                        @if ($hasLink)
+                                                            <a href="{{ $rawLink }}" target="_blank"
+                                                                rel="noopener noreferrer" class="text-decoration-none">
+                                                                Abrir
+                                                                <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                                                            </a>
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="px-4">
                                                         <div class="d-flex gap-2">
                                                             @can('imprimir imoveis')
@@ -301,7 +320,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="8" class="text-center py-7">
+                                                <td colspan="10" class="text-center py-7">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>

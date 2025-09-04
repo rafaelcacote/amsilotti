@@ -733,7 +733,7 @@ box-shadow: none;
                 @if ($pagina > 0)
                     <pagebreak />
                 @endif
-                <table class="photo-table">
+                <table class="photo-table" style="margin-top: 12px ">
                     @for ($linha = 0; $linha < $fotosPorPagina; $linha++)
                         @php
                             $indice = $pagina * $fotosPorPagina + $linha;
