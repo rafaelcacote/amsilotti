@@ -250,70 +250,83 @@
                                                         @endif
                                                     </td>
                                                     <td class="px-4">
-                                                        <div class="d-flex gap-2">
-                                                            @can('imprimir imoveis')
-                                                                <a class="btn btn-light"
-                                                                    href="{{ route('gerar.pdf', $imovel->id) }}"
-                                                                    target="_blank" data-coreui-toggle="tooltip"
-                                                                    data-coreui-placement="top" title="Imprimir Amostra">
-                                                                    <i class="fa-solid fa-print text-info"></i>
-                                                                </a>
-                                                            @endcan
-
-                                                            @can('view imoveis')
-                                                                <a class="btn btn-light"
-                                                                    href="{{ route('imoveis.show', $imovel->id) }}"
-                                                                    data-coreui-toggle="tooltip" data-coreui-placement="top"
-                                                                    title="Visualizar">
-
-                                                                    <i class="fa-solid fa-magnifying-glass text-primary"></i>
-                                                                </a>
-                                                            @endcan
-
-                                                            @can('edit imoveis')
-                                                                <a class="btn btn-light"
-                                                                    href="{{ route('imoveis.edit', $imovel->id) }}"
-                                                                    data-coreui-toggle="tooltip" data-coreui-placement="top"
-                                                                    title="Editar">
-                                                                    <i class="fas fa-edit text-warning"></i>
-                                                                </a>
-                                                            @endcan
-
-                                                            @can('delete imoveis')
-                                                                <form method="POST"
-                                                                    action="{{ route('imoveis.destroy', $imovel->id) }}"
-                                                                    class="d-inline"
-                                                                    onsubmit="return confirm('Tem certeza que deseja excluir este imóvel?')">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-light"
-                                                                        data-coreui-toggle="tooltip"
-                                                                        data-coreui-placement="top" title="Excluir">
-                                                                        <i class="fas fa-trash text-danger"></i>
-                                                                    </button>
-                                                                </form>
-                                                            @endcan
-                                                            @can('view_localizacao imoveis')
-                                                                @if (!empty($imovel->latitude) && !empty($imovel->longitude))
-                                                                    <button class="btn btn-light view-location"
-                                                                        data-coreui-toggle="tooltip"
-                                                                        data-coreui-placement="top" title="Ver localização"
-                                                                        data-latitude="{{ str_replace(',', '.', $imovel->latitude) }}"
-                                                                        data-longitude="{{ str_replace(',', '.', $imovel->longitude) }}"
-                                                                        data-id="{{ $imovel->id }}"
-                                                                        data-tipo="{{ $imovel->tipo == 'terreno' ? 'Terreno' : ($imovel->tipo == 'apartamento' ? 'Apartamento' : ($imovel->tipo == 'imovel_urbano' ? 'Imóvel Urbano' : 'Galpão')) }}"
-                                                                        data-bairro="{{ $imovel->bairro->nome ?? '' }}"
-                                                                        data-area="{{ $imovel->tipo == 'terreno' ? $imovel->area_total : $imovel->area_construida }}">
-                                                                        <i class="fa-solid fa-location-dot text-success"></i>
-                                                                    </button>
-                                                                @else
-                                                                    <span class="btn btn-light" data-coreui-toggle="tooltip"
-                                                                        data-coreui-placement="top"
-                                                                        title="Não possui localização">
-                                                                        <i class="fa-solid fa-location-dot text-danger"></i>
-                                                                    </span>
-                                                                @endif
-                                                            @endcan
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-light btn-sm dropdown-toggle"
+                                                                type="button" data-coreui-toggle="dropdown"
+                                                                aria-expanded="false">
+                                                                Ações
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                                @can('imprimir imoveis')
+                                                                    <li>
+                                                                        <a class="dropdown-item d-flex align-items-center gap-2"
+                                                                            href="{{ route('gerar.pdf', $imovel->id) }}"
+                                                                            target="_blank" rel="noopener noreferrer">
+                                                                            <i class="fa-solid fa-print text-info"></i>
+                                                                            <span>Imprimir amostra</span>
+                                                                        </a>
+                                                                    </li>
+                                                                @endcan
+                                                                @can('view imoveis')
+                                                                    <li>
+                                                                        <a class="dropdown-item d-flex align-items-center gap-2"
+                                                                            href="{{ route('imoveis.show', $imovel->id) }}">
+                                                                            <i
+                                                                                class="fa-solid fa-magnifying-glass text-primary"></i>
+                                                                            <span>Visualizar</span>
+                                                                        </a>
+                                                                    </li>
+                                                                @endcan
+                                                                @can('edit imoveis')
+                                                                    <li>
+                                                                        <a class="dropdown-item d-flex align-items-center gap-2"
+                                                                            href="{{ route('imoveis.edit', $imovel->id) }}">
+                                                                            <i class="fas fa-edit text-warning"></i>
+                                                                            <span>Editar</span>
+                                                                        </a>
+                                                                    </li>
+                                                                @endcan
+                                                                @can('delete imoveis')
+                                                                    <li>
+                                                                        <form method="POST"
+                                                                            action="{{ route('imoveis.destroy', $imovel->id) }}"
+                                                                            onsubmit="return confirm('Tem certeza que deseja excluir este imóvel?')">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit"
+                                                                                class="dropdown-item d-flex align-items-center gap-2 text-danger">
+                                                                                <i class="fas fa-trash"></i>
+                                                                                <span>Excluir</span>
+                                                                            </button>
+                                                                        </form>
+                                                                    </li>
+                                                                @endcan
+                                                                @can('view_localizacao imoveis')
+                                                                    <li>
+                                                                        @if (!empty($imovel->latitude) && !empty($imovel->longitude))
+                                                                            <button type="button"
+                                                                                class="dropdown-item d-flex align-items-center gap-2 view-location"
+                                                                                data-latitude="{{ str_replace(',', '.', $imovel->latitude) }}"
+                                                                                data-longitude="{{ str_replace(',', '.', $imovel->longitude) }}"
+                                                                                data-id="{{ $imovel->id }}"
+                                                                                data-tipo="{{ $imovel->tipo == 'terreno' ? 'Terreno' : ($imovel->tipo == 'apartamento' ? 'Apartamento' : ($imovel->tipo == 'imovel_urbano' ? 'Imóvel Urbano' : 'Galpão')) }}"
+                                                                                data-bairro="{{ $imovel->bairro->nome ?? '' }}"
+                                                                                data-area="{{ $imovel->tipo == 'terreno' ? $imovel->area_total : $imovel->area_construida }}">
+                                                                                <i
+                                                                                    class="fa-solid fa-location-dot text-success"></i>
+                                                                                <span>Ver localização</span>
+                                                                            </button>
+                                                                        @else
+                                                                            <span
+                                                                                class="dropdown-item d-flex align-items-center gap-2 disabled">
+                                                                                <i
+                                                                                    class="fa-solid fa-location-dot text-danger"></i>
+                                                                                <span>Sem localização</span>
+                                                                            </span>
+                                                                        @endif
+                                                                    </li>
+                                                                @endcan
+                                                            </ul>
                                                         </div>
                                                     </td>
                                                 </tr>
