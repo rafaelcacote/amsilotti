@@ -10,12 +10,12 @@
                             <h3 class="mb-0 text-primary"><i class="fas fa-gavel me-2"></i>Controle de Perícias</h3>
                             <div class="d-flex gap-2">
                                 @can('create pericias')
-                                <a href="{{ route('controle-pericias.create') }}"
-                                    class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3 py-2"
-                                    style="transition: all 0.2s ease;">
-                                    <i class="fas fa-plus" style="font-size: 0.9rem;"></i>
-                                    <span>Nova Perícia</span>
-                                </a>
+                                    <a href="{{ route('controle-pericias.create') }}"
+                                        class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3 py-2"
+                                        style="transition: all 0.2s ease;">
+                                        <i class="fas fa-plus" style="font-size: 0.9rem;"></i>
+                                        <span>Nova Perícia</span>
+                                    </a>
                                 @endcan
                             </div>
                         </div>
@@ -28,6 +28,17 @@
                                         <label class="form-label" for="search">Buscar</label>
                                         <input type="text" name="search" value="{{ $search ?? '' }}"
                                             placeholder="Buscar por processo, parte ou vara..." class="form-control">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label" for="vara">Vara</label>
+                                        <select class="form-select" name="vara" id="vara">
+                                            <option value="">Todas</option>
+                                            @foreach (App\Models\ControlePericia::varasOptions() as $varaOption)
+                                                <option value="{{ $varaOption }}"
+                                                    {{ request('vara') == $varaOption ? 'selected' : '' }}>
+                                                    {{ $varaOption }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label" for="responsavel_tecnico_id">Responsável Técnico</label>
@@ -54,7 +65,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label class="form-label" for="status_atual">Status</label>
                                         <select class="form-select" name="status_atual" id="status_atual">
                                             <option value="">Todos</option>
@@ -66,7 +77,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="d-flex justify-content-end gap-2">
                                             <button type="submit" class="btn btn-primary"><i
                                                     class="fas fa-search me-2"></i>Pesquisar</button>
@@ -112,7 +123,7 @@
                                             <th class="px-4 py-3 border-bottom-0">Responsável</th>
                                             <th class="px-4 py-3 border-bottom-0">Tipo de Perícia</th>
                                             <th class="px-4 py-3 border-bottom-0">Status</th>
-                                            <th class="px-4 py-3 border-bottom-0">Data de Entrega do Laudo</th>
+                                            <th class="px-4 py-3 border-bottom-0">Laudo Entregue</th>
                                             <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
                                             </th>
                                         </tr>
@@ -171,8 +182,8 @@
                                                         <x-action-buttons-pericias showRoute="controle-pericias.show"
                                                             editRoute="controle-pericias.edit"
                                                             destroyRoute="controle-pericias.destroy"
-                                                            printRoute="controle-pericias.print"
-                                                            :itemId="$pericia->id" title="Confirmar Exclusão"
+                                                            printRoute="controle-pericias.print" :itemId="$pericia->id"
+                                                            title="Confirmar Exclusão"
                                                             message="Tem certeza que deseja excluir esta perícia?" />
                                                     </td>
                                                 </tr>

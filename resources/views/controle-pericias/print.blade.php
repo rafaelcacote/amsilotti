@@ -143,7 +143,7 @@
                 </td>
             </tr>
             <tr>
-                <th class="label">Prazo Final</th>
+                <th class="label">Laudo Entregue</th>
                 <td class="value">
                     {{ $pericia->prazo_final ? $pericia->prazo_final->translatedFormat('d \d\e F \d\e Y') : 'Não definido' }}
                 </td>

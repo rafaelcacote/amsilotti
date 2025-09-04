@@ -66,7 +66,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-3 mb-3">
-                                                <strong>Prazo Final:</strong>
+                                                <strong>Laudo Entregue:</strong>
                                                 <p>{{ $controlePericia->prazo_final ? $controlePericia->prazo_final->format('d/m/Y') : 'Não definido' }}
                                                 </p>
                                             </div>

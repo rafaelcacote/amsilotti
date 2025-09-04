@@ -118,6 +118,7 @@
         </div>
         <div class="header-title">
             <h1>PESQUISA DE MERCADO</h1>
+
         </div>
         <div class="header-contact">
             <p><strong>Arquitetura, Avaliações <br>
@@ -126,6 +127,9 @@
             (92) 99510-0573
         </div>
     </div>
+    <p style="font-size:12px; margin-top:4px; color:#333;">
+        <strong>Quantidade de imóveis:</strong> {{ $imoveis->count() }}
+    </p>
     <table border="1" width="100%">
         <thead>
             <tr>

@@ -86,7 +86,7 @@
                                 </div>
 
                                 <div class="col-md-3 mb-3">
-                                    <label for="prazo_final" class="form-label">Prazo Final</label>
+                                    <label for="prazo_final" class="form-label">Laudo Entregue</label>
                                     <input type="date" class="form-control @error('prazo_final') is-invalid @enderror"
                                         id="prazo_final" name="prazo_final" value="{{ old('prazo_final') }}">
                                     @error('prazo_final')

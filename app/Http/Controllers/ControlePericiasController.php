@@ -25,7 +25,8 @@ class ControlePericiasController extends Controller
         $search = $request->input('search');
         $responsavelId = $request->input('responsavel_tecnico_id');
         $status = $request->input('status_atual');
-        $tipoPericia = $request->input('tipo_pericia');
+            $vara = $request->input('vara');
+            $tipoPericia = $request->input('tipo_pericia');
 
         $pericias = ControlePericia::query()
             ->with(['responsavelTecnico', 'requerente'])
@@ -39,6 +40,9 @@ class ControlePericiasController extends Controller
                       });
                 });
             })
+                ->when($vara, function ($query, $vara) {
+                    return $query->where('vara', $vara);
+                })
             ->when($responsavelId, function ($query, $responsavelId) {
                 return $query->where('responsavel_tecnico_id', $responsavelId);
             })
@@ -187,6 +191,7 @@ class ControlePericiasController extends Controller
 
     /**
      * Update the specified pericia in storage.
+                
      */
     public function update(Request $request, ControlePericia $controlePericia): RedirectResponse
     {
