@@ -87,21 +87,9 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('valores_pgm.index') }}">
-                            <i class="fa fa-dollar-sign nav-icon"></i> Valores PGM
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('valores_pgm.upload') }}">
-                            <i class="fa fa-upload nav-icon"></i> Upload em Massa PGM
-                        </a>
-                    </li>
-
-                    <li class="nav-item"><a class="nav-link" href="{{ route('vias-especificas.index') }}" target="_top">
+                    <!-- <li class="nav-item"><a class="nav-link" href="{{ route('vias-especificas.index') }}" target="_top">
                             <i class="fa fa-road nav-icon"></i> PGM - Vias Específicas</a>
-                    </li>
+                    </li> -->
 
                 </ul>
             </li>
