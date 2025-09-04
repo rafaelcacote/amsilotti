@@ -11,7 +11,7 @@ class BairroController extends Controller
 {
     public function index(Request $request)
     {
-        $zonas = Zona::orderBy('nome')->get();
+    $zonas = \App\Models\ZonaOrdenada::all();
         $vigencias = \App\Models\VigenciaPgm::orderBy('descricao')->get();
 
         $bairros = Bairro::with('zona')
@@ -26,7 +26,7 @@ class BairroController extends Controller
 
     public function create()
     {
-        $zonas = Zona::orderBy('nome')->get();
+    $zonas = \App\Models\ZonaOrdenada::all();
         return view('bairros.create', compact('zonas'));
     }
 
@@ -54,7 +54,7 @@ class BairroController extends Controller
 
     public function edit(Bairro $bairro)
     {
-        $zonas = Zona::orderBy('nome')->get();
+    $zonas = \App\Models\ZonaOrdenada::all();
         return view('bairros.edit', compact('bairro', 'zonas'));
     }
 
