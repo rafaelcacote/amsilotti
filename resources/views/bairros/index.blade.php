@@ -123,8 +123,9 @@
                 var vigencia_pgm_id = $(this).closest('tr').find('.vigencia-select').val();
                 var btn = $(this);
                 btn.prop('disabled', true);
+                var updateUrl = '{{ route('bairros.update', ['bairro' => 'ID_BAIRRO']) }}'.replace('ID_BAIRRO', id);
                 $.ajax({
-                    url: '/bairros/' + id,
+                    url: updateUrl,
                     type: 'PUT',
                     data: {
                         _token: '{{ csrf_token() }}',
