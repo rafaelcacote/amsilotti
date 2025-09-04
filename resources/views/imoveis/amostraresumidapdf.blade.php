@@ -163,7 +163,7 @@
                     <td>R$ {{ number_format($imovel->preco_unitario1, 2, ',', '.') }}</td>
                     <td>{{ $imovel->frente }}</td>
                     <td>{{ $imovel->profundidade_equiv }}</td>
-                    <td>{{ $imovel->pgm }}</td>
+                    <td>{{ $imovel->bairro->valor_pgm }}</td>
                     <td>{{ $imovel->topologia }}</td>
                     <td>{{ $imovel->posicao_na_quadra }}</td>
                     <td>{{ $imovel->benfeitoria }}</td>
