@@ -9,7 +9,7 @@ class Zona extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome'];
+    protected $fillable = ['nome', 'tipo'];
 
     public function bairros()
     {

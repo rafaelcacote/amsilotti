@@ -44,6 +44,7 @@
                                                         <strong>#{{ $zona->id }}</strong>
                                                     </td>
                                                     <td class="px-4">{{ $zona->nome }}</td>
+                                                    <td class="px-4">{{ $zona->tipo }}</td>
                                                     <td class="px-4 fw-medium text-muted">
                                                         {{ $zona->created_at->format('d/m/Y H:i') }}</td>
                                                     <td class="px-4 text-center">

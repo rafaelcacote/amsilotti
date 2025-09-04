@@ -9,7 +9,7 @@ class ZonaController extends Controller
 {
     public function index()
     {
-        $zonas = Zona::orderBy('nome')->paginate(10);
+    $zonas = Zona::orderByRaw("tipo = 'trecho' DESC")->orderBy('nome')->paginate(10);
         return view('zonas.index', compact('zonas'));
     }
 
@@ -21,7 +21,8 @@ class ZonaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string|max:255'
+            'nome' => 'required|string|max:255',
+            'tipo' => 'required|in:zona,trecho'
         ]);
 
         Zona::create($request->all());
@@ -43,7 +44,8 @@ class ZonaController extends Controller
     public function update(Request $request, Zona $zona)
     {
         $request->validate([
-            'nome' => 'required|string|max:255'
+            'nome' => 'required|string|max:255',
+            'tipo' => 'required|in:zona,trecho'
         ]);
 
         $zona->update($request->all());
@@ -59,7 +61,7 @@ class ZonaController extends Controller
             return redirect()->route('zonas.index')
                 ->with('error', 'Não é possível excluir esta zona pois existem bairros associados a ela.');
         }
-        
+
         $zona->delete();
 
         return redirect()->route('zonas.index')

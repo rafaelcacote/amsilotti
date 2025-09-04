@@ -26,6 +26,18 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="mb-3">
+                                    <label for="tipo" class="form-label">Tipo</label>
+                                    <select class="form-control @error('tipo') is-invalid @enderror" id="tipo"
+                                        name="tipo">
+                                        <option value="zona" {{ old('tipo') == 'zona' ? 'selected' : '' }}>Zona</option>
+                                        <option value="trecho" {{ old('tipo') == 'trecho' ? 'selected' : '' }}>Trecho
+                                        </option>
+                                    </select>
+                                    @error('tipo')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Salvar

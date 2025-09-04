@@ -36,6 +36,10 @@
                                 <h6 class="text-muted mb-1">Nome</h6>
                                 <p class="mb-0 fw-bold">{{ $zona->nome }}</p>
                             </div>
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">Tipo</h6>
+                                <p class="mb-0 fw-bold">{{ $zona->tipo }}</p>
+                            </div>
                             <div class="mb-0">
                                 <h6 class="text-muted mb-1">Data de Criação</h6>
                                 <p class="mb-0">{{ $zona->created_at->format('d/m/Y H:i') }}</p>
