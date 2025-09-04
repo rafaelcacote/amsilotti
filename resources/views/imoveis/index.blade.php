@@ -21,45 +21,45 @@
                                     <span>Novo Imóvel</span>
                                 </a>
                                 @can('imprimir imoveis')
-                                <div class="dropdown">
-                                    <button
-                                        class="btn btn-sm btn-outline-info d-flex align-items-center gap-2 px-3 py-2 dropdown-toggle"
-                                        type="button" data-coreui-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-print" style="font-size: 0.9rem;"></i>
-                                        Imprimir
-                                    </button>
-                                    {{-- <div id="printSelectedBtn">
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-sm btn-outline-info d-flex align-items-center gap-2 px-3 py-2 dropdown-toggle"
+                                            type="button" data-coreui-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-print" style="font-size: 0.9rem;"></i>
+                                            Imprimir
+                                        </button>
+                                        {{-- <div id="printSelectedBtn">
                                         <a href="#" class="btn btn-primary" id="printSelectedButton">Imprimir
                                             Selecionados</a>
                                     </div> --}}
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#" id="printSelectedButton">
-                                                <span>Impressão completa</span>
-                                                <span id="selectionCounter" class="badge bg-primary ms-2"
-                                                    style="display: none;">0</span>
-                                            </a></li>
-                                        <li><a class="dropdown-item" href="#" id="printSelectedButtonResumido">
-                                                <span>Impressão Resumida</span>
-                                                <span class="badge bg-primary ms-2" style="display: none;"
-                                                    id="selectionCounterResumido">0</span>
-                                            </a>
-                                        </li>
-                                        <li><a class="dropdown-item" href="#" id="printMapButton">
-                                                <span>Imprimir Mapa</span>
-                                                <span id="selectionCounterMapa" class="badge bg-primary ms-2"
-                                                    style="display: none;">0</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item text-danger" href="#"
-                                                onclick="clearAllSelections()">
-                                                <i class="fas fa-times me-2"></i>Limpar Seleções
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                @endcan        
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" id="printSelectedButton">
+                                                    <span>Impressão completa</span>
+                                                    <span id="selectionCounter" class="badge bg-primary ms-2"
+                                                        style="display: none;">0</span>
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#" id="printSelectedButtonResumido">
+                                                    <span>Impressão Resumida</span>
+                                                    <span class="badge bg-primary ms-2" style="display: none;"
+                                                        id="selectionCounterResumido">0</span>
+                                                </a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="#" id="printMapButton">
+                                                    <span>Imprimir Mapa</span>
+                                                    <span id="selectionCounterMapa" class="badge bg-primary ms-2"
+                                                        style="display: none;">0</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item text-danger" href="#"
+                                                    onclick="clearAllSelections()">
+                                                    <i class="fas fa-times me-2"></i>Limpar Seleções
+                                                </a></li>
+                                        </ul>
+                                    </div>
+                                @endcan
                                 {{-- <a href="#" id="generateMapButton"
                                     class="btn btn-sm btn-outline-success d-flex align-items-center gap-2 px-3 py-2"
                                     style="transition: all 0.2s ease;">
@@ -86,6 +86,16 @@
                                             <i class="fas fa-info-circle me-1"></i>
                                             Digite um código ou vários separados por vírgula
                                         </small> --}}
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-label" for="transacao">Transação</label>
+                                        <select class="form-select" id="transacao" name="transacao">
+                                            <option value="">Todos</option>
+                                            <option value="a venda"
+                                                {{ request('transacao') == 'a venda' ? 'selected' : '' }}>A venda</option>
+                                            <option value="vendido"
+                                                {{ request('transacao') == 'vendido' ? 'selected' : '' }}>Vendido</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label" for="bairro">Bairro</label>
@@ -130,12 +140,12 @@
                                         <input type="text" class="form-control" id="area_max" name="area_max"
                                             placeholder="Área Máxima" value="{{ request('area_max') }}">
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <div class="d-flex justify-content-end gap-2">
                                             <button type="submit" class="btn btn-primary"><i
-                                                    class="fas fa-search me-2"></i>Pesquisar</button>
+                                                    class="fas fa-search me-2"></i></button>
                                             <a href="{{ route('imoveis.index') }}" class="btn btn-outline-secondary"
-                                                onclick="clearAllSelections()"><i class="fas fa-times me-2"></i>Limpar</a>
+                                                onclick="clearAllSelections()"><i class="fas fa-times me-2"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -162,6 +172,7 @@
                                             <th class="bg-body-secondary">Valor (R$)</th>
                                             <th class="bg-body-secondary">Área Total</th>
                                             <th class="bg-body-secondary">Cadastrado em</th>
+                                            <th class="bg-body-secondary">Transação</th>
                                             <th class="bg-body-secondary text-center" style="width: 160px;">Ações</th>
                                         </tr>
                                     </thead>
@@ -209,64 +220,80 @@
                                                             {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '' }}
                                                             m² </td>
                                                     @endif
+                                                    <td class="px-4">
+                                                        @if ($imovel->transacao == 'A venda')
+                                                            <span class="badge bg-success">À venda</span>
+                                                        @elseif ($imovel->transacao == 'Vendido')
+                                                            <span class="badge bg-danger">Vendido</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Não informado</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="px-4">{{ $imovel->created_at->format('d/m/Y H:i') }}</td>
                                                     <td class="px-4">
                                                         <div class="d-flex gap-2">
                                                             @can('imprimir imoveis')
-                                                            <a class="btn btn-light"
-                                                                href="{{ route('gerar.pdf', $imovel->id) }}"
-                                                                target="_blank" data-coreui-toggle="tooltip"
-                                                                data-coreui-placement="top" title="Imprimir Amostra">
-                                                                <i class="fa-solid fa-print text-info"></i>
-                                                            </a>
+                                                                <a class="btn btn-light"
+                                                                    href="{{ route('gerar.pdf', $imovel->id) }}"
+                                                                    target="_blank" data-coreui-toggle="tooltip"
+                                                                    data-coreui-placement="top" title="Imprimir Amostra">
+                                                                    <i class="fa-solid fa-print text-info"></i>
+                                                                </a>
                                                             @endcan
 
                                                             @can('view imoveis')
-                                                            <a class="btn btn-light" href="{{ route('imoveis.show', $imovel->id) }}"
-                                                                data-coreui-toggle="tooltip" data-coreui-placement="top" title="Visualizar">
-                                                                
-                                                                <i class="fa-solid fa-magnifying-glass text-primary"></i>
-                                                            </a>
+                                                                <a class="btn btn-light"
+                                                                    href="{{ route('imoveis.show', $imovel->id) }}"
+                                                                    data-coreui-toggle="tooltip" data-coreui-placement="top"
+                                                                    title="Visualizar">
+
+                                                                    <i class="fa-solid fa-magnifying-glass text-primary"></i>
+                                                                </a>
                                                             @endcan
 
                                                             @can('edit imoveis')
-                                                            <a class="btn btn-light" href="{{ route('imoveis.edit', $imovel->id) }}"
-                                                                data-coreui-toggle="tooltip" data-coreui-placement="top" title="Editar">
-                                                                <i class="fas fa-edit text-warning"></i>
-                                                            </a>
+                                                                <a class="btn btn-light"
+                                                                    href="{{ route('imoveis.edit', $imovel->id) }}"
+                                                                    data-coreui-toggle="tooltip" data-coreui-placement="top"
+                                                                    title="Editar">
+                                                                    <i class="fas fa-edit text-warning"></i>
+                                                                </a>
                                                             @endcan
 
                                                             @can('delete imoveis')
-                                                            <form method="POST" action="{{ route('imoveis.destroy', $imovel->id) }}" 
-                                                                class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este imóvel?')">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-light"
-                                                                    data-coreui-toggle="tooltip" data-coreui-placement="top" title="Excluir">
-                                                                    <i class="fas fa-trash text-danger"></i>
-                                                                </button>
-                                                            </form>
+                                                                <form method="POST"
+                                                                    action="{{ route('imoveis.destroy', $imovel->id) }}"
+                                                                    class="d-inline"
+                                                                    onsubmit="return confirm('Tem certeza que deseja excluir este imóvel?')">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-light"
+                                                                        data-coreui-toggle="tooltip"
+                                                                        data-coreui-placement="top" title="Excluir">
+                                                                        <i class="fas fa-trash text-danger"></i>
+                                                                    </button>
+                                                                </form>
                                                             @endcan
                                                             @can('view_localizacao imoveis')
-                                                            @if (!empty($imovel->latitude) && !empty($imovel->longitude))
-                                                                <button class="btn btn-light view-location"
-                                                                    data-coreui-toggle="tooltip"
-                                                                    data-coreui-placement="top" title="Ver localização"
-                                                                    data-latitude="{{ str_replace(',', '.', $imovel->latitude) }}"
-                                                                    data-longitude="{{ str_replace(',', '.', $imovel->longitude) }}"
-                                                                    data-id="{{ $imovel->id }}"
-                                                                    data-tipo="{{ $imovel->tipo == 'terreno' ? 'Terreno' : ($imovel->tipo == 'apartamento' ? 'Apartamento' : ($imovel->tipo == 'imovel_urbano' ? 'Imóvel Urbano' : 'Galpão')) }}"
-                                                                    data-bairro="{{ $imovel->bairro->nome ?? '' }}"
-                                                                    data-area="{{ $imovel->tipo == 'terreno' ? $imovel->area_total : $imovel->area_construida }}">
-                                                                    <i class="fa-solid fa-location-dot text-success"></i>
-                                                                </button>
-                                                            @else
-                                                                <span class="btn btn-light" data-coreui-toggle="tooltip"
-                                                                    data-coreui-placement="top"
-                                                                    title="Não possui localização">
-                                                                    <i class="fa-solid fa-location-dot text-danger"></i>
-                                                                </span>
-                                                            @endif
+                                                                @if (!empty($imovel->latitude) && !empty($imovel->longitude))
+                                                                    <button class="btn btn-light view-location"
+                                                                        data-coreui-toggle="tooltip"
+                                                                        data-coreui-placement="top" title="Ver localização"
+                                                                        data-latitude="{{ str_replace(',', '.', $imovel->latitude) }}"
+                                                                        data-longitude="{{ str_replace(',', '.', $imovel->longitude) }}"
+                                                                        data-id="{{ $imovel->id }}"
+                                                                        data-tipo="{{ $imovel->tipo == 'terreno' ? 'Terreno' : ($imovel->tipo == 'apartamento' ? 'Apartamento' : ($imovel->tipo == 'imovel_urbano' ? 'Imóvel Urbano' : 'Galpão')) }}"
+                                                                        data-bairro="{{ $imovel->bairro->nome ?? '' }}"
+                                                                        data-area="{{ $imovel->tipo == 'terreno' ? $imovel->area_total : $imovel->area_construida }}">
+                                                                        <i class="fa-solid fa-location-dot text-success"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <span class="btn btn-light" data-coreui-toggle="tooltip"
+                                                                        data-coreui-placement="top"
+                                                                        title="Não possui localização">
+                                                                        <i class="fa-solid fa-location-dot text-danger"></i>
+                                                                    </span>
+                                                                @endif
                                                             @endcan
                                                         </div>
                                                     </td>

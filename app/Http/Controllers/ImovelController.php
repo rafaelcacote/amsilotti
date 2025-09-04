@@ -50,6 +50,9 @@ class ImovelController extends Controller
         ->when($request->tipo, function ($query) use ($request) {
             return $query->where('tipo', $request->tipo);
         })
+            ->when($request->transacao, function ($query) use ($request) {
+                return $query->where('transacao', $request->transacao);
+            })
         // NOVO: Filtro de área SEMPRE considera ambos os campos, independente do tipo
         ->when($request->area_min, function ($query) use ($request) {
             $query->where(function ($q) use ($request) {
