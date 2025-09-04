@@ -81,6 +81,7 @@
                                                     </td>
                                                     <td class="px-4">
                                                         <select class="form-select form-select-sm vigencia-select" data-id="{{ $bairro->id }}" style="max-width:150px;display:inline-block;">
+                                                            <option value="" {{ empty($bairro->vigencia_pgm_id) ? 'selected' : '' }}>Selecione</option>
                                                             @foreach($vigencias as $vigencia)
                                                                 <option value="{{ $vigencia->id }}" {{ $bairro->vigencia_pgm_id == $vigencia->id ? 'selected' : '' }}>{{ $vigencia->descricao }}</option>
                                                             @endforeach
