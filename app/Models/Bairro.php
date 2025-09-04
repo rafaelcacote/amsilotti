@@ -16,6 +16,11 @@ class Bairro extends Model
         return $this->belongsTo(Zona::class);
     }
 
+    public function vigenciaPgm()
+    {
+        return $this->belongsTo(VigenciaPgm::class, 'vigencia_pgm_id');
+    }
+
     public function imoveis()
     {
         return $this->hasMany(Imovel::class, 'bairro_id');

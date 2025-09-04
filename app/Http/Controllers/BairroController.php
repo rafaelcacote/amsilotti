@@ -12,6 +12,7 @@ class BairroController extends Controller
     public function index(Request $request)
     {
         $zonas = Zona::orderBy('nome')->get();
+        $vigencias = \App\Models\VigenciaPgm::orderBy('descricao')->get();
 
         $bairros = Bairro::with('zona')
             ->when($request->zona_id, function ($query) use ($request) {
@@ -20,7 +21,7 @@ class BairroController extends Controller
             ->orderBy('nome')
             ->paginate(10);
 
-        return view('bairros.index', compact('bairros', 'zonas'));
+        return view('bairros.index', compact('bairros', 'zonas', 'vigencias'));
     }
 
     public function create()
@@ -59,16 +60,25 @@ class BairroController extends Controller
 
     public function update(Request $request, Bairro $bairro)
     {
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'zona_id' => 'required|exists:zonas,id',
-            'valor_pgm' => 'required'
-        ]);
-
-        $bairro->update($request->all());
-
-        return redirect()->route('bairros.index')
-            ->with('success', 'Bairro atualizado com sucesso!');
+        if ($request->ajax()) {
+            $request->validate([
+                'valor_pgm' => 'required',
+                'vigencia_pgm_id' => 'required|exists:vigencia_pgm,id',
+            ]);
+            $bairro->valor_pgm = $request->input('valor_pgm');
+            $bairro->vigencia_pgm_id = $request->input('vigencia_pgm_id');
+            $bairro->save();
+            return response()->json(['success' => true, 'message' => 'Bairro atualizado com sucesso!']);
+        } else {
+            $request->validate([
+                'nome' => 'required|string|max:255',
+                'zona_id' => 'required|exists:zonas,id',
+                'valor_pgm' => 'required'
+            ]);
+            $bairro->update($request->all());
+            return redirect()->route('bairros.index')
+                ->with('success', 'Bairro atualizado com sucesso!');
+        }
     }
 
     public function destroy(Bairro $bairro)

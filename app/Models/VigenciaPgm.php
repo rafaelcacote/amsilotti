@@ -12,4 +12,9 @@ class VigenciaPgm extends Model
     {
         return $this->hasMany(ValoresPgm::class, 'vigencia_id');
     }
+
+    public function bairros()
+    {
+        return $this->hasMany(Bairro::class, 'vigencia_pgm_id');
+    }
 }

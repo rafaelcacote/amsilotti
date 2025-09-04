@@ -62,6 +62,7 @@
                                             <th class="px-4 py-3 border-bottom-0">Zona</th>
                                             <th class="px-4 py-3 border-bottom-0">Bairro</th>
                                             <th class="px-4 py-3 border-bottom-0">Valor PGM</th>
+                                            <th class="px-4 py-3 border-bottom-0">Vigência</th>
                                             <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
                                             </th>
                                         </tr>
@@ -75,9 +76,17 @@
                                                     </td>
                                                     <td class="px-4">{{ $bairro->zona->nome }}</td>
                                                     <td class="px-4">{{ $bairro->nome }}</td>
-                                                    <td class="px-4">{{ $bairro->valor_pgm }}</td>
-
-
+                                                    <td class="px-4">
+                                                        <input type="text" class="form-control form-control-sm valor-pgm-input" value="{{ $bairro->valor_pgm }}" data-id="{{ $bairro->id }}" style="max-width:120px;display:inline-block;">
+                                                    </td>
+                                                    <td class="px-4">
+                                                        <select class="form-select form-select-sm vigencia-select" data-id="{{ $bairro->id }}" style="max-width:150px;display:inline-block;">
+                                                            @foreach($vigencias as $vigencia)
+                                                                <option value="{{ $vigencia->id }}" {{ $bairro->vigencia_pgm_id == $vigencia->id ? 'selected' : '' }}>{{ $vigencia->descricao }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button class="btn btn-success btn-sm ms-2 salvar-bairro-btn" data-id="{{ $bairro->id }}"><i class="fas fa-save"></i></button>
+                                                    </td>
                                                     <td class="px-4 text-center">
                                                         <x-action-buttons showRoute="bairros.show" editRoute="bairros.edit"
                                                             destroyRoute="bairros.destroy" :itemId="$bairro->id" />
@@ -104,4 +113,48 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.salvar-bairro-btn').on('click', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var valor_pgm = $(this).closest('tr').find('.valor-pgm-input').val();
+                var vigencia_pgm_id = $(this).closest('tr').find('.vigencia-select').val();
+                var btn = $(this);
+                btn.prop('disabled', true);
+                $.ajax({
+                    url: '/bairros/' + id,
+                    type: 'PUT',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        valor_pgm: valor_pgm,
+                        vigencia_pgm_id: vigencia_pgm_id
+                    },
+                    success: function(resp) {
+                        showToast('Bairro atualizado com sucesso!');
+                        btn.prop('disabled', false);
+                    },
+                    error: function() {
+                        showToast('Erro ao atualizar bairro!', true);
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            function showToast(msg, error = false) {
+                var toastHtml = `<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+                    <div class="toast show ${error ? 'bg-danger text-white' : 'bg-success text-white'}" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header ${error ? 'bg-danger text-white' : 'bg-success text-white'}">
+                            <strong class="me-auto">${error ? 'Erro' : 'Sucesso'}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">${msg}</div>
+                    </div>
+                </div>`;
+                $('body').append(toastHtml);
+                setTimeout(function() { $('.toast').remove(); }, 3500);
+            }
+        });
+    </script>
 @endsection
