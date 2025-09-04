@@ -80,13 +80,16 @@
                                                         <input type="text" class="form-control form-control-sm valor-pgm-input" value="{{ $bairro->valor_pgm }}" data-id="{{ $bairro->id }}" style="max-width:120px;display:inline-block;">
                                                     </td>
                                                     <td class="px-4">
-                                                        <select class="form-select form-select-sm vigencia-select" data-id="{{ $bairro->id }}" style="max-width:150px;display:inline-block;">
-                                                            <option value="" {{ empty($bairro->vigencia_pgm_id) ? 'selected' : '' }}>Selecione</option>
-                                                            @foreach($vigencias as $vigencia)
-                                                                <option value="{{ $vigencia->id }}" {{ $bairro->vigencia_pgm_id == $vigencia->id ? 'selected' : '' }}>{{ $vigencia->descricao }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <button class="btn btn-success btn-sm ms-2 salvar-bairro-btn" data-id="{{ $bairro->id }}"><i class="fas fa-save"></i></button>
+                                                            <!-- Removido select duplicado, mantido apenas o flexbox -->
+                                                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                                                        <select class="form-select form-select-sm vigencia-select" data-id="{{ $bairro->id }}" style="min-width:180px;max-width:100%;">
+                                                                            <option value="" {{ empty($bairro->vigencia_pgm_id) ? 'selected' : '' }}>Selecione</option>
+                                                                            @foreach($vigencias as $vigencia)
+                                                                                <option value="{{ $vigencia->id }}" {{ $bairro->vigencia_pgm_id == $vigencia->id ? 'selected' : '' }}>{{ $vigencia->descricao }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <button class="btn btn-success btn-sm ms-2 salvar-bairro-btn" data-id="{{ $bairro->id }}"><i class="fas fa-save"></i></button>
+                                                                    </div>
                                                     </td>
                                                     <td class="px-4 text-center">
                                                         <x-action-buttons showRoute="bairros.show" editRoute="bairros.edit"

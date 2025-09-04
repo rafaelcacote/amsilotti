@@ -112,7 +112,7 @@
                                             <th class="px-4 py-3 border-bottom-0">Responsável</th>
                                             <th class="px-4 py-3 border-bottom-0">Tipo de Perícia</th>
                                             <th class="px-4 py-3 border-bottom-0">Status</th>
-                                            <th class="px-4 py-3 border-bottom-0">Prazo Final</th>
+                                            <th class="px-4 py-3 border-bottom-0">Data de Entrega do Laudo</th>
                                             <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
                                             </th>
                                         </tr>

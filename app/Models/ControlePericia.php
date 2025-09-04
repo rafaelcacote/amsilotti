@@ -141,10 +141,14 @@ class ControlePericia extends Model
     public static function statusOptions()
         {
             return [
-                 'aguardando vistoria',
-                'em redação',
+                'aguardando despacho',
+                'aguardando vistoria',
                 'aguardando pagamento',
-                'entregue'
+                'aguardando laudo do perito',
+                'em redação',
+                'entregue',
+                'extinto',
+                'suspenso'
             ];
         }
 
