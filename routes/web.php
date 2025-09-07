@@ -115,6 +115,10 @@ Route::patch('controle_de_tarefas/{controleDeTarefas}/situacao', [\App\Http\Cont
     ->name('controle_de_tarefas.duplicate')->middleware('auth');
     Route::post('/controle-de-tarefas/exportar-para-impressao', [\App\Http\Controllers\ControleDeTarefasController::class, 'exportarParaImpressao'])
     ->name('controle_de_tarefas.exportar_para_impressao')->middleware('auth');
+    
+    // Rota para buscar tarefas por status no dashboard
+    Route::get('/dashboard/tarefas-por-status', [\App\Http\Controllers\ControleDeTarefasController::class, 'getTarefasPorStatus'])
+    ->name('dashboard.tarefas_por_status')->middleware('auth');
 
 
 Route::resource('agenda', \App\Http\Controllers\AgendaController::class)->middleware('auth');

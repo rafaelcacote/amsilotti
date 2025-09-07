@@ -52,6 +52,16 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label" for="status">Status</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="">Todos</option>
+                                            @foreach ($getStatusValues as $status)
+                                                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="col-md-2">
                                         <label class="form-label" for="situacao">Situação</label>
                                         <select class="form-select" id="situacao" name="situacao">
@@ -93,15 +103,15 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <button type="submit" class="btn btn-primary"><i
-                                                    class="fas fa-search me-2"></i>Pesquisar</button>
-                                            <a href="{{ route('controle_de_tarefas.index') }}"
-                                                class="btn btn-outline-secondary"><i
-                                                    class="fas fa-times me-2"></i>Limpar</a>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Pesquisar</button>
+                                            <a href="{{ route('controle_de_tarefas.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
                                         </div>
                                     </div>
+                                </div>
                                 </div>
                             </form>
                         </div>
