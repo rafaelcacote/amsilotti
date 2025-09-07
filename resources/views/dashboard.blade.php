@@ -1087,7 +1087,7 @@
                     modal.show();
                     
                     // Buscar tarefas via AJAX
-                    fetch(`/dashboard/tarefas-por-status?user_id=${userId}&status=${status}`, {
+                    fetch(`{{ route('dashboard.tarefas_por_status') }}?user_id=${userId}&status=${status}`, {
                         method: 'GET',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
