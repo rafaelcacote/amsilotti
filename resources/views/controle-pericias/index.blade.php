@@ -89,16 +89,27 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label" for="prazo_final_inicio">Data Entregue
-                                                    (De)</label>
-                                                <input type="date" class="form-control" name="prazo_final_inicio"
-                                                    id="prazo_final_inicio" value="{{ request('prazo_final_inicio') }}">
+                                            <div class="col-md-1">
+                                                <label class="form-label" for="prazo_final_mes">Mês Entregue</label>
+                                                <select class="form-select" name="prazo_final_mes" id="prazo_final_mes">
+                                                    <option value="">Mês</option>
+                                                    @for ($i = 1; $i <= 12; $i++)
+                                                        <option value="{{ $i }}"
+                                                            {{ request('prazo_final_mes') == $i ? 'selected' : '' }}>
+                                                            {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
+                                                    @endfor
+                                                </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label" for="prazo_final_fim">Data Entregue (Até)</label>
-                                                <input type="date" class="form-control" name="prazo_final_fim"
-                                                    id="prazo_final_fim" value="{{ request('prazo_final_fim') }}">
+                                            <div class="col-md-1">
+                                                <label class="form-label" for="prazo_final_ano">Ano Entregue</label>
+                                                <select class="form-select" name="prazo_final_ano" id="prazo_final_ano">
+                                                    <option value="">Ano</option>
+                                                    @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
+                                                        <option value="{{ $y }}"
+                                                            {{ request('prazo_final_ano') == $y ? 'selected' : '' }}>
+                                                            {{ $y }}</option>
+                                                    @endfor
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row mt-3">

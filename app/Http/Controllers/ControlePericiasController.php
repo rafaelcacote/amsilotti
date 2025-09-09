@@ -22,11 +22,13 @@ class ControlePericiasController extends Controller
             abort(403, 'Você não tem permissão para visualizar perícias.');
         }
 
-        $search = $request->input('search');
-        $responsavelId = $request->input('responsavel_tecnico_id');
-        $status = $request->input('status_atual');
-            $vara = $request->input('vara');
-            $tipoPericia = $request->input('tipo_pericia');
+    $search = $request->input('search');
+    $responsavelId = $request->input('responsavel_tecnico_id');
+    $status = $request->input('status_atual');
+    $vara = $request->input('vara');
+    $tipoPericia = $request->input('tipo_pericia');
+    $prazoFinalMes = $request->input('prazo_final_mes');
+    $prazoFinalAno = $request->input('prazo_final_ano');
 
         $pericias = ControlePericia::query()
             ->with(['responsavelTecnico', 'requerente'])
@@ -40,9 +42,9 @@ class ControlePericiasController extends Controller
                       });
                 });
             })
-                ->when($vara, function ($query, $vara) {
-                    return $query->where('vara', $vara);
-                })
+            ->when($vara, function ($query, $vara) {
+                return $query->where('vara', $vara);
+            })
             ->when($responsavelId, function ($query, $responsavelId) {
                 return $query->where('responsavel_tecnico_id', $responsavelId);
             })
@@ -52,11 +54,17 @@ class ControlePericiasController extends Controller
             ->when($tipoPericia, function ($query, $tipoPericia) {
                 return $query->where('tipo_pericia', $tipoPericia);
             })
+            ->when($prazoFinalMes, function ($query) use ($prazoFinalMes) {
+                return $query->whereMonth('prazo_final', $prazoFinalMes);
+            })
+            ->when($prazoFinalAno, function ($query) use ($prazoFinalAno) {
+                return $query->whereYear('prazo_final', $prazoFinalAno);
+            })
             ->latest()
             ->paginate(10);
 
         $responsaveis = MembrosEquipeTecnica::where('status', true)->orderBy('nome')->get();
-        
+
         $statusOptions = [
             'Em Andamento',
             'Concluído',
@@ -67,7 +75,7 @@ class ControlePericiasController extends Controller
             'Em Redação',
             'Entregue'
         ];
-        
+
         return view('controle-pericias.index', compact('pericias', 'responsaveis', 'search', 'responsavelId', 'status', 'tipoPericia', 'statusOptions'));
     }
 
@@ -191,7 +199,7 @@ class ControlePericiasController extends Controller
 
     /**
      * Update the specified pericia in storage.
-                
+
      */
     public function update(Request $request, ControlePericia $controlePericia): RedirectResponse
     {
