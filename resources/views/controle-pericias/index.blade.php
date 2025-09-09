@@ -69,7 +69,7 @@
                                         <label class="form-label" for="status_atual">Status</label>
                                         <select class="form-select" name="status_atual" id="status_atual">
                                             <option value="">Todos</option>
-                                            @foreach ($statusOptions as $statusOption)
+                                            @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
                                                 <option value="{{ $statusOption }}"
                                                     {{ $status == $statusOption ? 'selected' : '' }}>
                                                     {{ $statusOption }}
