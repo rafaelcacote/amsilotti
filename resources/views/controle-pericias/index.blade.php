@@ -21,11 +21,15 @@
                         </div>
                         <div class="card-body bg-light">
                             <!-- Collapse Filtros -->
-                            <button class="btn btn-outline-primary mb-3 w-100 d-flex align-items-center justify-content-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse" aria-expanded="false" aria-controls="filtrosCollapse" style="font-size:1.1rem;">
+                            <button
+                                class="btn btn-outline-primary mb-3 w-100 d-flex align-items-center justify-content-center gap-2"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse"
+                                aria-expanded="false" aria-controls="filtrosCollapse" style="font-size:1.1rem;">
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
-                            <div class="collapse{{ request()->hasAny(['search','vara','responsavel_tecnico_id','tipo_pericia','status_atual','prazo_final_inicio','prazo_final_fim']) ? ' show' : '' }}" id="filtrosCollapse">
+                            <div class="collapse{{ request()->hasAny(['search', 'vara', 'responsavel_tecnico_id', 'tipo_pericia', 'status_atual', 'prazo_final_inicio', 'prazo_final_fim']) ? ' show' : '' }}"
+                                id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('controle-pericias.index') }}" method="GET">
                                         @csrf
@@ -33,7 +37,8 @@
                                             <div class="col-md-2">
                                                 <label class="form-label" for="search">Buscar</label>
                                                 <input type="text" name="search" value="{{ $search ?? '' }}"
-                                                    placeholder="Buscar por processo, parte ou vara..." class="form-control">
+                                                    placeholder="Buscar por processo, parte ou vara..."
+                                                    class="form-control">
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label" for="vara">Vara</label>
@@ -47,7 +52,8 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
-                                                <label class="form-label" for="responsavel_tecnico_id">Responsável Técnico</label>
+                                                <label class="form-label" for="responsavel_tecnico_id">Responsável
+                                                    Técnico</label>
                                                 <select class="form-select" name="responsavel_tecnico_id"
                                                     id="responsavel_tecnico_id">
                                                     <option value="">Todos</option>
@@ -84,19 +90,25 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
-                                                <label class="form-label" for="prazo_final_inicio">Data Entregue (De)</label>
-                                                <input type="date" class="form-control" name="prazo_final_inicio" id="prazo_final_inicio" value="{{ request('prazo_final_inicio') }}">
+                                                <label class="form-label" for="prazo_final_inicio">Data Entregue
+                                                    (De)</label>
+                                                <input type="date" class="form-control" name="prazo_final_inicio"
+                                                    id="prazo_final_inicio" value="{{ request('prazo_final_inicio') }}">
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label" for="prazo_final_fim">Data Entregue (Até)</label>
-                                                <input type="date" class="form-control" name="prazo_final_fim" id="prazo_final_fim" value="{{ request('prazo_final_fim') }}">
+                                                <input type="date" class="form-control" name="prazo_final_fim"
+                                                    id="prazo_final_fim" value="{{ request('prazo_final_fim') }}">
                                             </div>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-12 d-flex justify-content-center">
                                                 <div class="d-flex gap-2">
-                                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Pesquisar</button>
-                                                    <a href="{{ route('controle-pericias.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
+                                                    <button type="submit" class="btn btn-primary"><i
+                                                            class="fas fa-search me-2"></i>Pesquisar</button>
+                                                    <a href="{{ route('controle-pericias.index') }}"
+                                                        class="btn btn-outline-secondary"><i
+                                                            class="fas fa-times me-2"></i>Limpar</a>
                                                 </div>
                                             </div>
                                         </div>
