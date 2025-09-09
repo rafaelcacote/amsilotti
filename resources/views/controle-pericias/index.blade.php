@@ -20,74 +20,89 @@
                             </div>
                         </div>
                         <div class="card-body bg-light">
-                            <!-- Filtro -->
-                            <form action="{{ route('controle-pericias.index') }}" method="GET">
-                                @csrf
-                                <div class="row align-items-end">
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="search">Buscar</label>
-                                        <input type="text" name="search" value="{{ $search ?? '' }}"
-                                            placeholder="Buscar por processo, parte ou vara..." class="form-control">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="vara">Vara</label>
-                                        <select class="form-select" name="vara" id="vara">
-                                            <option value="">Todas</option>
-                                            @foreach (App\Models\ControlePericia::varasOptions() as $varaOption)
-                                                <option value="{{ $varaOption }}"
-                                                    {{ request('vara') == $varaOption ? 'selected' : '' }}>
-                                                    {{ $varaOption }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="responsavel_tecnico_id">Responsável Técnico</label>
-                                        <select class="form-select" name="responsavel_tecnico_id"
-                                            id="responsavel_tecnico_id">
-                                            <option value="">Todos</option>
-                                            @foreach ($responsaveis as $responsavel)
-                                                <option value="{{ $responsavel->id }}"
-                                                    {{ $responsavelId == $responsavel->id ? 'selected' : '' }}>
-                                                    {{ $responsavel->nome }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="tipo_pericia">Tipo de Perícia</label>
-                                        <select class="form-select" name="tipo_pericia" id="tipo_pericia">
-                                            <option value="">Todos</option>
-                                            @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
-                                                <option value="{{ $tipopericiaOption }}"
-                                                    {{ $tipoPericia == $tipopericiaOption ? 'selected' : '' }}>
-                                                    {{ $tipopericiaOption }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="status_atual">Status</label>
-                                        <select class="form-select" name="status_atual" id="status_atual">
-                                            <option value="">Todos</option>
-                                            @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
-                                                <option value="{{ $statusOption }}"
-                                                    {{ $status == $statusOption ? 'selected' : '' }}>
-                                                    {{ $statusOption }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <button type="submit" class="btn btn-primary"><i
-                                                    class="fas fa-search me-2"></i>Pesquisar</button>
-                                            <a href="{{ route('controle-pericias.index') }}"
-                                                class="btn btn-outline-secondary"><i
-                                                    class="fas fa-times me-2"></i>Limpar</a>
+                            <!-- Collapse Filtros -->
+                            <button class="btn btn-outline-primary mb-3 w-100 d-flex align-items-center justify-content-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse" aria-expanded="false" aria-controls="filtrosCollapse" style="font-size:1.1rem;">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtros de Pesquisa</span>
+                            </button>
+                            <div class="collapse{{ request()->hasAny(['search','vara','responsavel_tecnico_id','tipo_pericia','status_atual','prazo_final_inicio','prazo_final_fim']) ? ' show' : '' }}" id="filtrosCollapse">
+                                <div class="card card-body border-0 shadow-sm mb-3">
+                                    <form action="{{ route('controle-pericias.index') }}" method="GET">
+                                        @csrf
+                                        <div class="row align-items-end">
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="search">Buscar</label>
+                                                <input type="text" name="search" value="{{ $search ?? '' }}"
+                                                    placeholder="Buscar por processo, parte ou vara..." class="form-control">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="vara">Vara</label>
+                                                <select class="form-select" name="vara" id="vara">
+                                                    <option value="">Todas</option>
+                                                    @foreach (App\Models\ControlePericia::varasOptions() as $varaOption)
+                                                        <option value="{{ $varaOption }}"
+                                                            {{ request('vara') == $varaOption ? 'selected' : '' }}>
+                                                            {{ $varaOption }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="responsavel_tecnico_id">Responsável Técnico</label>
+                                                <select class="form-select" name="responsavel_tecnico_id"
+                                                    id="responsavel_tecnico_id">
+                                                    <option value="">Todos</option>
+                                                    @foreach ($responsaveis as $responsavel)
+                                                        <option value="{{ $responsavel->id }}"
+                                                            {{ $responsavelId == $responsavel->id ? 'selected' : '' }}>
+                                                            {{ $responsavel->nome }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="tipo_pericia">Tipo de Perícia</label>
+                                                <select class="form-select" name="tipo_pericia" id="tipo_pericia">
+                                                    <option value="">Todos</option>
+                                                    @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
+                                                        <option value="{{ $tipopericiaOption }}"
+                                                            {{ $tipoPericia == $tipopericiaOption ? 'selected' : '' }}>
+                                                            {{ $tipopericiaOption }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="status_atual">Status</label>
+                                                <select class="form-select" name="status_atual" id="status_atual">
+                                                    <option value="">Todos</option>
+                                                    @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
+                                                        <option value="{{ $statusOption }}"
+                                                            {{ $status == $statusOption ? 'selected' : '' }}>
+                                                            {{ $statusOption }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="prazo_final_inicio">Data Entregue (De)</label>
+                                                <input type="date" class="form-control" name="prazo_final_inicio" id="prazo_final_inicio" value="{{ request('prazo_final_inicio') }}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="prazo_final_fim">Data Entregue (Até)</label>
+                                                <input type="date" class="form-control" name="prazo_final_fim" id="prazo_final_fim" value="{{ request('prazo_final_fim') }}">
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="row mt-3">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Pesquisar</button>
+                                                    <a href="{{ route('controle-pericias.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
