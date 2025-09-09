@@ -151,11 +151,16 @@
                                             @enderror
                                             <div class="mt-2 d-flex gap-2 align-items-center">
                                                 <span id="span-loading" style="display:none;">
-                                                    <span class="spinner-border spinner-border-sm text-primary align-middle" role="status"></span>
-                                                    <span class="text-muted ms-2 align-middle">Carregando informações...</span>
+                                                    <span
+                                                        class="spinner-border spinner-border-sm text-primary align-middle"
+                                                        role="status"></span>
+                                                    <span class="text-muted ms-2 align-middle">Carregando
+                                                        informações...</span>
                                                 </span>
-                                                <span id="valor-pgm" class="badge bg-warning text-dark" style="display:none;"></span>
-                                                <span id="vigencia-pgm" class="badge bg-success text-dark" style="display:none;"></span>
+                                                <span id="valor-pgm" class="badge bg-warning text-dark"
+                                                    style="display:none;"></span>
+                                                <span id="vigencia-pgm" class="badge bg-success text-dark"
+                                                    style="display:none;"></span>
                                             </div>
                                         </div>
 
@@ -203,36 +208,46 @@
                                     <div class="row">
                                         <div class="col-md-2">
                                             <div class="mt-2">
-                                                <span id="zona-nome" class="badge bg-info text-dark" style="display:none;"></span>
-                                                <span id="valor-pgm" class="badge bg-warning text-dark" style="display:none;"></span>
-                                                <span id="vigencia-pgm" class="badge bg-success text-dark" style="display:none;"></span>
+                                                <span id="zona-nome" class="badge bg-info text-dark"
+                                                    style="display:none;"></span>
+                                                <span id="valor-pgm" class="badge bg-warning text-dark"
+                                                    style="display:none;"></span>
+                                                <span id="vigencia-pgm" class="badge bg-success text-dark"
+                                                    style="display:none;"></span>
                                                 <span id="span-loading" style="display:none;">
-                                                    <span class="spinner-border spinner-border-sm text-primary align-middle" role="status"></span>
-                                                    <span class="text-muted ms-2 align-middle">Carregando informações...</span>
+                                                    <span
+                                                        class="spinner-border spinner-border-sm text-primary align-middle"
+                                                        role="status"></span>
+                                                    <span class="text-muted ms-2 align-middle">Carregando
+                                                        informações...</span>
                                                 </span>
                                             </div>
-                                                    id="area_total_dados_terreno" name="area_total_dados_terreno"
-                                                    value="{{ old('area_total_dados_terreno') }}">
-                                                @error('area_total_dados_terreno')
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-2">
+                                                <label for="area_total" class="form-label">Área Total (m²)</label>
+                                                <input type="number" step="0.01" min="0"
+                                                    class="form-control @error('area_total') is-invalid @enderror"
+                                                    id="area_total" name="area_total" value="{{ old('area_total') }}">
+                                                @error('area_total')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                <select
-                                                    class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
-                                                    id="benfeitoria_terreno" name="benfeitoria_terreno">
+                                                <label for="benfeitoria" class="form-label">Benfeitoria</label>
+                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
+                                                    id="benfeitoria" name="benfeitoria">
                                                     <option value="">Selecione</option>
                                                     <option value="Possui"
-                                                        {{ old('benfeitoria_terreno') == 'Possui' ? 'selected' : '' }}>
+                                                        {{ old('benfeitoria') == 'Possui' ? 'selected' : '' }}>
                                                         Possui</option>
                                                     <option value="Não Possui"
-                                                        {{ old('benfeitoria_terreno') == 'Não Possui' ? 'selected' : '' }}>
+                                                        {{ old('benfeitoria') == 'Não Possui' ? 'selected' : '' }}>
                                                         Não Possui</option>
                                                 </select>
-                                                @error('benfeitoria_terreno')
+                                                @error('benfeitoria')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -240,40 +255,39 @@
 
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="posicao_na_quadra_terreno" class="form-label">Posição na
+                                                <label for="posicao_na_quadra" class="form-label">Posição na
                                                     Quadra</label>
                                                 <select
-                                                    class="form-select @error('posicao_na_quadra_terreno') is-invalid @enderror"
-                                                    id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
+                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
+                                                    id="posicao_na_quadra" name="posicao_na_quadra">
                                                     <option value="">Selecione</option>
                                                     <option value="Esquina"
-                                                        {{ old('posicao_na_quadra_terreno') == 'Esquina' ? 'selected' : '' }}>
+                                                        {{ old('posicao_na_quadra') == 'Esquina' ? 'selected' : '' }}>
                                                         Esquina</option>
                                                     <option value="Meio Quadra"
-                                                        {{ old('posicao_na_quadra_terreno') == 'Meio Quadra' ? 'selected' : '' }}>
+                                                        {{ old('posicao_na_quadra') == 'Meio Quadra' ? 'selected' : '' }}>
                                                         Meio Quadra</option>
                                                 </select>
-                                                @error('posicao_na_quadra_terreno')
+                                                @error('posicao_na_quadra')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="topologia_terreno" class="form-label">Topologia</label>
-                                                <select
-                                                    class="form-select @error('topologia_terreno') is-invalid @enderror"
-                                                    id="topologia_terreno" name="topologia_terreno">
+                                                <label for="topologia" class="form-label">Topologia</label>
+                                                <select class="form-select @error('topologia') is-invalid @enderror"
+                                                    id="topologia" name="topologia">
                                                     <option value="">Selecione</option>
                                                     <option value="Plano"
-                                                        {{ old('topologia_terreno') == 'Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia') == 'Plano' ? 'selected' : '' }}>
                                                         Plano</option>
                                                     <option value="Semi Plano"
-                                                        {{ old('topologia_terreno') == 'Semi Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia') == 'Semi Plano' ? 'selected' : '' }}>
                                                         Semi Plano</option>
 
                                                 </select>
-                                                @error('topologia_terreno')
+                                                @error('topologia')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -1088,9 +1102,30 @@
             if (tipo === 'terreno') {
                 sectionsToShow.push('dados-terreno');
                 // Terreno NÃO tem dados-construcao
+                
+                // Garantir que a seção dados-terreno seja exibida imediatamente
+                const dadosTerreno = document.getElementById('dados-terreno');
+                if (dadosTerreno) {
+                    dadosTerreno.style.display = 'block';
+                    dadosTerreno.style.opacity = '1';
+                    dadosTerreno.style.transform = 'translateY(0)';
+                    console.log('✅ Seção dados-terreno foi exibida');
+                    
+                    // Verificar se o campo area_total está visível
+                    const areaTotal = document.getElementById('area_total');
+                    if (areaTotal) {
+                        console.log('✅ Campo area_total encontrado:', areaTotal);
+                        console.log('Campo está visível?', areaTotal.offsetParent !== null);
+                    } else {
+                        console.log('❌ Campo area_total NÃO encontrado');
+                    }
+                } else {
+                    console.log('❌ Seção dados-terreno NÃO encontrada');
+                }
             } else {
                 sectionsToShow.push('dados-construcao');
                 // Outros tipos NÃO tem dados-terreno
+                console.log('Tipo não é terreno, exibindo dados-construcao');
             }
 
             // Mostra apenas as seções necessárias com animação
@@ -1326,7 +1361,8 @@
                                 success: function(vigData) {
                                     $('#span-loading').hide();
                                     if (vigData && vigData.nome) {
-                                        $('#vigencia-pgm').text('Vigência: ' + vigData.nome).show();
+                                        $('#vigencia-pgm').text('Vigência: ' +
+                                            vigData.nome).show();
                                     } else {
                                         $('#vigencia-pgm').hide();
                                     }
@@ -1470,7 +1506,7 @@
             // Busca o campo de área correto baseado no tipo
             let areaInput;
             if (tipo === 'terreno') {
-                areaInput = document.getElementById('area_total_dados_terreno'); // Campo correto para terreno
+                areaInput = document.getElementById('area_total'); // Campo correto para terreno
                 // Se o campo não foi encontrado, pode ser porque a seção ainda está carregando
                 if (!areaInput) {
                     // Tenta novamente em 300ms
@@ -1480,7 +1516,7 @@
             } else if (tipo === 'imovel_urbano' || tipo === 'galpao') {
                 areaInput = document.getElementById('area_terreno');
             } else {
-                areaInput = document.getElementById('area_total_dados_terreno');
+                areaInput = document.getElementById('area_total');
             }
 
             // Só busca o campo area_construida se não for terreno
@@ -1639,16 +1675,25 @@
 
         // Função para adicionar listeners dinamicamente
         function addDynamicListeners() {
-            // Para terreno, usa area_total_dados_terreno (seção "Dados do Terreno")
-            if (document.getElementById('area_total_dados_terreno')) {
-                document.getElementById('area_total_dados_terreno').removeEventListener('input', calcularPrecoUnitario);
-                document.getElementById('area_total_dados_terreno').addEventListener('input', calcularPrecoUnitario);
+            console.log('🔄 Adicionando listeners dinâmicos...');
+            
+            // Para terreno, usa area_total (seção "Dados do Terreno")
+            if (document.getElementById('area_total')) {
+                console.log('✅ Configurando listener para area_total (terreno)');
+                document.getElementById('area_total').removeEventListener('input', calcularPrecoUnitario);
+                document.getElementById('area_total').addEventListener('input', calcularPrecoUnitario);
+            } else {
+                console.log('❌ Campo area_total não encontrado para configurar listener');
             }
+            
             if (document.getElementById('area_terreno')) {
+                console.log('✅ Configurando listener para area_terreno');
                 document.getElementById('area_terreno').removeEventListener('input', calcularPrecoUnitario);
                 document.getElementById('area_terreno').addEventListener('input', calcularPrecoUnitario);
             }
+            
             if (document.getElementById('area_construida')) {
+                console.log('✅ Configurando listener para area_construida');
                 document.getElementById('area_construida').removeEventListener('input', calcularPrecoUnitario);
                 document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
             }

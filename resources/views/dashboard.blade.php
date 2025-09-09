@@ -318,8 +318,8 @@
                                             <i class="fas fa-times me-2"></i>Fechar
                                         </button>
                                         <!-- <button type="button" class="btn btn-primary px-4">
-                                                    <i class="fas fa-edit me-2"></i>Editar
-                                                </button> -->
+                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                    </button> -->
                                     </div>
                                 </div>
                             </div>
@@ -420,7 +420,7 @@
                 text-transform: none;
                 margin-top: 2px;
             }
-            
+
             /* Estilos para o modal de tarefas */
             .table th {
                 background-color: #f8f9fa;
@@ -428,26 +428,26 @@
                 font-weight: 600;
                 font-size: 0.9rem;
             }
-            
+
             .table td {
                 vertical-align: middle;
                 font-size: 0.9rem;
             }
-            
+
             .badge {
                 font-size: 0.75rem;
             }
-            
+
             /* Ajuste para células com texto longo */
             .table td div[title] {
                 cursor: help;
             }
-            
+
             /* Cursor pointer para badges clicáveis */
             .badge-status {
                 transition: all 0.2s ease;
             }
-            
+
             .badge-status:hover {
                 transform: scale(1.05);
                 filter: brightness(1.1);
@@ -931,43 +931,36 @@
                                 </div>
                             </td>
                             <td class="fw-semibold">
-                                <a href="{{ route('controle_de_tarefas.index', ['user' => $usuario['id']]) }}" class="text-decoration-none text-primary" title="Ver tarefas do usuário">
+                                <a href="{{ route('controle_de_tarefas.index', ['user' => $usuario['id']]) }}"
+                                    class="text-decoration-none text-primary" title="Ver tarefas do usuário">
                                     {{ $usuario['nome'] }}
                                 </a>
                             </td>
                             <td class="text-muted small">{{ $usuario['email'] }}</td>
                             <td class="text-center fw-bold">{{ $usuario['total'] }}</td>
                             <td class="text-center">
-                                <span class="badge bg-warning text-dark badge-status" style="cursor:pointer" 
-                                      data-user-id="{{ $usuario['id'] }}" 
-                                      data-user-nome="{{ $usuario['nome'] }}" 
-                                      data-user-email="{{ $usuario['email'] }}" 
-                                      data-status="nao_iniciada"
-                                      data-total="{{ $usuario['nao_iniciada'] ?? 0 }}">{{ $usuario['nao_iniciada'] ?? 0 }}</span>
+                                <span class="badge bg-warning text-dark badge-status" style="cursor:pointer"
+                                    data-user-id="{{ $usuario['id'] }}" data-user-nome="{{ $usuario['nome'] }}"
+                                    data-user-email="{{ $usuario['email'] }}" data-status="nao_iniciada"
+                                    data-total="{{ $usuario['nao_iniciada'] ?? 0 }}">{{ $usuario['nao_iniciada'] ?? 0 }}</span>
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-info text-dark badge-status" style="cursor:pointer"
-                                      data-user-id="{{ $usuario['id'] }}" 
-                                      data-user-nome="{{ $usuario['nome'] }}" 
-                                      data-user-email="{{ $usuario['email'] }}" 
-                                      data-status="em_andamento"
-                                      data-total="{{ $usuario['em_andamento'] ?? 0 }}">{{ $usuario['em_andamento'] ?? 0 }}</span>
+                                    data-user-id="{{ $usuario['id'] }}" data-user-nome="{{ $usuario['nome'] }}"
+                                    data-user-email="{{ $usuario['email'] }}" data-status="em_andamento"
+                                    data-total="{{ $usuario['em_andamento'] ?? 0 }}">{{ $usuario['em_andamento'] ?? 0 }}</span>
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-danger badge-status" style="cursor:pointer"
-                                      data-user-id="{{ $usuario['id'] }}" 
-                                      data-user-nome="{{ $usuario['nome'] }}" 
-                                      data-user-email="{{ $usuario['email'] }}" 
-                                      data-status="atrasada"
-                                      data-total="{{ $usuario['atrasada'] ?? 0 }}">{{ $usuario['atrasada'] ?? 0 }}</span>
+                                    data-user-id="{{ $usuario['id'] }}" data-user-nome="{{ $usuario['nome'] }}"
+                                    data-user-email="{{ $usuario['email'] }}" data-status="atrasada"
+                                    data-total="{{ $usuario['atrasada'] ?? 0 }}">{{ $usuario['atrasada'] ?? 0 }}</span>
                             </td>
                             <td class="text-center">
-                                <span class="badge bg-success badge-status" style="cursor:pointer" 
-                                      data-user-id="{{ $usuario['id'] }}" 
-                                      data-user-nome="{{ $usuario['nome'] }}" 
-                                      data-user-email="{{ $usuario['email'] }}" 
-                                      data-status="concluida"
-                                      data-total="{{ $usuario['concluida'] ?? 0 }}">{{ $usuario['concluida'] ?? 0 }}</span>
+                                <span class="badge bg-success badge-status" style="cursor:pointer"
+                                    data-user-id="{{ $usuario['id'] }}" data-user-nome="{{ $usuario['nome'] }}"
+                                    data-user-email="{{ $usuario['email'] }}" data-status="concluida"
+                                    data-total="{{ $usuario['concluida'] ?? 0 }}">{{ $usuario['concluida'] ?? 0 }}</span>
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('controle_de_tarefas.index', ['user' => $usuario['id']]) }}"
@@ -986,7 +979,8 @@
         </div>
 
         <!-- Modal de tarefas por status -->
-        <div class="modal fade" id="tarefasModal" tabindex="-1" aria-labelledby="tarefasModalLabel" aria-hidden="true">
+        <div class="modal fade" id="tarefasModal" tabindex="-1" aria-labelledby="tarefasModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content border-0 shadow-lg">
                     <div class="modal-header text-white border-0" id="tarefasModalHeader">
@@ -994,7 +988,8 @@
                             <i class="fas fa-tasks me-2"></i>
                             <span id="tarefasModalTitle">Tarefas</span>
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Fechar"></button>
                     </div>
                     <div class="modal-body p-4">
                         <div class="mb-3">
@@ -1021,83 +1016,91 @@
         </div>
 
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event listener para todos os badges de status
-            document.querySelectorAll('.badge-status').forEach(function(badge) {
-                badge.addEventListener('click', function() {
-                    const userId = this.getAttribute('data-user-id');
-                    const userNome = this.getAttribute('data-user-nome');
-                    const userEmail = this.getAttribute('data-user-email');
-                    const status = this.getAttribute('data-status');
-                    const total = this.getAttribute('data-total');
-                    
-                    // Se não há tarefas, não abrir modal
-                    if (parseInt(total) === 0) {
-                        return;
-                    }
-                    
-                    // Configurar cores e textos baseados no status
-                    let statusConfig = {
-                        'nao_iniciada': {
-                            color: 'bg-warning',
-                            text: 'Não Iniciadas',
-                            icon: 'fas fa-hourglass-start'
-                        },
-                        'em_andamento': {
-                            color: 'bg-info',
-                            text: 'Em Andamento',
-                            icon: 'fas fa-spinner'
-                        },
-                        'atrasada': {
-                            color: 'bg-danger',
-                            text: 'Atrasadas',
-                            icon: 'fas fa-exclamation-triangle'
-                        },
-                        'concluida': {
-                            color: 'bg-success',
-                            text: 'Concluídas',
-                            icon: 'fas fa-check-circle'
+            document.addEventListener('DOMContentLoaded', function() {
+                // Event listener para todos os badges de status
+                document.querySelectorAll('.badge-status').forEach(function(badge) {
+                    badge.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user-id');
+                        const userNome = this.getAttribute('data-user-nome');
+                        const userEmail = this.getAttribute('data-user-email');
+                        const status = this.getAttribute('data-status');
+                        const total = this.getAttribute('data-total');
+
+                        // Se não há tarefas, não abrir modal
+                        if (parseInt(total) === 0) {
+                            return;
                         }
-                    };
-                    
-                    const config = statusConfig[status];
-                    
-                    // Configurar modal
-                    const modalHeader = document.getElementById('tarefasModalHeader');
-                    const modalTitle = document.getElementById('tarefasModalTitle');
-                    const responsavelSpan = document.getElementById('tarefasResponsavel');
-                    const statusSpan = document.getElementById('tarefasStatus');
-                    
-                    modalHeader.className = `modal-header text-white border-0 ${config.color}`;
-                    modalTitle.innerHTML = `<i class="${config.icon} me-2"></i>Tarefas ${config.text}`;
-                    responsavelSpan.textContent = `${userNome} (${userEmail})`;
-                    statusSpan.innerHTML = `<span class="badge ${config.color} text-white">${config.text}: ${total}</span>`;
-                    
-                    // Mostrar loading
-                    document.getElementById('tarefasModalContent').innerHTML = `
+
+                        // Configurar cores e textos baseados no status
+                        let statusConfig = {
+                            'nao_iniciada': {
+                                color: 'bg-warning',
+                                text: 'Não Iniciadas',
+                                icon: 'fas fa-hourglass-start'
+                            },
+                            'em_andamento': {
+                                color: 'bg-info',
+                                text: 'Em Andamento',
+                                icon: 'fas fa-spinner'
+                            },
+                            'atrasada': {
+                                color: 'bg-danger',
+                                text: 'Atrasadas',
+                                icon: 'fas fa-exclamation-triangle'
+                            },
+                            'concluida': {
+                                color: 'bg-success',
+                                text: 'Concluídas',
+                                icon: 'fas fa-check-circle'
+                            }
+                        };
+
+                        const config = statusConfig[status];
+
+                        // Configurar modal
+                        const modalHeader = document.getElementById('tarefasModalHeader');
+                        const modalTitle = document.getElementById('tarefasModalTitle');
+                        const responsavelSpan = document.getElementById('tarefasResponsavel');
+                        const statusSpan = document.getElementById('tarefasStatus');
+
+                        modalHeader.className = `modal-header text-white border-0 ${config.color}`;
+                        modalTitle.innerHTML =
+                            `<i class="${config.icon} me-2"></i>Tarefas ${config.text}`;
+                        responsavelSpan.textContent = `${userNome} (${userEmail})`;
+                        statusSpan.innerHTML =
+                            `<span class="badge ${config.color} text-white">${config.text}: ${total}</span>`;
+
+                        // Mostrar loading
+                        document.getElementById('tarefasModalContent').innerHTML = `
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Carregando...</span>
                             </div>
                             <p class="mt-2">Carregando tarefas...</p>
                         </div>`;
-                    
-                    // Abrir modal primeiro
-                    var modal = new bootstrap.Modal(document.getElementById('tarefasModal'));
-                    modal.show();
-                    
-                    // Buscar tarefas via AJAX
-                    fetch(`{{ route('dashboard.tarefas_por_status') }}?user_id=${userId}&status=${status}`, {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json',
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(tarefas => {
-                        // Gerar tabela com dados reais
-                        let tableHtml = `
+
+                        // Abrir modal primeiro
+                        var modal = new bootstrap.Modal(document.getElementById('tarefasModal'));
+                        modal.show();
+
+                        // Buscar tarefas via AJAX
+                        fetch(`{{ route('dashboard.tarefas_por_status') }}?user_id=${userId}&status=${status}`, {
+                                method: 'GET',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute('content'),
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(tarefas => {
+                                // Gerar tabela com dados reais
+                                let tableHtml = `
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead class="table-light">
@@ -1111,17 +1114,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>`;
-                        
-                        if(tarefas.length > 0) {
-                            tarefas.forEach(function(tarefa) {
-                                let prioridadeClass = tarefa.prioridade === 'Alta' ? 'danger' : 
-                                                     (tarefa.prioridade === 'Média' ? 'warning' : 'success');
-                                
-                                tableHtml += `
+
+                                if (tarefas.length > 0) {
+                                    tarefas.forEach(function(tarefa) {
+                                        let prioridadeClass = tarefa.prioridade === 'Alta' ?
+                                            'danger' :
+                                            (tarefa.prioridade === 'Média' ? 'warning' :
+                                                'success');
+
+                                        tableHtml += `
                                     <tr>
                                         <td>${tarefa.processo || '-'}</td>
                                         <td>
-                                            <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" 
+                                            <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
                                                  title="${(tarefa.descricao_atividade || '').replace(/"/g, '&quot;')}">
                                                 ${tarefa.descricao_atividade || '-'}
                                             </div>
@@ -1135,40 +1140,41 @@
                                             </a>
                                         </td>
                                     </tr>`;
-                            });
-                        } else {
-                            tableHtml += `
+                                    });
+                                } else {
+                                    tableHtml += `
                                 <tr>
                                     <td colspan="6" class="text-center text-muted">
                                         <i class="fas fa-inbox fa-2x mb-2"></i><br>
                                         Nenhuma tarefa encontrada com este status.
                                     </td>
                                 </tr>`;
-                        }
-                        
-                        tableHtml += `
+                                }
+
+                                tableHtml += `
                                     </tbody>
                                 </table>
                             </div>`;
-                        
-                        document.getElementById('tarefasModalContent').innerHTML = tableHtml;
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                        document.getElementById('tarefasModalContent').innerHTML = `
+
+                                document.getElementById('tarefasModalContent').innerHTML =
+                                tableHtml;
+                            })
+                            .catch(error => {
+                                console.error('Erro:', error);
+                                document.getElementById('tarefasModalContent').innerHTML = `
                             <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 Erro ao carregar tarefas. Tente novamente.
                             </div>`;
+                            });
                     });
                 });
             });
-        });
         </script>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+    </div>
+    </div>
+    </div>
 
 
 
@@ -1521,23 +1527,25 @@
     </style>
     {{-- escolher todas as tarefas ou somente a do usuario --}}
     <script>
-                // Modal de tarefas concluídas por usuário
-                document.querySelectorAll('.badge-concluida').forEach(function(badge) {
-                    badge.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user-id');
-                        const userNome = this.getAttribute('data-user-nome');
-                        const userEmail = this.getAttribute('data-user-email');
-                        const total = this.getAttribute('data-total');
-                        // Aqui você pode buscar via AJAX as tarefas concluídas do usuário, ou exibir dados estáticos
-                        // Exemplo de conteúdo dinâmico:
-                        let html = `<div class='mb-3'><strong>Responsável:</strong> ${userNome} (${userEmail})</div>`;
-                        html += `<div class='mb-3'><strong>Total concluídas:</strong> ${total}</div>`;
-                        html += `<div class='alert alert-info'>Aqui você pode listar as tarefas concluídas desse usuário.</div>`;
-                        document.getElementById('concluidaModalContent').innerHTML = html;
-                        var modal = new bootstrap.Modal(document.getElementById('concluidaModal'));
-                        modal.show();
-                    });
-                });
+        // Modal de tarefas concluídas por usuário
+        document.querySelectorAll('.badge-concluida').forEach(function(badge) {
+            badge.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                const userNome = this.getAttribute('data-user-nome');
+                const userEmail = this.getAttribute('data-user-email');
+                const total = this.getAttribute('data-total');
+                // Aqui você pode buscar via AJAX as tarefas concluídas do usuário, ou exibir dados estáticos
+                // Exemplo de conteúdo dinâmico:
+                let html =
+                    `<div class='mb-3'><strong>Responsável:</strong> ${userNome} (${userEmail})</div>`;
+                html += `<div class='mb-3'><strong>Total concluídas:</strong> ${total}</div>`;
+                html +=
+                    `<div class='alert alert-info'>Aqui você pode listar as tarefas concluídas desse usuário.</div>`;
+                document.getElementById('concluidaModalContent').innerHTML = html;
+                var modal = new bootstrap.Modal(document.getElementById('concluidaModal'));
+                modal.show();
+            });
+        });
         document.addEventListener('DOMContentLoaded', function() {
             const toggle = document.getElementById('toggleTarefas');
             if (toggle) {

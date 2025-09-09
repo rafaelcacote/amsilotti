@@ -240,111 +240,111 @@
 
                                 <!-- Seção: Dados do Terreno -->
                                 <!-- <div class="mb-4" id="dados-terreno">
-                                                                    <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
-                                                                    </h5>
-                                                                    <div class="row">
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
+                                                                        <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
+                                                                        </h5>
+                                                                        <div class="row">
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
 
 
-                                                                                 <label for="area_total" class="form-label">Área
-                                                                                    Total</label>
-                                                                                <input type="text"
-                                                                                    class="form-control area @error('area_total') is-invalid @enderror"
-                                                                                    id="area_total" name="area_total"
-                                                                                    value="{{ old('area_total', $imovel->area_total ?? '') }}">
-                                                                                @error('area_total')
+                                                                                     <label for="area_total" class="form-label">Área
+                                                                                        Total</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control area @error('area_total') is-invalid @enderror"
+                                                                                        id="area_total" name="area_total"
+                                                                                        value="{{ old('area_total', $imovel->area_total ?? '') }}">
+                                                                                    @error('area_total')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
-                                                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
-                                                                                    id="benfeitoria_terreno" name="benfeitoria">
-                                                                                    <option value="">Selecione</option>
-                                                                                    <option value="Possui"
-                                                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
-                                                                                        Possui</option>
-                                                                                    <option value="Não Possui"
-                                                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
-                                                                                        Não Possui</option>
-                                                                                </select>
-                                                                                @error('benfeitoria')
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
+                                                                                    <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
+                                                                                    <select class="form-select @error('benfeitoria') is-invalid @enderror"
+                                                                                        id="benfeitoria_terreno" name="benfeitoria">
+                                                                                        <option value="">Selecione</option>
+                                                                                        <option value="Possui"
+                                                                                            {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
+                                                                                            Possui</option>
+                                                                                        <option value="Não Possui"
+                                                                                            {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
+                                                                                            Não Possui</option>
+                                                                                    </select>
+                                                                                    @error('benfeitoria')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
 
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
-                                                                                <label for="posicao_na_quadra" class="form-label">Posição na
-                                                                                    Quadra</label>
-                                                                                <select
-                                                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
-                                                                                    id="posicao_na_quadra" name="posicao_na_quadra">
-                                                                                    <option value="">Selecione</option>
-                                                                                    <option value="Esquina"
-                                                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
-                                                                                        Esquina</option>
-                                                                                    <option value="Meio Quadra"
-                                                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
-                                                                                        Meio Quadra</option>
-                                                                                </select>
-                                                                                @error('acessibilidade')
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
+                                                                                    <label for="posicao_na_quadra" class="form-label">Posição na
+                                                                                        Quadra</label>
+                                                                                    <select
+                                                                                        class="form-select @error('posicao_na_quadra') is-invalid @enderror"
+                                                                                        id="posicao_na_quadra" name="posicao_na_quadra">
+                                                                                        <option value="">Selecione</option>
+                                                                                        <option value="Esquina"
+                                                                                            {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
+                                                                                            Esquina</option>
+                                                                                        <option value="Meio Quadra"
+                                                                                            {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
+                                                                                            Meio Quadra</option>
+                                                                                    </select>
+                                                                                    @error('acessibilidade')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
-                                                                                <label for="topologia" class="form-label">Topologia</label>
-                                                                                <select class="form-select @error('topologia') is-invalid @enderror"
-                                                                                    id="topologia" name="topologia">
-                                                                                    <option value="">Selecione</option>
-                                                                                    <option value="Plano"
-                                                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
-                                                                                        Plano</option>
-                                                                                    <option value="Semi Plano"
-                                                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
-                                                                                        Semi Plano</option>
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
+                                                                                    <label for="topologia" class="form-label">Topologia</label>
+                                                                                    <select class="form-select @error('topologia') is-invalid @enderror"
+                                                                                        id="topologia" name="topologia">
+                                                                                        <option value="">Selecione</option>
+                                                                                        <option value="Plano"
+                                                                                            {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
+                                                                                            Plano</option>
+                                                                                        <option value="Semi Plano"
+                                                                                            {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
+                                                                                            Semi Plano</option>
 
-                                                                                </select>
-                                                                                @error('topologia')
+                                                                                    </select>
+                                                                                    @error('topologia')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
 
 
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
-                                                                                <label for="frente" class="form-label">Frente</label>
-                                                                                <input type="text"
-                                                                                    class="form-control @error('frente') is-invalid @enderror"
-                                                                                    id="frente" name="frente"
-                                                                                    value="{{ old('frente', $imovel->frente ?? '') }}">
-                                                                                @error('frente')
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
+                                                                                    <label for="frente" class="form-label">Frente</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control @error('frente') is-invalid @enderror"
+                                                                                        id="frente" name="frente"
+                                                                                        value="{{ old('frente', $imovel->frente ?? '') }}">
+                                                                                    @error('frente')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="mb-2">
-                                                                                <label for="profundidade_equiv" class="form-label">Prof. Equiv</label>
-                                                                                <input type="text"
-                                                                                    class="form-control @error('profundidade_equiv') is-invalid @enderror"
-                                                                                    id="profundidade_equiv" name="profundidade_equiv"
-                                                                                    value="{{ old('profundidade_equiv', $imovel->profundidade_equiv ?? '') }}">
-                                                                                @error('profundidade_equiv')
+                                                                            <div class="col-md-2">
+                                                                                <div class="mb-2">
+                                                                                    <label for="profundidade_equiv" class="form-label">Prof. Equiv</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control @error('profundidade_equiv') is-invalid @enderror"
+                                                                                        id="profundidade_equiv" name="profundidade_equiv"
+                                                                                        value="{{ old('profundidade_equiv', $imovel->profundidade_equiv ?? '') }}">
+                                                                                    @error('profundidade_equiv')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
 
-                                                                    </div>
-                                                                </div> -->
+                                                                        </div>
+                                                                    </div> -->
 
                                 <!-- Seção: Dados da Construção (aparece para todos exceto terreno) -->
                                 <div class="mb-4" id="dados-construcao">
@@ -678,64 +678,61 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
-                                                <select
-                                                    class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
-                                                    id="benfeitoria_terreno" name="benfeitoria_terreno">
+                                                <label for="benfeitoria" class="form-label">Benfeitoria</label>
+                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
+                                                    id="benfeitoria" name="benfeitoria">
                                                     <option value="">Selecione</option>
-                                                    <option value="possui"
-                                                        {{ old('benfeitoria_terreno', $imovel->benfeitoria ?? '') == 'possui' ? 'selected' : '' }}>
+                                                    <option value="Possui"
+                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
                                                         Possui
                                                     </option>
-                                                    <option value="nao possui"
-                                                        {{ old('benfeitoria_terreno', $imovel->benfeitoria ?? '') == 'nao possui' ? 'selected' : '' }}>
-                                                        Não
-                                                        Possui</option>
+                                                    <option value="Não Possui"
+                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
+                                                        Não Possui</option>
                                                 </select>
-                                                @error('benfeitoria_terreno')
+                                                @error('benfeitoria')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label for="posicao_na_quadra_terreno" class="form-label">Posição na
+                                                <label for="posicao_na_quadra" class="form-label">Posição na
                                                     Quadra</label>
                                                 <select
-                                                    class="form-select @error('posicao_na_quadra_terreno') is-invalid @enderror"
-                                                    id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
+                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
+                                                    id="posicao_na_quadra" name="posicao_na_quadra">
                                                     <option value="">Selecione</option>
-                                                    <option value="esquina"
-                                                        {{ old('posicao_na_quadra_terreno', old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '')) == 'esquina' ? 'selected' : '' }}>
+                                                    <option value="Esquina"
+                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
                                                         Esquina
                                                     </option>
-                                                    <option value="meio quadra"
-                                                        {{ old('posicao_na_quadra_terreno', old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '')) == 'meio quadra' ? 'selected' : '' }}>
+                                                    <option value="Meio Quadra"
+                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
                                                         Meio Quadra
                                                     </option>
                                                 </select>
-                                                @error('posicao_na_quadra_terreno')
+                                                @error('posicao_na_quadra')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label for="topologia_terreno" class="form-label">Topologia</label>
-                                                <select
-                                                    class="form-select @error('topologia_terreno') is-invalid @enderror"
-                                                    id="topologia_terreno" name="topologia_terreno">
+                                                <label for="topologia" class="form-label">Topologia</label>
+                                                <select class="form-select @error('topologia') is-invalid @enderror"
+                                                    id="topologia" name="topologia">
                                                     <option value="">Selecione</option>
                                                     <option value="Plano"
-                                                        {{ old('topologia_terreno', old('topologia', $imovel->topologia ?? '')) == 'Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
                                                         Plano
                                                     </option>
                                                     <option value="Semi Plano"
-                                                        {{ old('topologia_terreno', old('topologia', $imovel->topologia ?? '')) == 'Semi Plano' ? 'selected' : '' }}>
+                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
                                                         Semi Plano
                                                     </option>
                                                 </select>
-                                                @error('topologia_terreno')
+                                                @error('topologia')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -1884,7 +1881,7 @@
     </script>
 
     <!-- Antes do fechamento do script principal
-                                     Impede envio do campo imagens_data se não houver alteração nas imagens -->
+                                         Impede envio do campo imagens_data se não houver alteração nas imagens -->
     <script>
         $(document).ready(function() {
             var imagensDataInput = document.getElementById('imagens_data');

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
+
 {
     public function index(Request $request)
     {
@@ -221,5 +222,68 @@ class DashboardController extends Controller
             'periciasEmRedacao',
             'periciasEntregues'
         ));
+    }
+    /**
+     * Retorna tarefas filtradas por usuário e status para o dashboard (AJAX)
+     */
+    public function tarefasPorStatus(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $status = $request->input('status');
+
+        // Mapeamento para status do banco, considerando variações
+        $statusMap = [
+            'nao_iniciada' => ['nao iniciada', 'não iniciada', 'nao_iniciada', 'não_iniciada'],
+            'em_andamento' => ['em andamento', 'em_andamento'],
+            'atrasada' => ['atrasada', 'atrasado'],
+            'concluida' => ['concluida', 'concluída'],
+        ];
+
+        $statusDb = $statusMap[$status] ?? null;
+        if (!$userId || !$statusDb) {
+            return response()->json([], 200);
+        }
+
+        $tarefas = \App\Models\ControleDeTarefas::whereHas('membroEquipe', function($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })
+            ->where(function($query) use ($statusDb) {
+                foreach ($statusDb as $statusValue) {
+                    $query->orWhereRaw('LOWER(status) = ?', [strtolower($statusValue)]);
+                }
+            })
+            ->orderBy('prazo', 'asc')
+            ->get();
+
+        // Formata para o frontend
+        $result = $tarefas->map(function($tarefa) {
+            // Trata o campo prazo com segurança
+            $prazoFormatado = '-';
+            if ($tarefa->prazo) {
+                try {
+                    // Verifica se é uma data válida antes de tentar fazer o parse
+                    if (strtotime($tarefa->prazo) !== false) {
+                        $prazoFormatado = \Carbon\Carbon::parse($tarefa->prazo)->format('d/m/Y');
+                    } else {
+                        // Se não for uma data válida, mantém o valor original
+                        $prazoFormatado = $tarefa->prazo;
+                    }
+                } catch (\Exception $e) {
+                    // Em caso de erro, mantém o valor original
+                    $prazoFormatado = $tarefa->prazo;
+                }
+            }
+
+            return [
+                'id' => $tarefa->id,
+                'processo' => $tarefa->processo ?? '-',
+                'descricao_atividade' => $tarefa->descricao_atividade ?? '-',
+                'tipo_atividade' => $tarefa->tipo_atividade ?? '-',
+                'prioridade' => $tarefa->prioridade ?? '-',
+                'prazo' => $prazoFormatado,
+            ];
+        });
+
+        return response()->json($result, 200);
     }
 }
