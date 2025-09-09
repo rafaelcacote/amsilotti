@@ -274,13 +274,40 @@ class ControleDeTarefasController extends Controller
         }
     }
     
-   public function exportarParaImpressao(Request $request)
+    public function getTarefasPorStatus(Request $request)
+    {
+        if (!auth()->user()->can('view tarefas')) {
+            abort(403, 'Você não tem permissão para visualizar tarefas.');
+        }
+
+        $userId = $request->user_id;
+        $status = $request->status;
+        
+        $statusMap = [
+            'nao_iniciada' => 'nao iniciada',
+            'em_andamento' => 'em andamento', 
+            'atrasada' => 'atrasado',
+            'concluida' => 'concluida'
+        ];
+        
+        $statusBusca = $statusMap[$status] ?? $status;
+        
+        $tarefas = ControleDeTarefas::with(['membroEquipe.usuario', 'cliente'])
+            ->whereHas('membroEquipe.usuario', function($query) use ($userId) {
+                $query->where('id', $userId);
+            })
+            ->where('status', $statusBusca)
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($tarefas);
+    }
+
+    public function exportarParaImpressao(Request $request)
 {
     if (!auth()->user()->can('export tarefas')) {
         abort(403, 'Você não tem permissão para exportar tarefas.');
-    }
-    
-    // Aplicar os mesmos filtros da index
+    }    // Aplicar os mesmos filtros da index
 
     $query = ControleDeTarefas::query()
         ->with(['cliente', 'membroEquipe'])
