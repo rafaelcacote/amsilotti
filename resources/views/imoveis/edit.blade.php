@@ -26,6 +26,7 @@
             </div>
 
             <div class="row">
+                                                                            
                 <div class="col-sm-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
@@ -752,6 +753,38 @@
                                             </div>
                                         </div>
 
+                                        <!-- Tipologia e Marina: só aparecem para tipo terreno -->
+                                                                            <div class="col-md-2" id="tipologia-terreno-container" style="display:none;">
+                                                                                <div class="mb-2">
+                                                                                    <label for="tipologia" class="form-label">Tipologia</label>
+                                                                                    <select class="form-select @error('tipologia') is-invalid @enderror" id="tipologia" name="tipologia">
+                                                                                        <option value="">Selecione</option>
+                                                                                        <option value="seco" {{ old('tipologia', $imovel->tipologia ?? '') == 'seco' ? 'selected' : '' }}>Seco</option>
+                                                                                        <option value="alagada" {{ old('tipologia', $imovel->tipologia ?? '') == 'alagada' ? 'selected' : '' }}>Alagada</option>
+                                                                                        <option value="brejosa" {{ old('tipologia', $imovel->tipologia ?? '') == 'brejosa' ? 'selected' : '' }}>Brejosa</option>
+                                                                                    </select>
+                                                                                    @error('tipologia')
+                                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                                    @enderror
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-2" id="marina-terreno-container" style="display:none;">
+                                                                                <div class="mb-2">
+                                                                                    <label class="form-label d-block">Marina</label>
+                                                                                    <div class="form-check form-check-inline">
+                                                                                        <input class="form-check-input" type="radio" name="marina" id="marina_sim" value="1" {{ old('marina', $imovel->marina ?? '') == '1' ? 'checked' : '' }}>
+                                                                                        <label class="form-check-label" for="marina_sim">Sim</label>
+                                                                                    </div>
+                                                                                    <div class="form-check form-check-inline">
+                                                                                        <input class="form-check-input" type="radio" name="marina" id="marina_nao" value="0" {{ old('marina', $imovel->marina ?? '') == '0' ? 'checked' : '' }}>
+                                                                                        <label class="form-check-label" for="marina_nao">Não</label>
+                                                                                    </div>
+                                                                                    @error('marina')
+                                                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                                    @enderror
+                                                                                </div>
+                                                                            </div>
+
                                     </div>
                                 </div>
 
@@ -1139,13 +1172,13 @@
                 areaTerrenoCol.style.display = (tipo === 'imovel_urbano' || tipo === 'galpao') ? 'block' : 'none';
             }
 
-            // Controle dos campos comuns
+            // Campos específicos de terreno
+            const tipologiaTerrenoContainer = document.getElementById('tipologia-terreno-container');
+            const marinaTerrenoContainer = document.getElementById('marina-terreno-container');
+
             switch (tipo) {
                 case 'apartamento':
-                    // Área
                     if (areaLabel) areaLabel.textContent = 'Área Útil';
-
-                    // Campos alternados
                     if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
                     if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
                     if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'none';
@@ -1153,13 +1186,11 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'none';
                     if (geradorContainer) geradorContainer.style.display = 'block';
                     if (descricaoContainer) descricaoContainer.style.display = 'none';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
-
                 case 'sala_comercial':
-                    // Área
                     if (areaLabel) areaLabel.textContent = 'Área Útil';
-
-                    // Campos alternados
                     if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
                     if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
                     if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
@@ -1167,13 +1198,11 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
-
                 case 'galpao':
-                    // Área
                     if (areaLabel) areaLabel.textContent = 'Área Construída';
-
-                    // Campos alternados
                     if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
                     if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
                     if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
@@ -1181,13 +1210,11 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
-
                 case 'imovel_urbano':
-                    // Área
                     if (areaLabel) areaLabel.textContent = 'Área Construída';
-
-                    // Campos alternados
                     if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
                     if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
                     if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
@@ -1195,18 +1222,16 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
-
                 case 'terreno':
-                    // Para terreno, os campos ficam na seção dados-terreno
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'block';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'block';
                     break;
-
                 default:
-                    // Área
                     if (areaLabel) areaLabel.textContent = 'Área Construída';
-
-                    // Campos alternados
                     if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
                     if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
                     if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
@@ -1214,6 +1239,8 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
             }
 
             // Mostra o badge do tipo

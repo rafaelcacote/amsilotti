@@ -315,14 +315,17 @@
                                             </div>
                                             <div class="col-md-2" id="marina-terreno-container" style="display:none;">
                                                 <div class="mb-2">
-                                                    <label for="marina" class="form-label">Marina</label>
-                                                    <select class="form-select @error('marina') is-invalid @enderror" id="marina" name="marina">
-                                                        <option value="">Selecione</option>
-                                                        <option value="1" {{ old('marina') == '1' ? 'selected' : '' }}>Sim</option>
-                                                        <option value="0" {{ old('marina') == '0' ? 'selected' : '' }}>Não</option>
-                                                    </select>
+                                                    <label class="form-label d-block">Marina</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="marina" id="marina_sim" value="1" {{ old('marina') == '1' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="marina_sim">Sim</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="marina" id="marina_nao" value="0" {{ old('marina') == '0' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="marina_nao">Não</label>
+                                                    </div>
                                                     @error('marina')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                                     @enderror
                                                 </div>
                                             </div>

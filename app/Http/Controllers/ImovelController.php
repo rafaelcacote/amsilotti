@@ -298,7 +298,10 @@ public function update(Request $request, Imovel $imovel)
         'vagas_garagem' => 'nullable|integer',
         'gerador' => 'nullable',
         'area_lazer' => 'nullable',
-        'transacao' => 'nullable|string|max:255'
+        'transacao' => 'nullable|string|max:255',
+        'tipologia' => 'nullable|string|in:seco,alagada,brejosa',
+        'marina' => 'nullable|in:0,1'
+
     ]);
 
     if ($validator->fails()) {
@@ -327,7 +330,13 @@ public function update(Request $request, Imovel $imovel)
         $validated['vagas_garagem'] = $request->vagas_garagem_apartamento;
     } elseif ($request->tipo === 'sala_comercial') {
         $validated['vagas_garagem'] = $request->vagas_garagem_sala;
-    }    // Atualizar o imóvel
+    }
+
+    // Garantir que tipologia e marina sejam salvos corretamente
+    $validated['tipologia'] = $request->input('tipologia', null);
+    $validated['marina'] = $request->input('marina', null);
+
+    // Atualizar o imóvel
     $imovel->update($validated);
 
     // Processar atualizações de descrições de imagens existentes
