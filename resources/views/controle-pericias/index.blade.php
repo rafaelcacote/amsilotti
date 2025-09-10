@@ -17,6 +17,14 @@
                                         <span>Nova Perícia</span>
                                     </a>
                                 @endcan
+                                
+                                    <button type="button" id="btnImprimir"
+                                        class="btn btn-sm btn-outline-info d-flex align-items-center gap-2 px-3 py-2"
+                                        style="transition: all 0.2s ease;">
+                                        <i class="fas fa-print" style="font-size: 0.9rem;"></i>
+                                        <span>Imprimir</span>
+                                    </button>
+                                
                             </div>
                         </div>
                         <div class="card-body bg-light">
@@ -282,4 +290,23 @@
             });
         </script>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnImprimir = document.getElementById('btnImprimir');
+            
+            if (btnImprimir) {
+                btnImprimir.addEventListener('click', function() {
+                    // Capturar os parâmetros atuais da URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                    // Construir a URL de impressão com os mesmos parâmetros
+                    const printUrl = '{{ route("controle-pericias.print-list") }}?' + urlParams.toString();
+                    
+                    // Abrir em nova aba
+                    window.open(printUrl, '_blank');
+                });
+            }
+        });
+    </script>
 @endsection

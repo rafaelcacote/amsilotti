@@ -52,38 +52,40 @@
                                 <div class="mb-6">
                                     <h5 class="text-primary mb-3"><i class="fas fa-house me-2"></i>Tipo do Imóvel</h5>
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="tipo" class="form-label">Tipo</label>
-                                                <select class="form-select" id="tipo" name="tipo_fake" disabled>
-                                                    <option value="">Selecione o Tipo</option>
+                                                <label for="tipo" class="form-label fw-bold">Tipo do imóvel <span class="text-danger">*</span></label>
+                                                <select
+                                                    class="form-select form-select-lg @error('tipo') is-invalid @enderror"
+                                                    id="tipo" name="tipo" readonly>
+                                                    <option value="">🏠 Escolha o tipo do imóvel...</option>
                                                     <option value="apartamento"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'apartamento' ? 'selected' : '' }}>
-                                                        Apartamento</option>
+                                                        🏢 Apartamento</option>
                                                     <option value="imovel_urbano"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'imovel_urbano' ? 'selected' : '' }}>
-                                                        Imóvel Urbano</option>
+                                                        🏘️ Imóvel Urbano</option>
                                                     <option value="galpao"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'galpao' ? 'selected' : '' }}>
-                                                        Galpão</option>
+                                                        🏭 Galpão</option>
                                                     <option value="sala_comercial"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'sala_comercial' ? 'selected' : '' }}>
-                                                        Sala Comercial</option>
+                                                        🏢 Sala Comercial</option>
                                                     <option value="terreno"
                                                         {{ old('tipo', $imovel->tipo ?? '') == 'terreno' ? 'selected' : '' }}>
-                                                        Terreno</option>
+                                                        🌿 Terreno</option>
                                                 </select>
                                                 @error('tipo')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
+                                                <div class="form-text">O tipo não pode ser alterado na edição</div>
                                             </div>
-                                            <input type="hidden" name="tipo"
-                                                value="{{ old('tipo', $imovel->tipo ?? '') }}">
                                         </div>
-                                        <div class="col-md-4">
+                                    </div>
+                                    <div class="row" id="fator-fundamentacao-row">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="fator_fundamentacao" class="form-label">Fator de
-                                                    Fundamentação</label>
+                                                <label for="fator_fundamentacao" class="form-label">Fator de Fundamentação</label>
                                                 <select
                                                     class="form-select @error('fator_fundamentacao') is-invalid @enderror"
                                                     id="fator_fundamentacao" name="fator_fundamentacao">
@@ -104,6 +106,16 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Tipo selecionado badge -->
+                                    <div id="tipo-badge-container" class="mb-4">
+                                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <div>
+                                                <strong>Tipo selecionado:</strong> <span id="tipo-badge-text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -114,8 +126,8 @@
                                     </h5>
 
                                     <div class="row g-3">
-                                        <!-- Endereço (ocupa 8 colunas) -->
-                                        <div class="col-12 col-md-8">
+                                        <!-- Endereço (ocupa 6 colunas) -->
+                                        <div class="col-12 col-md-5">
                                             <label for="endereco" class="form-label">Endereço</label>
                                             <input type="text"
                                                 class="form-control @error('endereco') is-invalid @enderror" id="endereco"
@@ -125,8 +137,8 @@
                                             @enderror
                                         </div>
 
-                                        <!-- Número (ocupa 4 colunas) -->
-                                        <div class="col-12 col-md-4">
+                                        <!-- Número (ocupa 2 colunas) -->
+                                        <div class="col-12 col-md-2">
                                             <label for="numero" class="form-label">Número</label>
                                             <input type="text" class="form-control @error('numero') is-invalid @enderror"
                                                 id="numero" name="numero"
@@ -137,69 +149,37 @@
                                         </div>
 
                                         <!-- Bairro -->
-                                        <div class="col-12 col-md-2">
-                                            <label for="bairro_id" class="form-label">Bairro</label>
+                                        <div class="col-12 col-md-5">
+                                            <label for="bairro_id" class="form-label">Bairro / Via Especifica</label>
                                             <select
                                                 class="form-select js-example-basic-single @error('bairro_id') is-invalid @enderror"
                                                 id="bairro_id" name="bairro_id">
-                                                <option value="">Selecione o Bairro</option>
+                                                <option value="">Selecione</option>
                                                 @foreach ($bairros as $bairro)
                                                     <option value="{{ $bairro->id }}"
                                                         {{ old('bairro_id', $imovel->bairro_id ?? '') == $bairro->id ? 'selected' : '' }}>
-                                                        {{ $bairro->nome }}</option>
+                                                        {{ $bairro->zona->nome ?? '' }} - {{ $bairro->nome }}</option>
                                                 @endforeach
                                             </select>
                                             @error('bairro_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                        </div>
-
-                                        <!-- Zona -->
-                                        <div class="col-12 col-md-2">
-                                            <label for="zona" class="form-label">Zona</label>
-                                            <select class="form-select @error('zona_id') is-invalid @enderror"
-                                                id="zona" name="zona_id">
-                                                <option value="">Selecione a Zona</option>
-                                                @foreach ($zonas as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ old('zona_id', $imovel->zona_id ?? '') == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->nome }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('zona_id')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Via Específica Checkbox -->
-                                        <div class="col-12 col-md-2 d-flex align-items-center pt-4">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                    id="via_especifica_checkbox">
-                                                <label class="form-check-label" for="via_especifica_checkbox">Via
-                                                    Específica</label>
+                                            <div class="mt-2 d-flex gap-2 align-items-center">
+                                                <span id="span-loading" style="display:none;">
+                                                    <span
+                                                        class="spinner-border spinner-border-sm text-primary align-middle"
+                                                        role="status"></span>
+                                                    <span class="text-muted ms-2 align-middle">Carregando
+                                                        informações...</span>
+                                                </span>
+                                                <span id="valor-pgm" class="badge bg-warning text-dark"
+                                                    style="display:none;"></span>
+                                                <span id="vigencia-pgm" class="badge bg-success text-dark"
+                                                    style="display:none;"></span>
                                             </div>
                                         </div>
 
-                                        <!-- Campo Via Específica -->
-                                        <div class="col-12 col-md-3" id="via_especifica_field" style="display: none;">
-                                            <label for="via_especifica" class="form-label">Via Específica</label>
-                                            <input type="text" class="form-control" id="via_especifica">
-                                            <input type="hidden" id="via_especifica_id" name="via_especifica_id">
-                                        </div>
-
-                                        <!-- Campo PGM -->
-                                        <div class="col-12 col-md-1">
-                                            <label for="pgm" class="form-label">PGM</label>
-                                            <input type="text" class="form-control @error('pgm') is-invalid @enderror"
-                                                id="pgm" name="pgm"
-                                                value="{{ old('pgm', $imovel->pgm ?? '') }}">
-                                            @error('pgm')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="row">
+                                        <div class="row" style="margin-top: 35px;">
                                             <!-- Botão -->
                                             <div class="col-auto d-flex align-items-end">
                                                 <button type="button" id="verNoMapaBtn" class="btn btn-primary"
@@ -232,7 +212,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-
 
                                     </div>
                                 </div>
@@ -347,13 +326,13 @@
                                                                     </div> -->
 
                                 <!-- Seção: Dados da Construção (aparece para todos exceto terreno) -->
-                                <div class="mb-4" id="dados-construcao">
+                                <div class="mb-4" id="dados-construcao" style="display: none;">
                                     <h5 class="text-primary mb-3"><i class="fas fa-building me-2"></i>Dados da Construção
                                     </h5>
                                     <div class="row">
                                         <!-- Área (Construída/Útil) -->
                                         <div class="col-md-2">
-                                            <div class="mb-3">
+                                            <div class="mb-2">
                                                 <label for="area_construida" class="form-label" id="label-area">Área
                                                     Construída</label>
                                                 <input type="text"
@@ -363,6 +342,20 @@
                                                 @error('area_construida')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="area_terreno_col" style="display: none;">
+                                            <div class="mb-2">
+                                                <label for="area_terreno_construcao" class="form-label">Área
+                                                    Terreno</label>
+                                                <input type="text"
+                                                    class="form-control area @error('area_terreno_construcao') is-invalid @enderror"
+                                                    id="area_terreno" name="area_terreno_construcao"
+                                                    value="{{ old('area_terreno_construcao', $imovel->area_terreno ?? '') }}">
+                                                @error('area_terreno_construcao')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+
                                             </div>
                                         </div>
 
@@ -660,108 +653,105 @@
                                     </div>
                                 </div>
 
-                                <!-- Seção: Dados do Terreno (aparece apenas para terreno) -->
+                                <!-- Seção: Dados do Terreno -->
                                 <div class="mb-4" id="dados-terreno" style="display: none;">
-                                    <h5 class="text-primary mb-3"><i class="fas fa-map me-2"></i>Dados do Terreno</h5>
+                                    <h5 class="text-primary mb-3"><i class="fas fa-landmark me-2"></i>Dados do Terreno
+                                    </h5>
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="area_total" class="form-label">Área Total</label>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label for="area_total" class="form-label">Área Total (m²)</label>
                                                 <input type="text"
                                                     class="form-control area @error('area_total') is-invalid @enderror"
-                                                    id="area_total" name="area_total"
-                                                    value="{{ old('area_total', $imovel->area_total ?? '') }}">
+                                                    id="area_total" name="area_total" value="{{ old('area_total', $imovel->area_total ?? '') }}" placeholder="Ex: 230,00">
                                                 @error('area_total')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="benfeitoria" class="form-label">Benfeitoria</label>
-                                                <select class="form-select @error('benfeitoria') is-invalid @enderror"
-                                                    id="benfeitoria" name="benfeitoria">
+                                            <div class="mb-2">
+                                                <label for="benfeitoria_terreno" class="form-label">Benfeitoria</label>
+                                                <select class="form-select @error('benfeitoria_terreno') is-invalid @enderror"
+                                                    id="benfeitoria_terreno" name="benfeitoria_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Possui"
-                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
-                                                        Possui
-                                                    </option>
+                                                        {{ old('benfeitoria_terreno', $imovel->benfeitoria ?? '') == 'Possui' ? 'selected' : '' }}>
+                                                        Possui</option>
                                                     <option value="Não Possui"
-                                                        {{ old('benfeitoria', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
+                                                        {{ old('benfeitoria_terreno', $imovel->benfeitoria ?? '') == 'Não Possui' ? 'selected' : '' }}>
                                                         Não Possui</option>
                                                 </select>
-                                                @error('benfeitoria')
+                                                @error('benfeitoria_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="posicao_na_quadra" class="form-label">Posição na
-                                                    Quadra</label>
+                                            <div class="mb-2">
+                                                <label for="posicao_na_quadra_terreno" class="form-label">Posição na Quadra</label>
                                                 <select
-                                                    class="form-select @error('posicao_na_quadra') is-invalid @enderror"
-                                                    id="posicao_na_quadra" name="posicao_na_quadra">
+                                                    class="form-select @error('posicao_na_quadra_terreno') is-invalid @enderror"
+                                                    id="posicao_na_quadra_terreno" name="posicao_na_quadra_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Esquina"
-                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
-                                                        Esquina
-                                                    </option>
+                                                        {{ old('posicao_na_quadra_terreno', $imovel->posicao_na_quadra ?? '') == 'Esquina' ? 'selected' : '' }}>
+                                                        Esquina</option>
                                                     <option value="Meio Quadra"
-                                                        {{ old('posicao_na_quadra', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
-                                                        Meio Quadra
-                                                    </option>
+                                                        {{ old('posicao_na_quadra_terreno', $imovel->posicao_na_quadra ?? '') == 'Meio Quadra' ? 'selected' : '' }}>
+                                                        Meio Quadra</option>
                                                 </select>
-                                                @error('posicao_na_quadra')
+                                                @error('posicao_na_quadra_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="topologia" class="form-label">Topologia</label>
-                                                <select class="form-select @error('topologia') is-invalid @enderror"
-                                                    id="topologia" name="topologia">
+                                            <div class="mb-2">
+                                                <label for="topologia_terreno" class="form-label">Topologia</label>
+                                                <select class="form-select @error('topologia_terreno') is-invalid @enderror"
+                                                    id="topologia_terreno" name="topologia_terreno">
                                                     <option value="">Selecione</option>
                                                     <option value="Plano"
-                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
-                                                        Plano
-                                                    </option>
+                                                        {{ old('topologia_terreno', $imovel->topologia ?? '') == 'Plano' ? 'selected' : '' }}>
+                                                        Plano</option>
                                                     <option value="Semi Plano"
-                                                        {{ old('topologia', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
-                                                        Semi Plano
-                                                    </option>
+                                                        {{ old('topologia_terreno', $imovel->topologia ?? '') == 'Semi Plano' ? 'selected' : '' }}>
+                                                        Semi Plano</option>
+
                                                 </select>
-                                                @error('topologia')
+                                                @error('topologia_terreno')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
+
+
                                         <div class="col-md-2">
-                                            <div class="mb-3">
+                                            <div class="mb-2">
                                                 <label for="frente" class="form-label">Frente</label>
                                                 <input type="text"
                                                     class="form-control @error('frente') is-invalid @enderror"
-                                                    id="frente" name="frente"
-                                                    value="{{ old('frente', $imovel->frente ?? '') }}">
+                                                    id="frente" name="frente" value="{{ old('frente', $imovel->frente ?? '') }}">
                                                 @error('frente')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label for="profundidade_equivalente" class="form-label">Prof.
-                                                    Equiv.</label>
+                                            <div class="mb-2">
+                                                <label for="profundidade_equiv" class="form-label">Prof. Equiv</label>
                                                 <input type="text"
-                                                    class="form-control @error('profundidade_equivalente') is-invalid @enderror"
-                                                    id="profundidade_equivalente" name="profundidade_equivalente"
-                                                    value="{{ old('profundidade_equivalente', old('profundidade_equiv', $imovel->profundidade_equiv ?? '')) }}">
-                                                @error('profundidade_equivalente')
+                                                    class="form-control @error('profundidade_equiv') is-invalid @enderror"
+                                                    id="profundidade_equiv" name="profundidade_equiv"
+                                                    value="{{ old('profundidade_equiv', $imovel->profundidade_equiv ?? '') }}">
+                                                @error('profundidade_equiv')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -783,10 +773,10 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <div class="mb-3">
+                                            <div class="mb-2">
                                                 <label for="transacao" class="form-label">Transação</label>
                                                 <select class="form-select @error('transacao') is-invalid @enderror"
-                                                    id="transacao_terreno" name="transacao">
+                                                    id="transacao" name="transacao">
                                                     <option value="">Selecione</option>
                                                     <option value="Vendido"
                                                         {{ old('transacao', $imovel->transacao ?? '') == 'Vendido' ? 'selected' : '' }}>
@@ -1069,10 +1059,40 @@
         #vagas-garagem-container {
             transition: all 0.3s ease;
         }
+
+        /* Select tipo styling melhorado */
+        #tipo.form-select-lg {
+            font-size: 1.1rem;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #tipo.form-select-lg:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Tipo badge styling */
+        #tipo-badge-container .alert {
+            border-left: 4px solid #198754;
+            background: linear-gradient(135deg, #d1e7dd 0%, #f8f9fa 100%);
+        }
     </style>
 
     {{-- controle de campos dependendo do tipo do imovel  --}}
     <script>
+        // Mapeamento de tipos para labels amigáveis
+        const tipoLabels = {
+            'apartamento': '🏢 Apartamento',
+            'imovel_urbano': '🏘️ Imóvel Urbano',
+            'galpao': '🏭 Galpão',
+            'sala_comercial': '🏢 Sala Comercial',
+            'terreno': '🌿 Terreno'
+        };
+
         function toggleSections() {
             const tipo = document.getElementById('tipo').value;
             const dadosTerreno = document.getElementById('dados-terreno');
@@ -1080,6 +1100,7 @@
             const apartamentoCampos = document.getElementById('apartamento-campos');
             const salaComercialCampos = document.getElementById('sala-comercial-campos');
             const areaLabel = document.getElementById('label-area');
+            const areaTerrenoCol = document.getElementById('area_terreno_col');
 
             // Campos alternados
             const benfeitoriaContainer = document.getElementById('benfeitoria-container');
@@ -1113,90 +1134,186 @@
                 }
             }
 
+            // Controla campo Área Terreno (só para galpão e imóvel urbano)
+            if (areaTerrenoCol) {
+                areaTerrenoCol.style.display = (tipo === 'imovel_urbano' || tipo === 'galpao') ? 'block' : 'none';
+            }
+
             // Controle dos campos comuns
             switch (tipo) {
                 case 'apartamento':
                     // Área
-                    areaLabel.textContent = 'Área Útil';
+                    if (areaLabel) areaLabel.textContent = 'Área Útil';
 
                     // Campos alternados
-                    benfeitoriaContainer.style.display = 'none';
-                    mobiliadoContainer.style.display = 'block';
-                    posicaoQuadraContainer.style.display = 'none';
-                    banheirosContainer.style.display = 'block';
-                    topologiaContainer.style.display = 'none';
-                    geradorContainer.style.display = 'block';
-                    descricaoContainer.style.display = 'block';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'none';
+                    if (banheirosContainer) banheirosContainer.style.display = 'block';
+                    if (topologiaContainer) topologiaContainer.style.display = 'none';
+                    if (geradorContainer) geradorContainer.style.display = 'block';
+                    if (descricaoContainer) descricaoContainer.style.display = 'none';
                     break;
 
                 case 'sala_comercial':
                     // Área
-                    areaLabel.textContent = 'Área Útil';
+                    if (areaLabel) areaLabel.textContent = 'Área Útil';
 
                     // Campos alternados
-                    benfeitoriaContainer.style.display = 'none';
-                    mobiliadoContainer.style.display = 'block';
-                    posicaoQuadraContainer.style.display = 'none';
-                    banheirosContainer.style.display = 'block';
-                    topologiaContainer.style.display = 'none';
-                    geradorContainer.style.display = 'block';
-                    descricaoContainer.style.display = 'block';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'none';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'block';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    break;
+
+                case 'galpao':
+                    // Área
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
+
+                    // Campos alternados
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 case 'imovel_urbano':
-                case 'galpao':
                     // Área
-                    areaLabel.textContent = 'Área Construída';
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
 
                     // Campos alternados
-                    benfeitoriaContainer.style.display = 'block';
-                    mobiliadoContainer.style.display = 'none';
-                    posicaoQuadraContainer.style.display = 'block';
-                    banheirosContainer.style.display = 'none';
-                    topologiaContainer.style.display = 'block';
-                    geradorContainer.style.display = 'none';
-                    descricaoContainer.style.display = 'block';
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
 
                 case 'terreno':
-                    // Nada a fazer aqui, os campos do terreno são independentes
+                    // Para terreno, os campos ficam na seção dados-terreno
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
                     break;
+
+                default:
+                    // Área
+                    if (areaLabel) areaLabel.textContent = 'Área Construída';
+
+                    // Campos alternados
+                    if (benfeitoriaContainer) benfeitoriaContainer.style.display = 'block';
+                    if (mobiliadoContainer) mobiliadoContainer.style.display = 'none';
+                    if (posicaoQuadraContainer) posicaoQuadraContainer.style.display = 'block';
+                    if (banheirosContainer) banheirosContainer.style.display = 'none';
+                    if (topologiaContainer) topologiaContainer.style.display = 'block';
+                    if (geradorContainer) geradorContainer.style.display = 'none';
+                    if (descricaoContainer) descricaoContainer.style.display = 'block';
+            }
+
+            // Mostra o badge do tipo
+            showTypeBadge(tipo);
+        }
+
+        function showTypeBadge(tipo) {
+            const badgeContainer = document.getElementById('tipo-badge-container');
+            const badgeText = document.getElementById('tipo-badge-text');
+
+            if (badgeText && tipoLabels[tipo]) {
+                badgeText.textContent = tipoLabels[tipo];
+            }
+
+            if (badgeContainer) {
+                badgeContainer.style.display = 'block';
             }
         }
+
         // Inicializar ao carregar a página
-        document.addEventListener('DOMContentLoaded', toggleSections);
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleSections();
+
+            // Adicionar readonly ao campo tipo
+            const tipoSelect = document.getElementById('tipo');
+            if (tipoSelect) {
+                tipoSelect.setAttribute('readonly', true);
+                tipoSelect.style.pointerEvents = 'none';
+                tipoSelect.style.backgroundColor = '#f8f9fa';
+                tipoSelect.style.cursor = 'not-allowed';
+            }
+        });
     </script>
 
     {{-- bairro - zona - pgm --}}
     <script>
         // Defina a URL da rota nomeada em uma variável JavaScript
         const bairroDataUrl = "{{ route('getBairroData', ['id' => ':id']) }}";
+        const vigenciaDataUrl = "{{ route('getVigenciaNome', ['bairro_id' => ':id']) }}";
         $(document).ready(function() {
             $('#bairro_id').change(function() {
                 var bairroId = $(this).val();
 
+                // Mostra animação de carregamento
+                $('#zona-nome').hide();
+                $('#valor-pgm').hide();
+                $('#vigencia-pgm').hide();
+                $('#span-loading').show();
+
                 if (bairroId) {
                     const url = bairroDataUrl.replace(':id', bairroId);
-
                     $.ajax({
                         url: url,
                         type: 'GET',
                         success: function(data) {
-                            console.log(data);
-                            // Atualiza o campo Zona (select)
-                            $('#zona').val(data.zona_id);
-
-                            // Remove qualquer formatação existente e mantém o valor original
-                            $('#pgm').val(data.pgm);
+                            // Atualiza badges
+                            $('#span-loading').hide();
+                            if (data.zona_nome) {
+                                $('#zona-nome').text('Zona: ' + data.zona_nome).show();
+                            } else {
+                                $('#zona-nome').hide();
+                            }
+                            if (data.pgm) {
+                                $('#valor-pgm').text('PGM: ' + data.pgm).show();
+                            } else {
+                                $('#valor-pgm').hide();
+                            }
+                            // Busca vigência ativa
+                            $('#vigencia-pgm').hide();
+                            $('#span-loading').show();
+                            const vigUrl = vigenciaDataUrl.replace(':id', bairroId);
+                            $.ajax({
+                                url: vigUrl,
+                                type: 'GET',
+                                success: function(vigData) {
+                                    $('#span-loading').hide();
+                                    if (vigData && vigData.nome) {
+                                        $('#vigencia-pgm').text('Vigência: ' +
+                                            vigData.nome).show();
+                                    } else {
+                                        $('#vigencia-pgm').hide();
+                                    }
+                                },
+                                error: function() {
+                                    $('#span-loading').hide();
+                                    $('#vigencia-pgm').hide();
+                                }
+                            });
                         },
                         error: function() {
+                            $('#span-loading').hide();
                             alert('Erro ao carregar os dados do bairro.');
                         }
                     });
                 } else {
                     // Limpa os campos se nenhum bairro for selecionado
-                    $('#zona').val('');
-                    $('#pgm').val('');
+                    $('#span-loading').hide();
+                    $('#zona-nome').hide();
+                    $('#valor-pgm').hide();
+                    $('#vigencia-pgm').hide();
                 }
             });
         });
@@ -1900,7 +2017,7 @@
     </script>
     <script>
         function atualizarFatorOferta() {
-            const transacao = document.getElementById('transacao_terreno').value;
+            const transacao = document.getElementById('transacao').value;
             const fatorOfertaInput = document.getElementById('fator_oferta');
             if (!transacao) {
                 fatorOfertaInput.value = '';
@@ -1913,55 +2030,96 @@
             }
         }
 
-        function calcularPrecoUnitario() {
+        function calcularPrecoUnitario(mostrarErros = true) {
             const tipo = document.getElementById('tipo').value;
             const valorTotalInput = document.getElementById('valor_total_imovel');
-            const areaTotalInput = document.getElementById('area_total');
-            const areaConstruidaInput = document.getElementById('area_construida');
+
+            // Busca o campo de área correto baseado no tipo
+            let areaInput;
+            if (tipo === 'terreno') {
+                areaInput = document.getElementById('area_total'); // Campo específico para terreno
+                // Se o campo não foi encontrado, pode ser porque a seção ainda está carregando
+                if (!areaInput) {
+                    setTimeout(() => calcularPrecoUnitario(mostrarErros), 300);
+                    return;
+                }
+            } else {
+                // Para todos os outros tipos (apartamento, sala_comercial, galpao, imovel_urbano)
+                // usa o campo area_construida
+                areaInput = document.getElementById('area_construida');
+            }
+
             const fatorOfertaInput = document.getElementById('fator_oferta');
             const precoUnitarioInput = document.getElementById('preco_unitario1');
 
+            // Função auxiliar para converter valor para float corretamente
             function parseValor(val) {
                 if (!val) return NaN;
+                // Remove pontos de milhar e troca vírgula por ponto
                 return parseFloat(val.replace(/\./g, '').replace(',', '.'));
             }
 
+            // Só calcula se o fator de oferta estiver preenchido
             if (!fatorOfertaInput.value) {
                 precoUnitarioInput.value = '';
                 return;
             }
 
             const valorTotalImovel = parseValor(valorTotalInput.value);
-            const areaTotal = parseValor(areaTotalInput ? areaTotalInput.value : '');
-            const areaConstruida = parseValor(areaConstruidaInput ? areaConstruidaInput.value : '');
+            const area = areaInput ? parseValor(areaInput.value) : NaN;
             let fatorOferta = parseValor(fatorOfertaInput.value);
+
+            // Debug logs
+            console.log('=== DEBUG CÁLCULO ===');
+            console.log('Tipo:', tipo);
+            console.log('Valor Total:', valorTotalImovel);
+            console.log('Area Input Element:', areaInput);
+            console.log('Area Input ID:', areaInput ? areaInput.id : 'null');
+            console.log('Area Value (raw):', areaInput ? areaInput.value : 'null');
+            console.log('Área (parsed):', area);
+            console.log('Fator Oferta:', fatorOferta);
+            console.log('===================');
+
             if (isNaN(fatorOferta) || fatorOferta === 0) return;
 
-            let precoUnitario = NaN;
-            let camposFaltando = [];
+            // Só tenta calcular se temos os dados básicos
+            const temDadosBasicos = !isNaN(valorTotalImovel) && valorTotalImovel > 0;
 
-            if (tipo === 'terreno') {
-                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
-                if (isNaN(areaTotal) || areaTotal <= 0) camposFaltando.push('Área Total');
-                if (camposFaltando.length === 0) {
-                    precoUnitario = (valorTotalImovel / areaTotal) * fatorOferta;
+            if (!temDadosBasicos) {
+                precoUnitarioInput.value = '';
+                return;
+            }
+
+            let camposFaltando = [];
+            let precoUnitario = NaN;
+
+            // Verifica se a área está preenchida
+            if (isNaN(area) || area <= 0) {
+                if (tipo === 'terreno') {
+                    camposFaltando.push('Área Total');
+                } else {
+                    camposFaltando.push('Área Construída/Útil');
                 }
-            } else if (tipo === 'apartamento' || tipo === 'galpao' || tipo === 'sala_comercial' || tipo ===
-                'imovel_urbano') {
-                if (isNaN(valorTotalImovel) || valorTotalImovel <= 0) camposFaltando.push('Valor Total do Imóvel');
-                if (isNaN(areaConstruida) || areaConstruida <= 0) camposFaltando.push('Área Construída/Útil');
-                if (camposFaltando.length === 0) {
-                    precoUnitario = (valorTotalImovel / areaConstruida) * fatorOferta;
-                }
+            } else {
+                // Calcula o preço unitário
+                console.log('Calculando preço unitário...');
+                console.log('Fórmula: (', valorTotalImovel, '/', area, ') *', fatorOferta);
+                precoUnitario = (valorTotalImovel / area) * fatorOferta;
+                console.log('Preço unitário calculado:', precoUnitario);
             }
 
             if (camposFaltando.length > 0) {
                 precoUnitarioInput.value = '';
-                showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                // Só mostra o toast se mostrarErros for true e o usuário realmente está tentando calcular
+                if (mostrarErros && valorTotalImovel > 0) {
+                    showToast('Preencha os campos obrigatórios para o cálculo: ' + camposFaltando.join(', '));
+                }
                 return;
             }
 
+            // Toast elegante para avisos
             function showToast(message) {
+                // Remove toasts antigos
                 const oldToast = document.getElementById('toast-campos-obrigatorios');
                 if (oldToast) oldToast.remove();
 
@@ -1991,32 +2149,64 @@
             }
 
             if (isNaN(precoUnitario) || !isFinite(precoUnitario) || precoUnitario <= 0) {
+                console.log('Preço unitário inválido:', precoUnitario, '- Limpando campo');
                 precoUnitarioInput.value = '';
             } else {
-                precoUnitarioInput.value = precoUnitario.toLocaleString('pt-BR', {
+                console.log('Preço unitário válido:', precoUnitario, '- Formatando e inserindo no campo');
+                const valorFormatado = precoUnitario.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
+                console.log('Valor formatado:', valorFormatado);
+                precoUnitarioInput.value = valorFormatado;
+                console.log('Campo preço unitário atualizado com:', precoUnitarioInput.value);
             }
         }
 
-        document.getElementById('transacao_terreno').addEventListener('change', function() {
+        // Atualiza o fator de oferta ao mudar a transação
+        document.getElementById('transacao').addEventListener('change', function() {
             atualizarFatorOferta();
-            calcularPrecoUnitario();
+
+            // Para terreno, aguarda um pouco antes de calcular para garantir que a seção esteja visível
+            // Mas não mostra erros (false no parâmetro)
+            const tipo = document.getElementById('tipo').value;
+            if (tipo === 'terreno') {
+                setTimeout(() => calcularPrecoUnitario(false), 500);
+            } else {
+                calcularPrecoUnitario(false);
+            }
         });
 
-        document.getElementById('tipo').addEventListener('change', calcularPrecoUnitario);
-        document.getElementById('valor_total_imovel').addEventListener('input', calcularPrecoUnitario);
-        if (document.getElementById('area_total')) {
-            document.getElementById('area_total').addEventListener('input', calcularPrecoUnitario);
-        }
-        if (document.getElementById('area_construida')) {
-            document.getElementById('area_construida').addEventListener('input', calcularPrecoUnitario);
+        // Função para adicionar listeners dinamicamente
+        function addDynamicListeners() {
+            console.log('🔄 Adicionando listeners dinâmicos...');
+            
+            // Para terreno, usa area_total (seção "Dados do Terreno")
+            const areaTotalField = document.getElementById('area_total');
+            if (areaTotalField) {
+                console.log('✅ Configurando listener para area_total (terreno)');
+                areaTotalField.removeEventListener('input', calcularPrecoUnitario);
+                areaTotalField.addEventListener('input', calcularPrecoUnitario);
+            } else {
+                console.log('❌ Campo area_total não encontrado para configurar listener');
+            }
+            
+            // Para outros tipos, usa area_construida
+            const areaConstruidaField = document.getElementById('area_construida');
+            if (areaConstruidaField) {
+                console.log('✅ Configurando listener para area_construida');
+                areaConstruidaField.removeEventListener('input', calcularPrecoUnitario);
+                areaConstruidaField.addEventListener('input', calcularPrecoUnitario);
+            } else {
+                console.log('❌ Campo area_construida não encontrado para configurar listener');
+            }
         }
 
+        // Inicializa o fator de oferta correto ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
+            // Ao carregar, se já houver valor selecionado em transação, inicializa o fator de oferta
             const fatorOfertaInput = document.getElementById('fator_oferta');
-            const transacaoInput = document.getElementById('transacao_terreno');
+            const transacaoInput = document.getElementById('transacao');
             if (fatorOfertaInput && transacaoInput) {
                 if (transacaoInput.value) {
                     atualizarFatorOferta();
@@ -2024,6 +2214,55 @@
                     fatorOfertaInput.value = '';
                 }
             }
+
+            // Adiciona listeners para todos os campos necessários
+            setTimeout(() => {
+                addDynamicListeners();
+                
+                // Adiciona listener adicional para valor_total_imovel
+                const valorTotalField = document.getElementById('valor_total_imovel');
+                if (valorTotalField) {
+                    console.log('✅ Configurando listener para valor_total_imovel');
+                    valorTotalField.addEventListener('input', function() {
+                        // Só calcula se já tiver transação selecionada
+                        const transacao = document.getElementById('transacao').value;
+                        if (transacao) {
+                            calcularPrecoUnitario();
+                        }
+                    });
+                }
+            }, 1000);
         });
+
+        // Função de teste para debug (pode ser chamada no console do navegador)
+        function testarCalculoPrecoUnitario() {
+            console.log('=== TESTE DE CÁLCULO ===');
+            const tipo = document.getElementById('tipo').value;
+            const valorTotal = document.getElementById('valor_total_imovel').value;
+            const transacao = document.getElementById('transacao').value;
+            const fatorOferta = document.getElementById('fator_oferta').value;
+            
+            let area = '';
+            if (tipo === 'terreno') {
+                const areaField = document.getElementById('area_total');
+                area = areaField ? areaField.value : 'Campo não encontrado';
+            } else {
+                const areaField = document.getElementById('area_construida');
+                area = areaField ? areaField.value : 'Campo não encontrado';
+            }
+            
+            console.log('Tipo:', tipo);
+            console.log('Valor Total:', valorTotal);
+            console.log('Área:', area);
+            console.log('Transação:', transacao);
+            console.log('Fator Oferta:', fatorOferta);
+            console.log('========================');
+            
+            // Executa o cálculo
+            calcularPrecoUnitario(true);
+        }
+        
+        // Disponibiliza a função globalmente para teste
+        window.testarCalculoPrecoUnitario = testarCalculoPrecoUnitario;
     </script>
 @endsection

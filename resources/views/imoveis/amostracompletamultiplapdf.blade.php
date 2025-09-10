@@ -214,7 +214,7 @@
                     </td>
                     <td>
                         <span class="data-label">Zona:</span><br>
-                        <span class="data-value">{{ $data['imovel']->zona->nome ?? '-' }}</span>
+                        <span class="data-value">{{ $data['imovel']->bairro->zona->nome ?? '-' }}</span>
                     </td>
                     <td align="center" rowspan="2" style="vertical-align: middle;">
                         <span class="data-label">PGM:</span><br>

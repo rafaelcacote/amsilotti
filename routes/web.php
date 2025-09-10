@@ -98,6 +98,7 @@ Route::get('/api/clientes/search', function (\Illuminate\Http\Request $request) 
 Route::resource('controle-pericias', \App\Http\Controllers\ControlePericiasController::class)->middleware('auth');
 Route::get('autocomplete-clientes', [\App\Http\Controllers\ControlePericiasController::class, 'autocompleteClientes'])->middleware('auth');
 Route::get('controle-pericias/{id}/print', [\App\Http\Controllers\ControlePericiasController::class, 'printPdf'])->name('controle-pericias.print')->middleware('auth');
+Route::get('controle-pericias-imprimir', [\App\Http\Controllers\ControlePericiasController::class, 'printList'])->name('controle-pericias.print-list')->middleware('auth');
 
 Route::resource('controle_de_tarefas', \App\Http\Controllers\ControleDeTarefasController::class)
     ->parameters(['controle_de_tarefas' => 'controleDeTarefas'])

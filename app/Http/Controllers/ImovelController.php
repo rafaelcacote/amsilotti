@@ -15,6 +15,7 @@ use PDF;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 
@@ -90,14 +91,11 @@ class ImovelController extends Controller
             'endereco' => 'required|string|max:255',
             'numero' => 'nullable|',
             'bairro_id' => 'required|exists:bairros,id',
-            'zona_id' => 'required|exists:zonas,id',
+            'zona_id' => 'nullable|exists:zonas,id',
             'pgm' => 'nullable|regex:/^\d+(,\d{1,2})?$/',
             'latitude' => 'nullable|string|max:255',
             'longitude' => 'nullable|string|max:255',
-            'area_total' => 'nullable|numeric', // Campo original (não mais usado diretamente)
-            'area_total_dados_terreno' => 'nullable|numeric', // Para seção Dados do Terreno
-            'area_terreno_construcao' => 'nullable|numeric', // Para Área Terreno na construção
-            'area_total_terreno' => 'nullable|numeric', // Para seção específica de terreno
+            'area_total' => 'nullable|numeric',
             'area_construida' => 'nullable|numeric',
             'frente' => 'nullable|numeric',
             'profundidade_equiv' => 'nullable|numeric',
@@ -113,7 +111,7 @@ class ImovelController extends Controller
             'fator_oferta' => 'nullable',
             'via_especifica_id' => 'nullable',
             'benfeitoria' => 'nullable|string|',
-            'benfeitoria_terreno' => 'nullable|string|',
+            'benfeitoria_terreno' => 'nullable|string',
             'posicao_na_quadra' => 'nullable|string|max:255',
             'posicao_na_quadra_terreno' => 'nullable|string|max:255',
             'topologia' => 'nullable|string',
@@ -146,39 +144,8 @@ class ImovelController extends Controller
 
             // Obter os dados validados
             $validated = $validator->validated();
+            
 
-            // Unificar os campos de área em area_total baseado no tipo
-            if ($request->tipo === 'terreno') {
-                // Para terreno, usa area_total_dados_terreno
-                $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
-            } elseif ($request->tipo === 'galpao' || $request->tipo === 'imovel_urbano') {
-                // Para galpão e imóvel urbano, usa area_terreno_construcao
-                $validated['area_total'] = $validated['area_terreno_construcao'] ?? null;
-            } else {
-                // Para outros tipos (apartamento, sala_comercial), usa area_total_dados_terreno
-                $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
-            }
-
-            // Remove os campos específicos para não tentar salvar no banco
-            unset($validated['area_total_dados_terreno']);
-            unset($validated['area_terreno_construcao']);
-            unset($validated['area_total_terreno']);
-
-            // Mapear campos de terreno se o tipo for 'terreno'
-            if ($request->tipo === 'terreno') {
-                if (isset($validated['benfeitoria_terreno'])) {
-                    $validated['benfeitoria'] = $validated['benfeitoria_terreno'];
-                    unset($validated['benfeitoria_terreno']);
-                }
-                if (isset($validated['posicao_na_quadra_terreno'])) {
-                    $validated['posicao_na_quadra'] = $validated['posicao_na_quadra_terreno'];
-                    unset($validated['posicao_na_quadra_terreno']);
-                }
-                if (isset($validated['topologia_terreno'])) {
-                    $validated['topologia'] = $validated['topologia_terreno'];
-                    unset($validated['topologia_terreno']);
-                }
-            }
 
             // Converter valores decimais (substituir vírgula por ponto)
                 if (!empty($validated['pgm'])) {
@@ -192,6 +159,21 @@ class ImovelController extends Controller
                 } elseif ($request->tipo === 'sala_comercial') {
                     $validated['vagas_garagem'] = $request->vagas_garagem_sala;
                 }
+
+                if ($request->tipo === 'terreno') {
+                        if (isset($validated['benfeitoria_terreno'])) {
+                            $validated['benfeitoria'] = $validated['benfeitoria_terreno'];
+                            unset($validated['benfeitoria_terreno']);
+                        }
+                        if (isset($validated['posicao_na_quadra_terreno'])) {
+                            $validated['posicao_na_quadra'] = $validated['posicao_na_quadra_terreno'];
+                            unset($validated['posicao_na_quadra_terreno']);
+                        }
+                        if (isset($validated['topologia_terreno'])) {
+                            $validated['topologia'] = $validated['topologia_terreno'];
+                            unset($validated['topologia_terreno']);
+                        }
+}
 
                 //dd($validated);
 
@@ -246,6 +228,9 @@ public function update(Request $request, Imovel $imovel)
 {
    $input = $request->all();
 
+    // Debug para verificar os dados recebidos
+    \Log::info('Dados recebidos no update:', $input);
+
     if (($input['tipo'] ?? '') === 'terreno') {
         // Se vierem os campos com sufixo _terreno, use eles para os campos principais
         if (isset($input['benfeitoria_terreno'])) {
@@ -274,15 +259,13 @@ public function update(Request $request, Imovel $imovel)
         'endereco' => 'required|string|max:255',
         'numero' => 'nullable',
         'bairro_id' => 'required|exists:bairros,id',
-        'zona_id' => 'required|exists:zonas,id',
+        'zona_id' => 'nullable|exists:zonas,id',
         'pgm' => 'nullable|numeric',
         'latitude' => 'nullable|string|max:255',
         'longitude' => 'nullable|string|max:255',
         'area_total' => 'nullable|numeric',
-        'area_total_dados_terreno' => 'nullable|numeric', // Para seção Dados do Terreno
-        'area_terreno_construcao' => 'nullable|numeric', // Para Área Terreno na construção
-        'area_total_terreno' => 'nullable|numeric', // Para seção específica de terreno
         'area_construida' => 'nullable|numeric',
+        'area_terreno' => 'nullable|numeric', // Para área terreno na construção
         'frente' => 'nullable|numeric',
         'profundidade_equiv' => 'nullable|numeric',
         'padrao' => 'nullable|string|max:255',
@@ -292,7 +275,8 @@ public function update(Request $request, Imovel $imovel)
         'preco_unitario1' => 'nullable|numeric',
         'fonte_informacao' => 'nullable|string|max:255',
         'contato' => 'nullable|string|max:255',
-        'link' => 'nullable|url|max:900',        'imagens_data' => 'nullable|json',
+        'link' => 'nullable|url|max:900',
+        'imagens_data' => 'nullable|json',
         'imagens_removidas' => 'nullable|json',
         'imagens.*.descricao' => 'nullable|string|max:255',
         'fator_oferta' => 'nullable',
@@ -320,24 +304,12 @@ public function update(Request $request, Imovel $imovel)
     // Obter os dados validados
     $validated = $validator->validated();
 
-    // Unificar os campos de área em area_total baseado no tipo
-    if ($request->tipo === 'terreno') {
-        // Para terreno, usa area_total_dados_terreno
-        $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
-    } elseif ($request->tipo === 'galpao' || $request->tipo === 'imovel_urbano') {
-        // Para galpão e imóvel urbano, usa area_terreno_construcao
-        $validated['area_total'] = $validated['area_terreno_construcao'] ?? null;
-    } else {
-        // Para outros tipos (apartamento, sala_comercial), usa area_total_dados_terreno
-        $validated['area_total'] = $validated['area_total_dados_terreno'] ?? null;
-    }
-
-    // Remove os campos específicos para não tentar salvar no banco
-    unset($validated['area_total_dados_terreno']);
-    unset($validated['area_terreno_construcao']);
-    unset($validated['area_total_terreno']);
-
-
+    // Log para debug - dados recebidos
+    Log::info('ImovelController update - Dados recebidos', [
+        'tipo' => $request->tipo,
+        'area_total' => $validated['area_total'] ?? 'não informado',
+        'area_terreno' => $validated['area_terreno'] ?? 'não informado'
+    ]);
 
     // Converter valores decimais (substituir vírgula por ponto)
     if (!empty($validated['pgm'])) {

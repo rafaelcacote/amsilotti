@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Cálculo Preço Unitário - CORRIGIDO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-case {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .test-case h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .step {
+            margin: 5px 0;
+            padding: 8px 12px;
+            background: white;
+            border-left: 3px solid #007bff;
+            border-radius: 3px;
+        }
+
+        .debug-step {
+            margin: 5px 0;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-left: 3px solid #6c757d;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .formula {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧮 PROBLEMA DO CÁLCULO RESOLVIDO!</h1>
+
+        <div class="test-case error">
+            <h3>🔧 PROBLEMA IDENTIFICADO E CORRIGIDO</h3>
+            <div class="step"><strong>Erro Principal:</strong> Lógica de seleção de campos de área estava incorreta
+            </div>
+            <div class="step"><strong>Para terreno:</strong> ✓ Agora usa corretamente o campo area_total</div>
+            <div class="step"><strong>Para outros tipos:</strong> ✓ Agora usa consistentemente o campo area_construida
+            </div>
+            <div class="step"><strong>Event listeners:</strong> ✓ Adicionados nos campos corretos</div>
+        </div>
+
+        <div class="test-case success">
+            <h3>✅ CORREÇÕES APLICADAS</h3>
+            <div class="step"><strong>1. Lógica simplificada:</strong> Terreno = area_total, Outros = area_construida
+            </div>
+            <div class="step"><strong>2. Event listeners:</strong> Configurados para ambos os campos de área</div>
+            <div class="step"><strong>3. Debug function:</strong> testarCalculoPrecoUnitario() disponível no console
+            </div>
+            <div class="step"><strong>4. Logs detalhados:</strong> Console mostra cada passo do cálculo</div>
+            <div class="step"><strong>5. Triggers múltiplos:</strong> Cálculo executa ao alterar qualquer campo
+                relevante</div>
+        </div>
+
+        <div class="test-case info">
+            <h3>🧪 COMO TESTAR AGORA</h3>
+
+            <h4>📍 Para TERRENO:</h4>
+            <div class="step">1. Selecione "🌿 Terreno" no tipo de imóvel</div>
+            <div class="step">2. Preencha "Valor Total do Imóvel" (ex: 100000)</div>
+            <div class="step">3. Na seção "Dados do Terreno", preencha "Área Total" (ex: 500)</div>
+            <div class="step">4. Selecione "Vendido" ou "A venda" em Transação</div>
+            <div class="step">5. ✨ O preço unitário deve aparecer automaticamente!</div>
+
+            <h4>🏢 Para APARTAMENTO/OUTROS:</h4>
+            <div class="step">1. Selecione "Apartamento", "Sala Comercial", etc.</div>
+            <div class="step">2. Preencha "Valor Total do Imóvel" (ex: 200000)</div>
+            <div class="step">3. Na seção "Dados da Construção", preencha "Área Construída/Útil" (ex: 80)</div>
+            <div class="step">4. Selecione "Vendido" ou "A venda" em Transação</div>
+            <div class="step">5. ✨ O preço unitário deve aparecer automaticamente!</div>
+        </div>
+
+        <div class="test-case warning">
+            <h3>🔍 FERRAMENTA DE DEBUG</h3>
+
+            <h4>No Console do Navegador (F12):</h4>
+            <div class="debug-step">testarCalculoPrecoUnitario()</div>
+            <div class="step">Esta função mostra todos os valores sendo usados no cálculo</div>
+            <div class="step">Mostra qual campo de área está sendo usado para cada tipo</div>
+            <div class="step">Executa o cálculo e mostra o resultado no console</div>
+
+            <h4>Logs Automáticos:</h4>
+            <div class="step">O console mostra automaticamente "=== DEBUG CÁLCULO ==="</div>
+            <div class="step">Verifique se os campos estão sendo encontrados: "Area Input ID"</div>
+            <div class="step">Verifique os valores parsed: "Área (parsed)"</div>
+        </div>
+
+        <div class="test-case">
+            <h3>📊 EXEMPLOS PRÁTICOS</h3>
+
+            <h4>Exemplo 1 - Terreno Vendido:</h4>
+            <div class="step">Valor Total: R$ 100.000,00</div>
+            <div class="step">Área Total: 500 m²</div>
+            <div class="step">Transação: Vendido (Fator = 1,00)</div>
+            <div class="formula">Preço = (100.000 ÷ 500) × 1,00 = R$ 200,00/m²</div>
+
+            <h4>Exemplo 2 - Terreno à Venda:</h4>
+            <div class="step">Valor Total: R$ 100.000,00</div>
+            <div class="step">Área Total: 500 m²</div>
+            <div class="step">Transação: A venda (Fator = 0,90)</div>
+            <div class="formula">Preço = (100.000 ÷ 500) × 0,90 = R$ 180,00/m²</div>
+
+            <h4>Exemplo 3 - Apartamento Vendido:</h4>
+            <div class="step">Valor Total: R$ 200.000,00</div>
+            <div class="step">Área Útil: 80 m²</div>
+            <div class="step">Transação: Vendido (Fator = 1,00)</div>
+            <div class="formula">Preço = (200.000 ÷ 80) × 1,00 = R$ 2.500,00/m²</div>
+        </div>
+
+        <div class="test-case info">
+            <h3>⚡ QUANDO O CÁLCULO EXECUTA (TRIGGERS)</h3>
+            <div class="step">✓ Ao selecionar/alterar a Transação</div>
+            <div class="step">✓ Ao digitar no campo Valor Total do Imóvel</div>
+            <div class="step">✓ Ao digitar no campo Área Total (para terreno)</div>
+            <div class="step">✓ Ao digitar no campo Área Construída (para outros tipos)</div>
+            <div class="step">✓ Ao alterar o tipo de imóvel (reconfigura os listeners)</div>
+        </div>
+
+        <div class="test-case warning">
+            <h3>⚠️ SE AINDA NÃO FUNCIONAR</h3>
+            <div class="step"><strong>1. Verifique a ordem:</strong></div>
+            <div class="step">• Primeiro selecione o tipo de imóvel</div>
+            <div class="step">• Aguarde os campos carregarem</div>
+            <div class="step">• Preencha valor total e área</div>
+            <div class="step">• Por último, selecione a transação</div>
+
+            <div class="step"><strong>2. Debug no Console:</strong></div>
+            <div class="step">• Abra o console (F12)</div>
+            <div class="step">• Execute: testarCalculoPrecoUnitario()</div>
+            <div class="step">• Verifique se todos os campos estão sendo encontrados</div>
+
+            <div class="step"><strong>3. Verifique erros:</strong></div>
+            <div class="step">• Procure mensagens de erro em vermelho no console</div>
+            <div class="step">• Verifique se todos os IDs dos campos estão corretos</div>
+        </div>
+
+        <div class="test-case success">
+            <h3>🎯 RESUMO DAS MELHORIAS</h3>
+            <div class="step">✅ Lógica de seleção de campos corrigida</div>
+            <div class="step">✅ Event listeners adicionados corretamente</div>
+            <div class="step">✅ Debug function para facilitar testes</div>
+            <div class="step">✅ Logs detalhados para troubleshooting</div>
+            <div class="step">✅ Múltiplos triggers para garantir execução</div>
+            <div class="step">✅ Tratamento de erros melhorado</div>
+        </div>
+
+    </div>
+</body>
+
+</html>

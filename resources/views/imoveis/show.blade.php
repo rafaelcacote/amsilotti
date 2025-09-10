@@ -72,13 +72,13 @@
 
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <strong>Bairro</strong>
-                                        <p>{{ $imovel->bairro->nome ?? 'N/A' }}</p>
+                                        <strong>Bairro / Zona</strong>
+                                        <p>{{ $imovel->bairro->nome ?? '-' }} / {{ $imovel->bairro->zona->nome ?? '-' }}</p>
                                     </div>
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <strong>Zona</strong>
                                         <p>{{ $imovel->zona->nome ?? 'N/A' }}</p>
-                                    </div>
+                                    </div> -->
                                     @if ($imovel->via_especifica_id)
                                         <div class="col-md-4">
                                             <strong>Via Específica</strong>

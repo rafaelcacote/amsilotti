@@ -292,4 +292,91 @@ class ControlePericiasController extends Controller
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
+
+    /**
+     * Gera o PDF da listagem de perícias com os filtros aplicados.
+     */
+    public function printList(Request $request)
+    {
+        if (!auth()->user()->can('export pericias')) {
+            abort(403, 'Você não tem permissão para exportar perícias.');
+        }
+
+        $search = $request->input('search');
+        $responsavelId = $request->input('responsavel_tecnico_id');
+        $status = $request->input('status_atual');
+        $vara = $request->input('vara');
+        $tipoPericia = $request->input('tipo_pericia');
+        $prazoFinalMes = $request->input('prazo_final_mes');
+        $prazoFinalAno = $request->input('prazo_final_ano');
+
+        $pericias = ControlePericia::query()
+            ->with(['responsavelTecnico', 'requerente'])
+            ->when($search, function ($query, $search) {
+                return $query->where(function($q) use ($search) {
+                    $q->where('numero_processo', 'like', "%{$search}%")
+                      ->orWhere('vara', 'like', "%{$search}%")
+                      ->orWhere('requerido', 'like', "%{$search}%")
+                      ->orWhereHas('requerente', function($q) use ($search) {
+                          $q->where('nome', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->when($vara, function ($query, $vara) {
+                return $query->where('vara', $vara);
+            })
+            ->when($responsavelId, function ($query, $responsavelId) {
+                return $query->where('responsavel_tecnico_id', $responsavelId);
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status_atual', $status);
+            })
+            ->when($tipoPericia, function ($query, $tipoPericia) {
+                return $query->where('tipo_pericia', $tipoPericia);
+            })
+            ->when($prazoFinalMes, function ($query) use ($prazoFinalMes) {
+                return $query->whereMonth('prazo_final', $prazoFinalMes);
+            })
+            ->when($prazoFinalAno, function ($query) use ($prazoFinalAno) {
+                return $query->whereYear('prazo_final', $prazoFinalAno);
+            })
+            ->latest()
+            ->get();
+
+        // Buscar informações dos filtros aplicados para exibir no cabeçalho do relatório
+        $responsavelNome = null;
+        if ($responsavelId) {
+            $responsavel = MembrosEquipeTecnica::find($responsavelId);
+            $responsavelNome = $responsavel ? $responsavel->nome : null;
+        }
+
+        $filtrosAplicados = [
+            'search' => $search,
+            'vara' => $vara,
+            'responsavel' => $responsavelNome,
+            'status' => $status,
+            'tipo_pericia' => $tipoPericia,
+            'mes' => $prazoFinalMes,
+            'ano' => $prazoFinalAno
+        ];
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L', // Paisagem para melhor visualização da tabela
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_left' => 10,
+            'margin_right' => 10,
+        ]);
+
+        $html = view('controle-pericias.print-list', compact('pericias', 'filtrosAplicados'))->render();
+        $mpdf->WriteHTML($html);
+        
+        $filename = 'listagem_pericias_' . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response($mpdf->Output($filename, 'S'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
+    }
 }

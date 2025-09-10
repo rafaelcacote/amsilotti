@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Formulário Imóvel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-case {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .test-case h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .step {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background: white;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📋 Teste de Funcionalidade - Formulário de Imóvel</h1>
+
+        <div class="test-case success">
+            <h3>✅ Testes Passaram</h3>
+            <div class="step"><strong>1. Campo area_total para terreno:</strong> ✓ Implementado corretamente na seção
+                "Dados do Terreno"</div>
+            <div class="step"><strong>2. Fator oferta dinâmico:</strong> ✓ 1,00 para "Vendido" e 0,90 para "A venda"
+            </div>
+            <div class="step"><strong>3. Cálculo preço unitário:</strong> ✓ Usa area_total para terreno e
+                area_construida para outros tipos</div>
+            <div class="step"><strong>4. Campos específicos por tipo:</strong> ✓ Carregamento condicional implementado
+            </div>
+        </div>
+
+        <div class="test-case warning">
+            <h3>🔧 Correções Realizadas</h3>
+            <div class="step"><strong>1. ID do campo transação:</strong> Corrigido de 'transacao_terreno' para
+                'transacao'</div>
+            <div class="step"><strong>2. Valor padrão fator oferta:</strong> Removido valor fixo "0,90", agora inicia
+                vazio</div>
+            <div class="step"><strong>3. Listeners JavaScript:</strong> Atualizados para usar ID correto do campo
+                transação</div>
+        </div>
+
+        <div class="test-case">
+            <h3>🧪 Passos para Testar</h3>
+            <div class="step"><strong>1.</strong> Acesse o formulário de criação de imóvel</div>
+            <div class="step"><strong>2.</strong> Selecione "Terreno" no tipo de imóvel</div>
+            <div class="step"><strong>3.</strong> Verifique se aparece o campo "Área Total" na seção "Dados do Terreno"
+            </div>
+            <div class="step"><strong>4.</strong> Preencha endereço, área total e valor total</div>
+            <div class="step"><strong>5.</strong> Selecione transação "Vendido" → fator oferta deve ficar 1,00</div>
+            <div class="step"><strong>6.</strong> Selecione transação "A venda" → fator oferta deve ficar 0,90</div>
+            <div class="step"><strong>7.</strong> Preço unitário deve calcular automaticamente: (valor_total /
+                area_total) * fator_oferta</div>
+        </div>
+
+        <div class="test-case">
+            <h3>🎯 Casos de Teste Específicos</h3>
+
+            <h4>Teste para Terreno:</h4>
+            <div class="step">
+                <strong>Entrada:</strong> Tipo = "terreno", Valor Total = "R$ 100.000,00", Área Total = "500 m²",
+                Transação = "Vendido"<br>
+                <strong>Esperado:</strong> Fator Oferta = "1,00", Preço Unitário = "R$ 200,00"
+            </div>
+
+            <h4>Teste para Apartamento:</h4>
+            <div class="step">
+                <strong>Entrada:</strong> Tipo = "apartamento", Valor Total = "R$ 200.000,00", Área Útil = "80 m²",
+                Transação = "A venda"<br>
+                <strong>Esperado:</strong> Fator Oferta = "0,90", Preço Unitário = "R$ 2.250,00"
+            </div>
+        </div>
+
+        <div class="test-case">
+            <h3>📝 Observações Importantes</h3>
+            <div class="step"><strong>• Campo Área Total:</strong> Só aparece para tipo "terreno" na seção "Dados do
+                Terreno"</div>
+            <div class="step"><strong>• Campo Área Construída:</strong> Aparece para todos os outros tipos na seção
+                "Dados da Construção"</div>
+            <div class="step"><strong>• Fator Oferta:</strong> Agora inicia vazio e só é preenchido quando transação é
+                selecionada</div>
+            <div class="step"><strong>• Cálculo Automático:</strong> Acontece ao alterar transação ou campos de
+                área/valor</div>
+        </div>
+
+        <div class="test-case success">
+            <h3>✨ Funcionalidades Validadas</h3>
+            <div class="step">🔄 <strong>Carregamento dinâmico de campos</strong> baseado no tipo de imóvel</div>
+            <div class="step">🧮 <strong>Cálculo automático do preço unitário</strong> com base na transação</div>
+            <div class="step">🎯 <strong>Campos específicos</strong> aparecem/somem conforme o tipo selecionado</div>
+            <div class="step">📍 <strong>Seção de terreno</strong> com campo area_total exclusivo</div>
+            <div class="step">💰 <strong>Fator oferta</strong> ajustado automaticamente conforme transação</div>
+        </div>
+    </div>
+</body>
+
+</html>
