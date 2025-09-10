@@ -298,6 +298,34 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                            <!-- Tipologia e Marina: só aparecem para tipo terreno -->
+                                            <div class="col-md-2" id="tipologia-terreno-container" style="display:none;">
+                                                <div class="mb-2">
+                                                    <label for="tipologia" class="form-label">Tipologia</label>
+                                                    <select class="form-select @error('tipologia') is-invalid @enderror" id="tipologia" name="tipologia">
+                                                        <option value="">Selecione</option>
+                                                        <option value="seco" {{ old('tipologia') == 'seco' ? 'selected' : '' }}>Seco</option>
+                                                        <option value="alagada" {{ old('tipologia') == 'alagada' ? 'selected' : '' }}>Alagada</option>
+                                                        <option value="brejosa" {{ old('tipologia') == 'brejosa' ? 'selected' : '' }}>Brejosa</option>
+                                                    </select>
+                                                    @error('tipologia')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" id="marina-terreno-container" style="display:none;">
+                                                <div class="mb-2">
+                                                    <label for="marina" class="form-label">Marina</label>
+                                                    <select class="form-select @error('marina') is-invalid @enderror" id="marina" name="marina">
+                                                        <option value="">Selecione</option>
+                                                        <option value="1" {{ old('marina') == '1' ? 'selected' : '' }}>Sim</option>
+                                                        <option value="0" {{ old('marina') == '0' ? 'selected' : '' }}>Não</option>
+                                                    </select>
+                                                    @error('marina')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
 
                                     </div>
                                 </div>
@@ -1145,6 +1173,10 @@
             const geradorContainer = document.getElementById('gerador-container');
             const descricaoContainer = document.getElementById('descricao-container');
 
+            // Campos específicos de terreno
+            const tipologiaTerrenoContainer = document.getElementById('tipologia-terreno-container');
+            const marinaTerrenoContainer = document.getElementById('marina-terreno-container');
+
             // Controle dos campos específicos dentro das seções
             if (tipo === 'apartamento') {
                 apartamentoCampos.style.display = 'block';
@@ -1173,6 +1205,9 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'none';
                     if (geradorContainer) geradorContainer.style.display = 'block';
                     if (descricaoContainer) descricaoContainer.style.display = 'none';
+                    // Esconder campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
 
                 case 'sala_comercial':
@@ -1184,6 +1219,9 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    // Esconder campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
 
                 case 'galpao':
@@ -1195,6 +1233,9 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    // Esconder campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
 
                 case 'imovel_urbano':
@@ -1206,11 +1247,17 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    // Esconder campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
                     break;
 
                 case 'terreno':
                     // Para terreno, os campos ficam na seção dados-terreno
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    // Mostrar campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'block';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'block';
                     break;
 
                 default:
@@ -1222,6 +1269,9 @@
                     if (topologiaContainer) topologiaContainer.style.display = 'block';
                     if (geradorContainer) geradorContainer.style.display = 'none';
                     if (descricaoContainer) descricaoContainer.style.display = 'block';
+                    // Esconder campos específicos de terreno
+                    if (tipologiaTerrenoContainer) tipologiaTerrenoContainer.style.display = 'none';
+                    if (marinaTerrenoContainer) marinaTerrenoContainer.style.display = 'none';
             }
         }
 

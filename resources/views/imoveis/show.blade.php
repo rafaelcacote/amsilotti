@@ -149,6 +149,22 @@
                                             <strong>Prof. Equiv</strong>
                                             <p>{{ $imovel->profundidade_equiv }}</p>
                                         </div>
+                                         <div class="col-md-2">
+                                            <strong>Tipologia</strong>
+                                            <p>{{ $imovel->tipologia }}</p>
+                                        </div>
+                                         <div class="col-md-2">
+                                            <strong>Marina</strong>
+                                                <p>
+                                                    @if($imovel->marina === 1 || $imovel->marina === '1')
+                                                        <span class="badge bg-success">Sim</span>
+                                                    @elseif($imovel->marina === 0 || $imovel->marina === '0')
+                                                        <span class="badge bg-danger">Não</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </p>
+                                        </div>
                                     </div>
                                 </div>
                             @endif

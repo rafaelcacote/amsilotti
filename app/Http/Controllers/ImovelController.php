@@ -85,7 +85,7 @@ class ImovelController extends Controller
     public function store(Request $request)
     {
                 // Crie o validador separadamente
-        $validator = Validator::make($request->all(), [
+    $validator = Validator::make($request->all(), [
             'tipo' => 'required|string|max:255',
             'fator_fundamentacao' => 'required|string|max:255',
             'endereco' => 'required|string|max:255',
@@ -124,7 +124,9 @@ class ImovelController extends Controller
             'vagas_garagem' => 'nullable|integer',
             'gerador' => 'nullable',
             'area_lazer' => 'nullable',
-            'transacao' => 'nullable|string|max:255'
+            'transacao' => 'nullable|string|max:255',
+            'tipologia' => 'nullable|string|in:seco,alagada,brejosa',
+            'marina' => 'nullable|in:0,1'
 
         ]);
 
@@ -161,19 +163,23 @@ class ImovelController extends Controller
                 }
 
                 if ($request->tipo === 'terreno') {
-                        if (isset($validated['benfeitoria_terreno'])) {
-                            $validated['benfeitoria'] = $validated['benfeitoria_terreno'];
-                            unset($validated['benfeitoria_terreno']);
-                        }
-                        if (isset($validated['posicao_na_quadra_terreno'])) {
-                            $validated['posicao_na_quadra'] = $validated['posicao_na_quadra_terreno'];
-                            unset($validated['posicao_na_quadra_terreno']);
-                        }
-                        if (isset($validated['topologia_terreno'])) {
-                            $validated['topologia'] = $validated['topologia_terreno'];
-                            unset($validated['topologia_terreno']);
-                        }
-}
+                    if (isset($validated['benfeitoria_terreno'])) {
+                        $validated['benfeitoria'] = $validated['benfeitoria_terreno'];
+                        unset($validated['benfeitoria_terreno']);
+                    }
+                    if (isset($validated['posicao_na_quadra_terreno'])) {
+                        $validated['posicao_na_quadra'] = $validated['posicao_na_quadra_terreno'];
+                        unset($validated['posicao_na_quadra_terreno']);
+                    }
+                    if (isset($validated['topologia_terreno'])) {
+                        $validated['topologia'] = $validated['topologia_terreno'];
+                        unset($validated['topologia_terreno']);
+                    }
+                }
+
+                // Definir valores padrão para tipologia e marina
+                $validated['tipologia'] = $request->input('tipologia', null);
+                $validated['marina'] = $request->input('marina', null);
 
                 //dd($validated);
 

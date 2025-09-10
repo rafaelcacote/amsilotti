@@ -56,8 +56,10 @@ class Imovel extends Model
         'gerador',
         'vagas_garagem',
         'area_lazer',
-        'preco_venda_amostra',
-        'transacao'
+    'preco_venda_amostra',
+    'transacao',
+    'tipologia',
+    'marina'
     ];
 
     public function bairro()

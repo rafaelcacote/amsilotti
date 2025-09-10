@@ -263,6 +263,20 @@
                             <span class="data-value">{{ $data['imovel']->topologia }}</span>
                         </td>
                         <td>
+                            <span class="data-label">Tipologia:</span><br>
+                            <span class="data-value">{{ $data['imovel']->tipologia }}</span>
+                        </td>
+                        <td>
+                        <span class="data-label">Marina:</span><br>
+                        @if($data['imovel']->marina === 1 || $data['imovel']->marina === '1')
+                                                        <span class="data-value">Sim</span>
+                                                    @elseif($data['imovel']->marina === 0 || $data['imovel']->marina === '0')
+                                                        <span class="data-value">Não</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                    </td>
+                        <td>
                             <span class="data-label">Frente:</span><br>
                             <span class="data-value">{{ $data['imovel']->frente }}</span>
                         </td>
