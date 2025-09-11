@@ -256,7 +256,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mb-2">
-                                                <label for="topologia_terreno" class="form-label">Topologia</label>
+                                                <label for="topologia_terreno" class="form-label">Topografia</label>
                                                 <select class="form-select @error('topologia_terreno') is-invalid @enderror"
                                                     id="topologia_terreno" name="topologia_terreno">
                                                     <option value="">Selecione</option>
@@ -266,6 +266,12 @@
                                                     <option value="Semi Plano"
                                                         {{ old('topologia_terreno') == 'Semi Plano' ? 'selected' : '' }}>
                                                         Semi Plano</option>
+                                                        <option value="Aclive"
+                                                            {{ old('topologia_terreno') == 'Aclive' ? 'selected' : '' }}>
+                                                            Aclive</option>
+                                                        <option value="Declive"
+                                                            {{ old('topologia_terreno') == 'Declive' ? 'selected' : '' }}>
+                                                            Declive</option>
 
                                                 </select>
                                                 @error('topologia_terreno')

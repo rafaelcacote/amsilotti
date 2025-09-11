@@ -138,7 +138,7 @@
                                             <p>{{ ucfirst(str_replace('_', ' ', $imovel->posicao_na_quadra)) }}</p>
                                         </div>
                                         <div class="col-md-2">
-                                            <strong>Topologia</strong>
+                                            <strong>Topografia</strong>
                                             <p>{{ $imovel->topologia }}</p>
                                         </div>
                                         <div class="col-md-2">

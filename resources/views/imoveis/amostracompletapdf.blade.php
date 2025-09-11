@@ -257,7 +257,7 @@
                             class="data-value">{{ ucfirst(str_replace('_', ' ', $imovel->posicao_na_quadra)) }}</span>
                     </td>
                     <td>
-                        <span class="data-label">Topologia:</span><br>
+                        <span class="data-label">Topografia:</span><br>
                         <span class="data-value">{{ $imovel->topologia }}</span>
                     </td>
                     <td>
