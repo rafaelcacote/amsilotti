@@ -180,8 +180,8 @@
                                                                                         <th class="bg-body-secondary text-center">Tipo</th>
                                                                                         <th class="bg-body-secondary text-center">Bairro</th>
                                                                                         <th class="bg-body-secondary text-center">Valor (R$)</th>
-                                                                                        <th class="bg-body-secondary text-center">R$/m²</th>
                                                                                         <th class="bg-body-secondary text-center">Área Total</th>
+                                                                                        <th class="bg-body-secondary text-center">R$/m²</th>
                                                                                         <th class="bg-body-secondary text-center">Marina</th>
                                                                                         <th class="bg-body-secondary text-center">Transação</th>
                                                                                         <th class="bg-body-secondary text-center">Cadastrado em</th>
@@ -221,7 +221,21 @@
                                                         @endif
                                                     </td>
 
+                                                        
+
+                                                    @if ($imovel->tipo == 'terreno')
                                                         <td class="px-4">
+                                                            {{ number_format($imovel->area_total, 2, ',', '.') }} m²</td>
+                                                    @elseif (
+                                                        $imovel->tipo == 'apartamento' ||
+                                                            $imovel->tipo == 'imovel_urbano' ||
+                                                            $imovel->tipo == 'galpao' ||
+                                                            $imovel->tipo == 'sala_comercial')
+                                                        <td class="px-4">
+                                                            {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '' }}
+                                                            m² </td>
+                                                    @endif
+                                                    <td class="px-4">
                                                             @php
                                                                 $precoUnitario = null;
                                                                 if ($imovel->tipo == 'terreno' && $imovel->area_total > 0) {
@@ -236,19 +250,6 @@
                                                                 <span class="text-muted">-</span>
                                                             @endif
                                                         </td>
-
-                                                    @if ($imovel->tipo == 'terreno')
-                                                        <td class="px-4">
-                                                            {{ number_format($imovel->area_total, 2, ',', '.') }} m²</td>
-                                                    @elseif (
-                                                        $imovel->tipo == 'apartamento' ||
-                                                            $imovel->tipo == 'imovel_urbano' ||
-                                                            $imovel->tipo == 'galpao' ||
-                                                            $imovel->tipo == 'sala_comercial')
-                                                        <td class="px-4">
-                                                            {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '' }}
-                                                            m² </td>
-                                                    @endif
                                                     <td class="px-4">
                                                         @if(isset($imovel->marina))
                                                             @if($imovel->marina == 1 || $imovel->marina === true || $imovel->marina === '1')
