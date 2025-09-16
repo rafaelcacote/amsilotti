@@ -26,6 +26,16 @@ class ImovelController extends Controller
     $bairros = Bairro::all();
     $vias = ViaEspecifica::all();
 
+    // Prepara valores monetários para pesquisa (preço unitário)
+    $precoUnitarioMin = null;
+    $precoUnitarioMax = null;
+    if ($request->filled('preco_unitario_min')) {
+        $precoUnitarioMin = floatval(str_replace([".", ","], ["", "."], $request->preco_unitario_min));
+    }
+    if ($request->filled('preco_unitario_max')) {
+        $precoUnitarioMax = floatval(str_replace([".", ","], ["", "."], $request->preco_unitario_max));
+    }
+
     $imoveis = Imovel::with(['bairro', 'viaEspecifica'])
 
         ->when($request->id, function ($query) use ($request) {
@@ -48,13 +58,17 @@ class ImovelController extends Controller
         ->when($request->bairro, function ($query) use ($request) {
             return $query->whereIn('bairro_id', (array) $request->bairro);
         })
+        // Filtro marina (sim/não)
+        ->when($request->filled('marina'), function ($query) use ($request) {
+            return $query->where('marina', $request->marina);
+        })
         ->when($request->tipo, function ($query) use ($request) {
             return $query->where('tipo', $request->tipo);
         })
             ->when($request->transacao, function ($query) use ($request) {
                 return $query->where('transacao', $request->transacao);
             })
-        // NOVO: Filtro de área SEMPRE considera ambos os campos, independente do tipo
+        // Filtro de área SEMPRE considera ambos os campos, independente do tipo
         ->when($request->area_min, function ($query) use ($request) {
             $query->where(function ($q) use ($request) {
                 $q->where('area_total', '>=', $request->area_min)
@@ -65,6 +79,32 @@ class ImovelController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('area_total', '<=', $request->area_max)
                   ->orWhere('area_construida', '<=', $request->area_max);
+            });
+        })
+        // Filtro de Preço Unitário (mínimo)
+        ->when($precoUnitarioMin !== null, function ($query) use ($precoUnitarioMin) {
+            $query->where(function ($q) use ($precoUnitarioMin) {
+                $q->where(function($qq) use ($precoUnitarioMin) {
+                    $qq->where('tipo', 'terreno')
+                        ->whereRaw('(valor_total_imovel / NULLIF(area_total,0)) >= ?', [$precoUnitarioMin]);
+                })
+                ->orWhere(function($qq) use ($precoUnitarioMin) {
+                    $qq->whereIn('tipo', ['apartamento','imovel_urbano','galpao','sala_comercial'])
+                        ->whereRaw('(valor_total_imovel / NULLIF(area_construida,0)) >= ?', [$precoUnitarioMin]);
+                });
+            });
+        })
+        // Filtro de Preço Unitário (máximo)
+        ->when($precoUnitarioMax !== null, function ($query) use ($precoUnitarioMax) {
+            $query->where(function ($q) use ($precoUnitarioMax) {
+                $q->where(function($qq) use ($precoUnitarioMax) {
+                    $qq->where('tipo', 'terreno')
+                        ->whereRaw('(valor_total_imovel / NULLIF(area_total,0)) <= ?', [$precoUnitarioMax]);
+                })
+                ->orWhere(function($qq) use ($precoUnitarioMax) {
+                    $qq->whereIn('tipo', ['apartamento','imovel_urbano','galpao','sala_comercial'])
+                        ->whereRaw('(valor_total_imovel / NULLIF(area_construida,0)) <= ?', [$precoUnitarioMax]);
+                });
             });
         })
           ->orderBy('created_at', 'desc')

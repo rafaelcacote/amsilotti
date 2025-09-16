@@ -71,85 +71,95 @@
                         </div>
                         <div class="card-body bg-light">
                             <!-- Filtro -->
-                            <form action="{{ route('imoveis.index') }}" method="GET">
-                                @csrf
-                                <div class="row align-items-end">
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="id">
-                                            Cód(s) Imóvel
-                                            <small class="text-muted">(separar por vírgula)</small>
-                                        </label>
-                                        <input type="text" class="form-control" id="id" name="id"
-                                            placeholder="Ex: 80,81,85,90,98" value="{{ request('id') }}"
-                                            title="Digite um ou mais códigos separados por vírgula">
-                                        {{-- <small class="form-text text-muted">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            Digite um código ou vários separados por vírgula
-                                        </small> --}}
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label class="form-label" for="transacao">Transação</label>
-                                        <select class="form-select" id="transacao" name="transacao">
-                                            <option value="">Todos</option>
-                                            <option value="a venda"
-                                                {{ request('transacao') == 'a venda' ? 'selected' : '' }}>A venda</option>
-                                            <option value="vendido"
-                                                {{ request('transacao') == 'vendido' ? 'selected' : '' }}>Vendido</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="bairro">Bairro</label>
-                                        <select class="form-select" id="multiple-select-field"
-                                            data-placeholder="Escolha o Bairro" name="bairro[]" multiple>
-                                            <option value="">Todos</option>
-                                            @foreach ($bairros as $bairro)
-                                                <option value="{{ $bairro->id }}"
-                                                    {{ in_array($bairro->id, (array) request('bairro')) ? 'selected' : '' }}>
-                                                    {{ $bairro->nome }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="tipo">Tipo</label>
-                                        <select class="form-select" id="tipo" name="tipo">
-                                            <option value="">Todos</option>
-                                            <option value="terreno" {{ request('tipo') == 'terreno' ? 'selected' : '' }}>
-                                                Terreno</option>
-                                            <option value="galpao" {{ request('tipo') == 'galpao' ? 'selected' : '' }}>
-                                                Galpão</option>
-                                            <option value="apartamento"
-                                                {{ request('tipo') == 'apartamento' ? 'selected' : '' }}>Apartamento
-                                            </option>
-                                            <option value="imovel_urbano"
-                                                {{ request('tipo') == 'imovel_urbano' ? 'selected' : '' }}>Imóvel Urbano
-                                            </option>
-                                            <option value="sala_comercial"
-                                                {{ request('tipo') == 'sala_comercial' ? 'selected' : '' }}>Sala Comercial
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="area_min">Área Mínima (m²)</label>
-                                        <input type="text" class="form-control" id="area_min" name="area_min"
-                                            placeholder="Área Mínima" value="{{ request('area_min') }}">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="area_max">Área Máxima (m²)</label>
-                                        <input type="text" class="form-control" id="area_max" name="area_max"
-                                            placeholder="Área Máxima" value="{{ request('area_max') }}">
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <button type="submit" class="btn btn-primary"><i
-                                                    class="fas fa-search me-2"></i></button>
-                                            <a href="{{ route('imoveis.index') }}" class="btn btn-outline-secondary"
-                                                onclick="clearAllSelections()"><i class="fas fa-times me-2"></i></a>
+                            <div class="accordion mb-3" id="filtrosAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFiltros">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros" style="background: linear-gradient(90deg, #e0e7ff 0%, #f0fdfa 100%); color: #2563eb; font-weight: 600;">
+                                            <i class="fas fa-filter me-2"></i>Filtros de Pesquisa
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFiltros" class="accordion-collapse collapse{{ (request()->except('_token') && count(request()->except('_token')) > 0) ? ' show' : '' }}" aria-labelledby="headingFiltros" data-bs-parent="#filtrosAccordion">
+                                        <div class="accordion-body">
+                                            <form action="{{ route('imoveis.index') }}" method="GET">
+                                                @csrf
+                                                <div class="row mb-2">
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="id">Cód(s) Imóvel <small class="text-muted">(separar por vírgula)</small></label>
+                                                        <input type="text" class="form-control" id="id" name="id" placeholder="Ex: 80,81,85,90,98" value="{{ request('id') }}" title="Digite um ou mais códigos separados por vírgula">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="bairro">Bairro</label>
+                                                        <select class="form-select" id="multiple-select-field" data-placeholder="Escolha o Bairro" name="bairro[]" multiple>
+                                                            <option value="">Todos</option>
+                                                            @foreach ($bairros as $bairro)
+                                                                <option value="{{ $bairro->id }}" {{ in_array($bairro->id, (array) request('bairro')) ? 'selected' : '' }}>{{ $bairro->nome }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="tipo">Tipo</label>
+                                                        <select class="form-select" id="tipo" name="tipo">
+                                                            <option value="">Todos</option>
+                                                            <option value="terreno" {{ request('tipo') == 'terreno' ? 'selected' : '' }}>Terreno</option>
+                                                            <option value="galpao" {{ request('tipo') == 'galpao' ? 'selected' : '' }}>Galpão</option>
+                                                            <option value="apartamento" {{ request('tipo') == 'apartamento' ? 'selected' : '' }}>Apartamento</option>
+                                                            <option value="imovel_urbano" {{ request('tipo') == 'imovel_urbano' ? 'selected' : '' }}>Imóvel Urbano</option>
+                                                            <option value="sala_comercial" {{ request('tipo') == 'sala_comercial' ? 'selected' : '' }}>Sala Comercial</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="transacao">Transação</label>
+                                                        <select class="form-select" id="transacao" name="transacao">
+                                                            <option value="">Todos</option>
+                                                            <option value="a venda" {{ request('transacao') == 'a venda' ? 'selected' : '' }}>A venda</option>
+                                                            <option value="vendido" {{ request('transacao') == 'vendido' ? 'selected' : '' }}>Vendido</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="marina">Marina</label>
+                                                        <select class="form-select" id="marina" name="marina">
+                                                            <option value="">Todos</option>
+                                                            <option value="1" {{ request('marina') === '1' ? 'selected' : '' }}>Sim</option>
+                                                            <option value="0" {{ request('marina') === '0' ? 'selected' : '' }}>Não</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="area_min">Área Mínima (m²)</label>
+                                                        <input type="text" class="form-control" id="area_min" name="area_min" placeholder="Área Mínima" value="{{ request('area_min') }}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="area_max">Área Máxima (m²)</label>
+                                                        <input type="text" class="form-control" id="area_max" name="area_max" placeholder="Área Máxima" value="{{ request('area_max') }}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="preco_unitario_min">Preço Unitário Mínimo (R$/m²)</label>
+                                                        <input type="text" class="form-control money-mask" id="preco_unitario_min" name="preco_unitario_min" placeholder="Mínimo" value="{{ request('preco_unitario_min') }}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label" for="preco_unitario_max">Preço Unitário Máximo (R$/m²)</label>
+                                                        <input type="text" class="form-control money-mask" id="preco_unitario_max" name="preco_unitario_max" placeholder="Máximo" value="{{ request('preco_unitario_max') }}">
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center mt-3">
+                                                    <div class="col-md-3 d-flex justify-content-center gap-2">
+                                                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Pesquisar</button>
+                                                        <a href="{{ route('imoveis.index') }}" class="btn btn-outline-secondary w-100" onclick="clearAllSelections()"><i class="fas fa-times me-2"></i>Limpar</a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+                                            <script>
+                                                $(document).ready(function(){
+                                                    $('.money-mask').mask('000.000.000,00', {reverse: true});
+                                                });
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -170,7 +180,9 @@
                                             <th class="bg-body-secondary">Tipo</th>
                                             <th class="bg-body-secondary">Bairro</th>
                                             <th class="bg-body-secondary">Valor (R$)</th>
+                                                <th class="bg-body-secondary">Preço Unitário (R$/m²)</th>
                                             <th class="bg-body-secondary">Área Total</th>
+                                            <th class="bg-body-secondary">Marina</th>
                                             <th class="bg-body-secondary">Transação</th>
                                             <th class="bg-body-secondary">Cadastrado em</th>
                                             <th class="bg-body-secondary">Link</th>
@@ -209,6 +221,22 @@
                                                         @endif
                                                     </td>
 
+                                                        <td class="px-4">
+                                                            @php
+                                                                $precoUnitario = null;
+                                                                if ($imovel->tipo == 'terreno' && $imovel->area_total > 0) {
+                                                                    $precoUnitario = $imovel->valor_total_imovel / $imovel->area_total;
+                                                                } elseif (($imovel->tipo == 'apartamento' || $imovel->tipo == 'imovel_urbano' || $imovel->tipo == 'galpao' || $imovel->tipo == 'sala_comercial') && $imovel->area_construida > 0) {
+                                                                    $precoUnitario = $imovel->valor_total_imovel / $imovel->area_construida;
+                                                                }
+                                                            @endphp
+                                                            @if ($precoUnitario)
+                                                                R$ {{ number_format($precoUnitario, 2, ',', '.') }}
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
+
                                                     @if ($imovel->tipo == 'terreno')
                                                         <td class="px-4">
                                                             {{ number_format($imovel->area_total, 2, ',', '.') }} m²</td>
@@ -221,6 +249,19 @@
                                                             {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '' }}
                                                             m² </td>
                                                     @endif
+                                                    <td class="px-4">
+                                                        @if(isset($imovel->marina))
+                                                            @if($imovel->marina == 1 || $imovel->marina === true || $imovel->marina === '1')
+                                                                <span class="badge bg-info text-dark">Sim</span>
+                                                            @elseif($imovel->marina == 0 || $imovel->marina === false || $imovel->marina === '0')
+                                                                <span class="badge bg-secondary">Não</span>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="px-4">
                                                         @if ($imovel->transacao == 'A venda')
                                                             <span class="badge bg-success">À venda</span>
