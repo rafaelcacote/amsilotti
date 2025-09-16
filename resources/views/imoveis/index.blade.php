@@ -180,7 +180,7 @@
                                                                                         <th class="bg-body-secondary text-center">Tipo</th>
                                                                                         <th class="bg-body-secondary text-center">Bairro</th>
                                                                                         <th class="bg-body-secondary text-center">Valor (R$)</th>
-                                                                                        <th class="bg-body-secondary text-center">PU</th>
+                                                                                        <th class="bg-body-secondary text-center">R$/m²</th>
                                                                                         <th class="bg-body-secondary text-center">Área Total</th>
                                                                                         <th class="bg-body-secondary text-center">Marina</th>
                                                                                         <th class="bg-body-secondary text-center">Transação</th>
