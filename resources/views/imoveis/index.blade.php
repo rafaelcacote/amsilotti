@@ -176,17 +176,17 @@
                                             <th class="bg-body-secondary" style="width: 40px;">
                                                 <input type="checkbox" class="form-check-input" id="selectAll">
                                             </th>
-                                            <th class="bg-body-secondary">#Cód.</th>
-                                            <th class="bg-body-secondary">Tipo</th>
-                                            <th class="bg-body-secondary">Bairro</th>
-                                            <th class="bg-body-secondary">Valor (R$)</th>
-                                                <th class="bg-body-secondary">Preço Unitário (R$/m²)</th>
-                                            <th class="bg-body-secondary">Área Total</th>
-                                            <th class="bg-body-secondary">Marina</th>
-                                            <th class="bg-body-secondary">Transação</th>
-                                            <th class="bg-body-secondary">Cadastrado em</th>
-                                            <th class="bg-body-secondary">Link</th>
-                                            <th class="bg-body-secondary text-center" style="width: 160px;">Ações</th>
+                                            <th class="bg-body-secondary text-center">#Cód.</th>
+                                                                                        <th class="bg-body-secondary text-center">Tipo</th>
+                                                                                        <th class="bg-body-secondary text-center">Bairro</th>
+                                                                                        <th class="bg-body-secondary text-center">Valor (R$)</th>
+                                                                                        <th class="bg-body-secondary text-center">PU</th>
+                                                                                        <th class="bg-body-secondary text-center">Área Total</th>
+                                                                                        <th class="bg-body-secondary text-center">Marina</th>
+                                                                                        <th class="bg-body-secondary text-center">Transação</th>
+                                                                                        <th class="bg-body-secondary text-center">Cadastrado em</th>
+                                                                                        <th class="bg-body-secondary text-center">Link</th>
+                                                                                        <th class="bg-body-secondary text-center" style="width: 160px;">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
