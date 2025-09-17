@@ -181,7 +181,7 @@
                                                                                         <th class="bg-body-secondary text-center">Bairro</th>
                                                                                         <th class="bg-body-secondary text-center">Valor (R$)</th>
                                                                                         <th class="bg-body-secondary text-center">Área Total</th>
-                                                                                        <th class="bg-body-secondary text-center">R$/m²</th>
+                                                                                         <th class="bg-body-secondary text-center">R$/m²</th>
                                                                                         <th class="bg-body-secondary text-center">Marina</th>
                                                                                         <th class="bg-body-secondary text-center">Transação</th>
                                                                                         <th class="bg-body-secondary text-center">Cadastrado em</th>
@@ -220,9 +220,6 @@
                                                             <span class="text-muted">-</span>
                                                         @endif
                                                     </td>
-
-                                                        
-
                                                     @if ($imovel->tipo == 'terreno')
                                                         <td class="px-4">
                                                             {{ number_format($imovel->area_total, 2, ',', '.') }} m²</td>
@@ -235,21 +232,16 @@
                                                             {{ $imovel->area_construida !== null ? number_format($imovel->area_construida, 2, ',', '.') : '' }}
                                                             m² </td>
                                                     @endif
-                                                    <td class="px-4">
-                                                            @php
-                                                                $precoUnitario = null;
-                                                                if ($imovel->tipo == 'terreno' && $imovel->area_total > 0) {
-                                                                    $precoUnitario = $imovel->valor_total_imovel / $imovel->area_total;
-                                                                } elseif (($imovel->tipo == 'apartamento' || $imovel->tipo == 'imovel_urbano' || $imovel->tipo == 'galpao' || $imovel->tipo == 'sala_comercial') && $imovel->area_construida > 0) {
-                                                                    $precoUnitario = $imovel->valor_total_imovel / $imovel->area_construida;
-                                                                }
-                                                            @endphp
-                                                            @if ($precoUnitario)
-                                                                R$ {{ number_format($precoUnitario, 2, ',', '.') }}
+
+                                                        <td class="px-4 text-center">
+                                                            @if (!is_null($imovel->preco_unitario1))
+                                                                R$ {{ number_format($imovel->preco_unitario1, 2, ',', '.') }}
                                                             @else
                                                                 <span class="text-muted">-</span>
                                                             @endif
+                                                            
                                                         </td>
+
                                                     <td class="px-4">
                                                         @if(isset($imovel->marina))
                                                             @if($imovel->marina == 1 || $imovel->marina === true || $imovel->marina === '1')
