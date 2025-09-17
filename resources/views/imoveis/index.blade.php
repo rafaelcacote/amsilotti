@@ -34,12 +34,12 @@
                                     </div> --}}
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="#" id="printSelectedButton">
-                                                    <span>Impressão completa</span>
+                                                    <span>Tabela Analítica</span>
                                                     <span id="selectionCounter" class="badge bg-primary ms-2"
                                                         style="display: none;">0</span>
                                                 </a></li>
                                             <li><a class="dropdown-item" href="#" id="printSelectedButtonResumido">
-                                                    <span>Impressão Resumida</span>
+                                                    <span>Tabela Sintética</span>
                                                     <span class="badge bg-primary ms-2" style="display: none;"
                                                         id="selectionCounterResumido">0</span>
                                                 </a>
