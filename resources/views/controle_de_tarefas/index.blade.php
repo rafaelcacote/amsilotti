@@ -170,6 +170,16 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body p-0">
+                            <!-- Contadores de Tarefas -->
+                            <div class="mb-3 mx-4 mt-4 d-flex gap-3 align-items-center flex-wrap">
+                                
+                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                    <span class="fw-semibold text-success" style="font-size: 1.1rem;">
+                                        <i class="fas fa-filter me-2"></i>Exibindo:
+                                    </span>
+                                    <span class="badge bg-success fs-5">{{ $tarefas->count() }}</span>
+                                </div>
+                            </div>
                             <div class="table-responsive" style="overflow-x: auto;">
                                 <table class="table table-hover table-striped align-middle" style="min-width: 1200px;">
                                     <thead class="bg-light">
