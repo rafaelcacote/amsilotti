@@ -29,91 +29,138 @@
                             </div>
                         </div>
                         <div class="card-body bg-light">
-                            <!-- Filtro -->
-                            <form action="{{ route('controle_de_tarefas.index') }}" method="GET">
-                                @csrf
-                                <div class="row align-items-end">
-                                    
-                                    <div class="col-md-3">
-                                        <label class="form-label" for="cliente">Cliente</label>
-                                        <input type="text" class="form-control" id="cliente" name="cliente"
-                                            value="{{ request('cliente') }}" placeholder="Digite o nome do cliente">
-                                    </div>
+                            <!-- Collapse Filtros -->
+                            <button
+                                class="btn btn-outline-primary mb-3 w-100 d-flex align-items-center justify-content-center gap-2"
+                                type="button" data-coreui-toggle="collapse" data-coreui-target="#filtrosCollapse"
+                                aria-expanded="{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_inicio', 'ano_inicio']) ? 'true' : 'false' }}" 
+                                aria-controls="filtrosCollapse" style="font-size:1.1rem;">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtros de Pesquisa</span>
+                            </button>
 
-                                    <div class="col-md-1">
-                                        <label class="form-label" for="prioridade">Prioridade</label>
-                                        <select class="form-select" id="prioridade" name="prioridade">
-                                            <option value="">Todas</option>
-                                            @foreach ($getPrioridadeValues as $prioridade)
-                                                <option value="{{ $prioridade }}"
-                                                    {{ request('prioridade') == $prioridade ? 'selected' : '' }}>
-                                                    {{ $prioridade }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <!-- Filtros em Collapse -->
+                            <div class="collapse{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_inicio', 'ano_inicio']) ? ' show' : '' }}" id="filtrosCollapse">
+                                <div class="card card-body border-0 shadow-sm mb-3">
+                                    <form action="{{ route('controle_de_tarefas.index') }}" method="GET">
+                                        @csrf
+                                        <div class="row align-items-end">
+                                            <div class="col-md-3">
+                                                <label class="form-label" for="cliente">Cliente</label>
+                                                <input type="text" class="form-control" id="cliente" name="cliente"
+                                                    value="{{ request('cliente') }}" placeholder="Digite o nome do cliente">
+                                            </div>
 
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="status">Status</label>
-                                        <select class="form-select" id="status" name="status">
-                                            <option value="">Todos</option>
-                                            @foreach ($getStatusValues as $status)
-                                                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="situacao">Situação</label>
-                                        <select class="form-select" id="situacao" name="situacao">
-                                            <option value="">Todas</option>
-                                            @foreach (App\Models\ControleDeTarefas::situacaoOptions() as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('situacao') == $option ? 'selected' : '' }}>
-                                                    {{ $option }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="tipo_atividade" class="form-label">Tipo de Atividade</label>
-                                        <select class="form-select @error('tipo_atividade') is-invalid @enderror"
-                                            id="tipo_atividade" name="tipo_atividade">
-                                            <option value="">Selecione</option>
-                                            @foreach (App\Models\ControleDeTarefas::tipoatividadeOptions() as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('tipo_atividade') == $option ? 'selected' : '' }}>
-                                                    {{ $option }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="prioridade">Prioridade</label>
+                                                <select class="form-select" id="prioridade" name="prioridade">
+                                                    <option value="">Todas</option>
+                                                    @foreach ($getPrioridadeValues as $prioridade)
+                                                        <option value="{{ $prioridade }}"
+                                                            {{ request('prioridade') == $prioridade ? 'selected' : '' }}>
+                                                            {{ $prioridade }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
-                                        @error('tipo_atividade')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label" for="responsavel">Responsável</label>
-                                        <select class="form-select" id="responsavel" name="responsavel">
-                                            <option value="">Todos</option>
-                                            @foreach ($membros as $membro)
-                                                <option value="{{ $membro->id }}"
-                                                    {{ request('responsavel') == $membro->id ? 'selected' : '' }}>
-                                                    {{ $membro->usuario->name ?? 'Nome não disponível' }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <div class="d-flex gap-2">
-                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Pesquisar</button>
-                                            <a href="{{ route('controle_de_tarefas.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="status">Status</label>
+                                                <select class="form-select" id="status" name="status">
+                                                    <option value="">Todos</option>
+                                                    @foreach ($getStatusValues as $status)
+                                                        <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="situacao">Situação</label>
+                                                <select class="form-select" id="situacao" name="situacao">
+                                                    <option value="">Todas</option>
+                                                    @foreach (App\Models\ControleDeTarefas::situacaoOptions() as $option)
+                                                        <option value="{{ $option }}"
+                                                            {{ request('situacao') == $option ? 'selected' : '' }}>
+                                                            {{ $option }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="tipo_atividade" class="form-label">Tipo de Atividade</label>
+                                                <select class="form-select @error('tipo_atividade') is-invalid @enderror"
+                                                    id="tipo_atividade" name="tipo_atividade">
+                                                    <option value="">Selecione</option>
+                                                    @foreach (App\Models\ControleDeTarefas::tipoatividadeOptions() as $option)
+                                                        <option value="{{ $option }}"
+                                                            {{ request('tipo_atividade') == $option ? 'selected' : '' }}>
+                                                            {{ $option }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('tipo_atividade')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div class="row align-items-end mt-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label" for="responsavel">Responsável</label>
+                                                <select class="form-select" id="responsavel" name="responsavel">
+                                                    <option value="">Todos</option>
+                                                    @foreach ($membros as $membro)
+                                                        <option value="{{ $membro->id }}"
+                                                            {{ request('responsavel') == $membro->id ? 'selected' : '' }}>
+                                                            {{ $membro->usuario->name ?? 'Nome não disponível' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="mes_inicio">Mês</label>
+                                                <select class="form-select" id="mes_inicio" name="mes_inicio">
+                                                    <option value="">Todos</option>
+                                                    <option value="01" {{ request('mes_inicio') == '01' ? 'selected' : '' }}>Janeiro</option>
+                                                    <option value="02" {{ request('mes_inicio') == '02' ? 'selected' : '' }}>Fevereiro</option>
+                                                    <option value="03" {{ request('mes_inicio') == '03' ? 'selected' : '' }}>Março</option>
+                                                    <option value="04" {{ request('mes_inicio') == '04' ? 'selected' : '' }}>Abril</option>
+                                                    <option value="05" {{ request('mes_inicio') == '05' ? 'selected' : '' }}>Maio</option>
+                                                    <option value="06" {{ request('mes_inicio') == '06' ? 'selected' : '' }}>Junho</option>
+                                                    <option value="07" {{ request('mes_inicio') == '07' ? 'selected' : '' }}>Julho</option>
+                                                    <option value="08" {{ request('mes_inicio') == '08' ? 'selected' : '' }}>Agosto</option>
+                                                    <option value="09" {{ request('mes_inicio') == '09' ? 'selected' : '' }}>Setembro</option>
+                                                    <option value="10" {{ request('mes_inicio') == '10' ? 'selected' : '' }}>Outubro</option>
+                                                    <option value="11" {{ request('mes_inicio') == '11' ? 'selected' : '' }}>Novembro</option>
+                                                    <option value="12" {{ request('mes_inicio') == '12' ? 'selected' : '' }}>Dezembro</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="ano_inicio">Ano</label>
+                                                <select class="form-select" id="ano_inicio" name="ano_inicio">
+                                                    <option value="">Todos</option>
+                                                    @for ($ano = date('Y') + 1; $ano >= 2024; $ano--)
+                                                        <option value="{{ $ano }}" {{ request('ano_inicio') == $ano ? 'selected' : '' }}>{{ $ano }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-5 d-flex justify-content-end gap-2">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-search me-2"></i>Pesquisar
+                                                </button>
+                                                <a href="{{ route('controle_de_tarefas.index') }}" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-times me-2"></i>Limpar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -600,10 +647,12 @@
             const filtros = {
                 cliente: document.getElementById('cliente').value,
                 prioridade: document.getElementById('prioridade').value,
+                status: document.getElementById('status').value,
                 situacao: document.getElementById('situacao').value,
                 tipo_atividade: document.getElementById('tipo_atividade').value,
                 responsavel: document.getElementById('responsavel').value,
-                
+                mes_inicio: document.getElementById('mes_inicio').value,
+                ano_inicio: document.getElementById('ano_inicio').value,
             };
 
             // Criar um formulário dinâmico para enviar os filtros
