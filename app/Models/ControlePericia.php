@@ -150,6 +150,7 @@ class ControlePericia extends Model
                 'em redação',
                 'entregue',
                 'extinto',
+                'transferido projudi',
                 'suspenso'
             ];
         }
