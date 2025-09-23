@@ -33,14 +33,14 @@
                             <button
                                 class="btn btn-outline-primary mb-3 w-100 d-flex align-items-center justify-content-center gap-2"
                                 type="button" data-coreui-toggle="collapse" data-coreui-target="#filtrosCollapse"
-                                aria-expanded="{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_inicio', 'ano_inicio']) ? 'true' : 'false' }}" 
+                                aria-expanded="{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_termino', 'ano_termino']) ? 'true' : 'false' }}" 
                                 aria-controls="filtrosCollapse" style="font-size:1.1rem;">
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
 
                             <!-- Filtros em Collapse -->
-                            <div class="collapse{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_inicio', 'ano_inicio']) ? ' show' : '' }}" id="filtrosCollapse">
+                            <div class="collapse{{ request()->hasAny(['cliente', 'prioridade', 'status', 'situacao', 'tipo_atividade', 'responsavel', 'mes_termino', 'ano_termino']) ? ' show' : '' }}" id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('controle_de_tarefas.index') }}" method="GET">
                                         @csrf
@@ -121,30 +121,30 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <label class="form-label" for="mes_inicio">Mês</label>
-                                                <select class="form-select" id="mes_inicio" name="mes_inicio">
+                                                <label class="form-label" for="mes_termino">Mês (Data Término)</label>
+                                                <select class="form-select" id="mes_termino" name="mes_termino">
                                                     <option value="">Todos</option>
-                                                    <option value="01" {{ request('mes_inicio') == '01' ? 'selected' : '' }}>Janeiro</option>
-                                                    <option value="02" {{ request('mes_inicio') == '02' ? 'selected' : '' }}>Fevereiro</option>
-                                                    <option value="03" {{ request('mes_inicio') == '03' ? 'selected' : '' }}>Março</option>
-                                                    <option value="04" {{ request('mes_inicio') == '04' ? 'selected' : '' }}>Abril</option>
-                                                    <option value="05" {{ request('mes_inicio') == '05' ? 'selected' : '' }}>Maio</option>
-                                                    <option value="06" {{ request('mes_inicio') == '06' ? 'selected' : '' }}>Junho</option>
-                                                    <option value="07" {{ request('mes_inicio') == '07' ? 'selected' : '' }}>Julho</option>
-                                                    <option value="08" {{ request('mes_inicio') == '08' ? 'selected' : '' }}>Agosto</option>
-                                                    <option value="09" {{ request('mes_inicio') == '09' ? 'selected' : '' }}>Setembro</option>
-                                                    <option value="10" {{ request('mes_inicio') == '10' ? 'selected' : '' }}>Outubro</option>
-                                                    <option value="11" {{ request('mes_inicio') == '11' ? 'selected' : '' }}>Novembro</option>
-                                                    <option value="12" {{ request('mes_inicio') == '12' ? 'selected' : '' }}>Dezembro</option>
+                                                    <option value="01" {{ request('mes_termino') == '01' ? 'selected' : '' }}>Janeiro</option>
+                                                    <option value="02" {{ request('mes_termino') == '02' ? 'selected' : '' }}>Fevereiro</option>
+                                                    <option value="03" {{ request('mes_termino') == '03' ? 'selected' : '' }}>Março</option>
+                                                    <option value="04" {{ request('mes_termino') == '04' ? 'selected' : '' }}>Abril</option>
+                                                    <option value="05" {{ request('mes_termino') == '05' ? 'selected' : '' }}>Maio</option>
+                                                    <option value="06" {{ request('mes_termino') == '06' ? 'selected' : '' }}>Junho</option>
+                                                    <option value="07" {{ request('mes_termino') == '07' ? 'selected' : '' }}>Julho</option>
+                                                    <option value="08" {{ request('mes_termino') == '08' ? 'selected' : '' }}>Agosto</option>
+                                                    <option value="09" {{ request('mes_termino') == '09' ? 'selected' : '' }}>Setembro</option>
+                                                    <option value="10" {{ request('mes_termino') == '10' ? 'selected' : '' }}>Outubro</option>
+                                                    <option value="11" {{ request('mes_termino') == '11' ? 'selected' : '' }}>Novembro</option>
+                                                    <option value="12" {{ request('mes_termino') == '12' ? 'selected' : '' }}>Dezembro</option>
                                                 </select>
                                             </div>
 
                                             <div class="col-md-2">
-                                                <label class="form-label" for="ano_inicio">Ano</label>
-                                                <select class="form-select" id="ano_inicio" name="ano_inicio">
+                                                <label class="form-label" for="ano_termino">Ano (Data Término)</label>
+                                                <select class="form-select" id="ano_termino" name="ano_termino">
                                                     <option value="">Todos</option>
                                                     @for ($ano = date('Y') + 1; $ano >= 2024; $ano--)
-                                                        <option value="{{ $ano }}" {{ request('ano_inicio') == $ano ? 'selected' : '' }}>{{ $ano }}</option>
+                                                        <option value="{{ $ano }}" {{ request('ano_termino') == $ano ? 'selected' : '' }}>{{ $ano }}</option>
                                                     @endfor
                                                 </select>
                                             </div>
@@ -661,8 +661,8 @@
                 situacao: document.getElementById('situacao').value,
                 tipo_atividade: document.getElementById('tipo_atividade').value,
                 responsavel: document.getElementById('responsavel').value,
-                mes_inicio: document.getElementById('mes_inicio').value,
-                ano_inicio: document.getElementById('ano_inicio').value,
+                mes_termino: document.getElementById('mes_termino').value,
+                ano_termino: document.getElementById('ano_termino').value,
             };
 
             // Criar um formulário dinâmico para enviar os filtros

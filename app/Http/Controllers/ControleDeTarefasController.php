@@ -53,14 +53,14 @@ class ControleDeTarefasController extends Controller
         $query->where('membro_id', $request->responsavel);
     }
 
-    // Filtro por Mês da Data de Início
-    if ($request->has('mes_inicio') && $request->mes_inicio != '') {
-        $query->whereMonth('data_inicio', $request->mes_inicio);
+    // Filtro por Mês da Data de Término
+    if ($request->has('mes_termino') && $request->mes_termino != '') {
+        $query->whereMonth('data_termino', $request->mes_termino);
     }
 
-    // Filtro por Ano da Data de Início
-    if ($request->has('ano_inicio') && $request->ano_inicio != '') {
-        $query->whereYear('data_inicio', $request->ano_inicio);
+    // Filtro por Ano da Data de Término
+    if ($request->has('ano_termino') && $request->ano_termino != '') {
+        $query->whereYear('data_termino', $request->ano_termino);
     }
 
         // Aplica a paginação
@@ -350,14 +350,14 @@ class ControleDeTarefasController extends Controller
         $query->where('membro_id', $request->responsavel);
     }
 
-    // Filtro por Mês da Data de Início
-    if ($request->has('mes_inicio') && $request->mes_inicio != '') {
-        $query->whereMonth('data_inicio', $request->mes_inicio);
+    // Filtro por Mês da Data de Término
+    if ($request->has('mes_termino') && $request->mes_termino != '') {
+        $query->whereMonth('data_termino', $request->mes_termino);
     }
 
-    // Filtro por Ano da Data de Início
-    if ($request->has('ano_inicio') && $request->ano_inicio != '') {
-        $query->whereYear('data_inicio', $request->ano_inicio);
+    // Filtro por Ano da Data de Término
+    if ($request->has('ano_termino') && $request->ano_termino != '') {
+        $query->whereYear('data_termino', $request->ano_termino);
     }
 
     // Filtro para não mostrar concluídas, a menos que o usuário marque o checkbox
