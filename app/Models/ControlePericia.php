@@ -146,6 +146,7 @@ class ControlePericia extends Model
                 'aguardando pagamento',
                 'aguardando laudo do perito',
                 'aguardando quesitos',
+                'Aguardando nomeação',
                 'em redação',
                 'entregue',
                 'extinto',
