@@ -71,6 +71,11 @@ class ControlePericia extends Model
         return $this->belongsTo(MembrosEquipeTecnica::class, 'protocolo_responsavel_id');
     }
 
+    public function entregaLaudoFinanceiro()
+    {
+        return $this->hasOne(EntregaLaudoFinanceiro::class, 'controle_pericias_id');
+    }
+
     /**
      * Scope a query to filter by status.
      *
@@ -156,6 +161,35 @@ class ControlePericia extends Model
                 'suspenso'
             ];
         }
+
+    /**
+     * Get status color mapping
+     */
+    public static function statusColors()
+    {
+        return [
+            'aguardando despacho' => ['class' => 'bg-warning text-dark', 'color' => '#ffc107'],
+            'aguardando vistoria' => ['class' => 'bg-info text-white', 'color' => '#0dcaf0'],
+            'aguardando pagamento' => ['class' => 'bg-warning text-dark', 'color' => '#ffc107'],
+            'aguardando laudo do perito' => ['class' => 'bg-secondary text-white', 'color' => '#6c757d'],
+            'aguardando quesitos' => ['class' => 'bg-secondary text-white', 'color' => '#6c757d'],
+            'Aguardando nomeação' => ['class' => 'bg-primary text-white', 'color' => '#0d6efd'],
+            'em redação' => ['class' => 'bg-primary text-white', 'color' => '#0d6efd'],
+            'entregue' => ['class' => 'bg-success text-white', 'color' => '#198754'],
+            'extinto' => ['class' => 'bg-danger text-white', 'color' => '#dc3545'],
+            'transferido projudi' => ['class' => 'bg-dark text-white', 'color' => '#212529'],
+            'suspenso' => ['class' => 'bg-warning text-dark', 'color' => '#ffc107']
+        ];
+    }
+
+    /**
+     * Get color class for a specific status
+     */
+    public static function getStatusColor($status)
+    {
+        $colors = self::statusColors();
+        return $colors[strtolower($status)] ?? ['class' => 'bg-light text-dark', 'color' => '#f8f9fa'];
+    }
 
        public static function tipopericiaOptions()
         {

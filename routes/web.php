@@ -99,6 +99,11 @@ Route::resource('controle-pericias', \App\Http\Controllers\ControlePericiasContr
 Route::get('autocomplete-clientes', [\App\Http\Controllers\ControlePericiasController::class, 'autocompleteClientes'])->middleware('auth');
 Route::get('controle-pericias/{id}/print', [\App\Http\Controllers\ControlePericiasController::class, 'printPdf'])->name('controle-pericias.print')->middleware('auth');
 Route::get('controle-pericias-imprimir', [\App\Http\Controllers\ControlePericiasController::class, 'printList'])->name('controle-pericias.print-list')->middleware('auth');
+Route::patch('controle-pericias/{pericia}/status', [\App\Http\Controllers\ControlePericiasController::class, 'updateStatus'])->name('controle-pericias.update-status')->middleware('auth');
+
+// Rotas para Entrega de Laudos Financeiro
+Route::resource('entrega-laudos-financeiro', \App\Http\Controllers\EntregaLaudoFinanceiroController::class)->middleware('auth');
+Route::get('entrega-laudos-financeiro/{entregaLaudoFinanceiro}/details', [\App\Http\Controllers\EntregaLaudoFinanceiroController::class, 'getDetails'])->name('entrega-laudos-financeiro.details')->middleware('auth');
 
 Route::resource('controle_de_tarefas', \App\Http\Controllers\ControleDeTarefasController::class)
     ->parameters(['controle_de_tarefas' => 'controleDeTarefas'])

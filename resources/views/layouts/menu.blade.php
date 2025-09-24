@@ -35,6 +35,10 @@
                     <i class="fas fa-gavel me-2 nav-icon"></i> Controle de Perícias</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{ route('entrega-laudos-financeiro.index') }}">
+                    <i class="fas fa-money-bill-wave nav-icon"></i> Financeiro Laudo</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('agenda.index') }}">
                     <i class="fa-solid fa-calendar-days nav-icon"></i> Agenda</a>
             </li>

@@ -241,6 +241,27 @@ class ControlePericiasController extends Controller
     }
 
     /**
+     * Update status of the specified pericia via AJAX.
+     */
+    public function updateStatus(Request $request, ControlePericia $pericia)
+    {
+        if (!auth()->user()->can('edit pericias')) {
+            return response()->json(['success' => false, 'message' => 'Você não tem permissão para editar perícias.'], 403);
+        }
+
+        $validated = $request->validate([
+            'status_atual' => 'required|string|in:' . implode(',', ControlePericia::statusOptions())
+        ]);
+
+        $pericia->update(['status_atual' => $validated['status_atual']]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status atualizado com sucesso!'
+        ]);
+    }
+
+    /**
      * Remove the specified pericia from storage.
      */
     public function destroy(ControlePericia $controlePericia): RedirectResponse
