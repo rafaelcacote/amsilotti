@@ -104,8 +104,8 @@
                                             <th>Processo</th>
                                             <th>Requerente</th>
                                             <th>Status</th>
-                                            <th>UPJ</th>
                                             <th>Vara</th>
+                                            <th>UPJ</th>
                                             <th>Financeiro</th>
                                             <th>Valor</th>
                                             <th>Protocolo</th>
@@ -146,10 +146,10 @@
                                                         @endphp
                                                         <span class="badge {{ $statusClass }}">{{ $entregaLaudo->status ?? 'Não informado' }}</span>
                                                     </td>
-                                                    <!-- 4. UPJ -->
-                                                    <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
-                                                    <!-- 5. Vara -->
+                                                    <!-- 4. Vara -->
                                                     <td>{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
+                                                    <!-- 5. UPJ -->
+                                                    <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                                                     <!-- 6. Financeiro -->
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                                                     <!-- 7. Valor -->
