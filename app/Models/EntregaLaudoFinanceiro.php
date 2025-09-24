@@ -60,10 +60,12 @@ class EntregaLaudoFinanceiro extends Model
     public static function statusOptions()
     {
         return [
+            'Aguardando Sei',
+            'Atesto Perícia',
             'Liquidado',
             'pagamento/presidencia',
-            'Aguardando Sei',
-            'SECOFT/EMPENHO'
+            'SECOFT/EMPENHO',
+            
         ];
     }
 
