@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Coluna Vara Adicionada</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        
+        .table thead th:nth-child(1) { width: 11%; } /* Processo */
+        .table thead th:nth-child(2) { width: 18%; } /* Requerente */
+        .table thead th:nth-child(3) { width: 10%; } /* Status */
+        .table thead th:nth-child(4) { width: 8%; }  /* UPJ */
+        .table thead th:nth-child(5) { width: 9%; }  /* Vara */
+        .table thead th:nth-child(6) { width: 9%; }  /* Financeiro */
+        .table thead th:nth-child(7) { width: 9%; }  /* Valor */
+        .table thead th:nth-child(8) { width: 9%; }  /* Protocolo */
+        .table thead th:nth-child(9) { width: 11%; } /* Mês Pagamento */
+        .table thead th:nth-child(10) { width: 6%; } /* Ações */
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h3>✅ Coluna Vara Adicionada com Sucesso!</h3>
+    
+    <div class="alert alert-success">
+        <strong>A coluna "Vara" foi adicionada ao lado da coluna "UPJ" na tabela de Financeiro de Laudos!</strong>
+    </div>
+
+    <h5>Exemplo da nova estrutura da tabela:</h5>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle">
+            <thead>
+                <tr class="table-dark">
+                    <th>Processo</th>
+                    <th>Requerente</th>
+                    <th>Status</th>
+                    <th>UPJ</th>
+                    <th>🆕 Vara</th> <!-- Nova coluna -->
+                    <th>Financeiro</th>
+                    <th>Valor</th>
+                    <th>Protocolo</th>
+                    <th>Mês Pagamento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0000000-00.0000.0.00.0000</td>
+                    <td>João Silva</td>
+                    <td><span class="badge bg-success">Liquidado</span></td>
+                    <td>1ª UPJ</td>
+                    <td><strong>9 Cível</strong></td> <!-- Valor da nova coluna Vara -->
+                    <td>SECOFT</td>
+                    <td>R$ 2.500,00</td>
+                    <td>15/09/2024</td>
+                    <td>Setembro/2024</td>
+                    <td><button class="btn btn-sm btn-outline-primary">Editar</button></td>
+                </tr>
+                <tr>
+                    <td>1111111-11.1111.1.11.1111</td>
+                    <td>Maria Santos</td>
+                    <td><span class="badge bg-warning text-dark">Pagamento/Presidência</span></td>
+                    <td>2ª UPJ</td>
+                    <td><strong>15 Cível</strong></td> <!-- Valor da nova coluna Vara -->
+                    <td>PRESIDÊNCIA</td>
+                    <td>R$ 1.800,00</td>
+                    <td>20/09/2024</td>
+                    <td>Setembro/2024</td>
+                    <td><button class="btn btn-sm btn-outline-primary">Editar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h5>O que foi implementado:</h5>
+    <ul>
+        <li>✅ <strong>Nova coluna "Vara"</strong> adicionada ao lado da coluna UPJ</li>
+        <li>✅ <strong>Dados da Vara</strong> obtidos através da relação <code>controlePericia->vara</code></li>
+        <li>✅ <strong>CSS atualizado</strong> para acomodar a nova coluna (10 colunas no total)</li>
+        <li>✅ <strong>Larguras reajustadas</strong> para manter proporção adequada</li>
+        <li>✅ <strong>Alinhamento centralizado</strong> para a coluna Vara</li>
+        <li>✅ <strong>Colspan corrigido</strong> na mensagem de "nenhum registro encontrado"</li>
+    </ul>
+
+    <div class="alert alert-info">
+        <strong>Nota:</strong> A coluna Vara exibe o valor do campo "vara" da tabela controle_pericias, 
+        que está relacionada através do campo controle_pericias_id na tabela entrega_laudos_financeiro.
+    </div>
+
+    <h5>Estrutura da Nova Tabela:</h5>
+    <ol>
+        <li><strong>Processo</strong> (11%)</li>
+        <li><strong>Requerente</strong> (18%)</li>
+        <li><strong>Status</strong> (10%)</li>
+        <li><strong>UPJ</strong> (8%)</li>
+        <li><strong>🆕 Vara</strong> (9%) ← Nova coluna</li>
+        <li><strong>Financeiro</strong> (9%)</li>
+        <li><strong>Valor</strong> (9%)</li>
+        <li><strong>Protocolo</strong> (9%)</li>
+        <li><strong>Mês Pagamento</strong> (11%)</li>
+        <li><strong>Ações</strong> (6%)</li>
+    </ol>
+</div>
+</body>
+</html>

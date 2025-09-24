@@ -105,6 +105,7 @@
                                             <th>Requerente</th>
                                             <th>Status</th>
                                             <th>UPJ</th>
+                                            <th>Vara</th>
                                             <th>Financeiro</th>
                                             <th>Valor</th>
                                             <th>Protocolo</th>
@@ -147,9 +148,11 @@
                                                     </td>
                                                     <!-- 4. UPJ -->
                                                     <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
-                                                    <!-- 5. Financeiro -->
+                                                    <!-- 5. Vara -->
+                                                    <td>{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
+                                                    <!-- 6. Financeiro -->
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
-                                                    <!-- 6. Valor -->
+                                                    <!-- 7. Valor -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
                                                             <span class="fw-bold text-success">{{ $entregaLaudo->valor_formatado }}</span>
@@ -157,11 +160,11 @@
                                                             <span class="text-muted">-</span>
                                                         @endif
                                                     </td>
-                                                    <!-- 7. Protocolo -->
+                                                    <!-- 8. Protocolo -->
                                                     <td>{{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}</td>
-                                                    <!-- 8. Mês Pagamento -->
+                                                    <!-- 9. Mês Pagamento -->
                                                     <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}</td>
-                                                    <!-- 9. Ações -->
+                                                    <!-- 10. Ações -->
                                                     <td>
                                                         @can('edit pericias')
                                                             <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
@@ -189,7 +192,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="9" class="text-center py-4">
+                                                <td colspan="10" class="text-center py-4">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>
@@ -648,15 +651,16 @@ document.addEventListener('DOMContentLoaded', function() {
         border-collapse: collapse;
     }
     
-    .table thead th:nth-child(1) { width: 12%; } /* Processo */
-    .table thead th:nth-child(2) { width: 20%; } /* Requerente */
-    .table thead th:nth-child(3) { width: 12%; } /* Status */
+    .table thead th:nth-child(1) { width: 11%; } /* Processo */
+    .table thead th:nth-child(2) { width: 18%; } /* Requerente */
+    .table thead th:nth-child(3) { width: 10%; } /* Status */
     .table thead th:nth-child(4) { width: 8%; }  /* UPJ */
-    .table thead th:nth-child(5) { width: 10%; } /* Financeiro */
-    .table thead th:nth-child(6) { width: 10%; } /* Valor */
-    .table thead th:nth-child(7) { width: 10%; } /* Protocolo */
-    .table thead th:nth-child(8) { width: 12%; } /* Mês Pagamento */
-    .table thead th:nth-child(9) { width: 6%; }  /* Ações */
+    .table thead th:nth-child(5) { width: 9%; }  /* Vara */
+    .table thead th:nth-child(6) { width: 9%; }  /* Financeiro */
+    .table thead th:nth-child(7) { width: 9%; }  /* Valor */
+    .table thead th:nth-child(8) { width: 9%; }  /* Protocolo */
+    .table thead th:nth-child(9) { width: 11%; } /* Mês Pagamento */
+    .table thead th:nth-child(10) { width: 6%; } /* Ações */
     
     .table th,
     .table td {
@@ -684,15 +688,17 @@ document.addEventListener('DOMContentLoaded', function() {
     .table tbody td:nth-child(4),
     .table thead th:nth-child(4) { text-align: center; } /* UPJ */
     .table tbody td:nth-child(5),
-    .table thead th:nth-child(5) { text-align: center; } /* Financeiro */
+    .table thead th:nth-child(5) { text-align: center; } /* Vara */
     .table tbody td:nth-child(6),
-    .table thead th:nth-child(6) { text-align: right; }  /* Valor */
+    .table thead th:nth-child(6) { text-align: center; } /* Financeiro */
     .table tbody td:nth-child(7),
-    .table thead th:nth-child(7) { text-align: center; } /* Protocolo */
+    .table thead th:nth-child(7) { text-align: right; }  /* Valor */
     .table tbody td:nth-child(8),
-    .table thead th:nth-child(8) { text-align: center; } /* Mês Pagamento */
+    .table thead th:nth-child(8) { text-align: center; } /* Protocolo */
     .table tbody td:nth-child(9),
-    .table thead th:nth-child(9) { text-align: center; } /* Ações */
+    .table thead th:nth-child(9) { text-align: center; } /* Mês Pagamento */
+    .table tbody td:nth-child(10),
+    .table thead th:nth-child(10) { text-align: center; } /* Ações */
 
     /* Simplified row hover - sem transformações que podem afetar layout */
     .drawer-row {
