@@ -3,6 +3,106 @@
 @section('content')
     <div class="container-lg px-4">
 
+        <!-- Modal de Notificações de Decurso de Prazo -->
+        @if($periciasProximasDecurso->count() > 0)
+            <div class="modal fade" id="decursoPrazoModal" tabindex="-1" aria-labelledby="decursoPrazoModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-gradient text-white border-0" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);">
+                            <h5 class="modal-title d-flex align-items-center" id="decursoPrazoModalLabel">
+                                <i class="fas fa-exclamation-triangle me-2 fa-lg"></i>
+                                <div>
+                                    <div>Alerta: Decurso de Prazo Próximo</div>
+                                    <small class="opacity-75" style="font-size: 0.85rem;">{{ $periciasProximasDecurso->count() }} perícia(s) com decurso próximo</small>
+                                </div>
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="bg-light p-3 border-bottom">
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <small>As perícias listadas abaixo têm decurso de prazo previsto para <strong>amanhã ({{ now()->addDay()->format('d/m/Y') }})</strong>. Verifique se todas as ações necessárias foram tomadas.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4">
+                                @foreach($periciasProximasDecurso as $pericia)
+                                    <div class="card border-0 shadow-sm mb-3 hover-card">
+                                        <div class="card-body p-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="bg-warning bg-opacity-20 rounded-circle p-2 me-3 flex-shrink-0">
+                                                            <i class="fas fa-gavel text-warning fa-lg"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="mb-1 fw-bold text-dark">
+                                                                Processo: {{ $pericia->numero_processo }}
+                                                            </h6>
+                                                            <div class="text-muted small mb-2">
+                                                                <div><i class="fas fa-user me-1"></i><strong>Requerente:</strong> {{ $pericia->requerente->nome ?? 'Não informado' }}</div>
+                                                                <div><i class="fas fa-user-tie me-1"></i><strong>Requerido:</strong> {{ $pericia->requerido ?? 'Não informado' }}</div>
+                                                                <div><i class="fas fa-balance-scale me-1"></i><strong>Vara:</strong> {{ $pericia->vara ?? 'Não informado' }}</div>
+                                                                @if($pericia->responsavelTecnico)
+                                                                    <div><i class="fas fa-user-cog me-1"></i><strong>Responsável:</strong> {{ $pericia->responsavelTecnico->nome }}</div>
+                                                                @endif
+                                                            </div>
+                                                            <span class="badge bg-info text-dark">{{ $pericia->status_atual ?? 'Status não informado' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 text-end">
+                                                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 border border-warning border-opacity-25">
+                                                        <div class="text-warning-emphasis fw-bold">
+                                                            <i class="fas fa-calendar-times fa-lg d-block mb-1"></i>
+                                                            <div style="font-size: 0.85rem;">Decurso de Prazo</div>
+                                                            <div class="fw-bold">{{ \Carbon\Carbon::parse($pericia->decurso_prazo)->format('d/m/Y') }}</div>
+                                                            <small class="text-muted">
+                                                                ({{ \Carbon\Carbon::parse($pericia->decurso_prazo)->diffForHumans() }})
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-light border-0 p-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    Cadastrado em {{ \Carbon\Carbon::parse($pericia->created_at)->format('d/m/Y H:i') }}
+                                                </small>
+                                                <a href="{{ route('controle-pericias.show', $pericia->id) }}" 
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye me-1"></i>Ver Detalhes
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 bg-light d-flex justify-content-between">
+                            <div class="text-muted">
+                                <small>
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    Esta notificação aparece automaticamente quando há perícias próximas do decurso.
+                                </small>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-2"></i>Entendido
+                                </button>
+                                <a href="{{ route('controle-pericias.index') }}" class="btn btn-primary px-4">
+                                    <i class="fas fa-list me-2"></i>Ver Todas as Perícias
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="tab-content rounded-bottom">
             <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1011">
                 <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
@@ -1524,6 +1624,102 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* === ESTILOS PARA MODAL DE DECURSO DE PRAZO === */
+        .hover-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.08) !important;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            border-color: rgba(255, 107, 53, 0.2) !important;
+        }
+
+        /* Gradiente personalizado para o header do modal */
+        .modal-header.bg-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header.bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer-modal 3s infinite;
+        }
+
+        @keyframes shimmer-modal {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animação de entrada para os cards do modal */
+        .modal.fade .modal-dialog .card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .modal.fade .modal-dialog .card:nth-child(1) { animation-delay: 0.1s; }
+        .modal.fade .modal-dialog .card:nth-child(2) { animation-delay: 0.2s; }
+        .modal.fade .modal-dialog .card:nth-child(3) { animation-delay: 0.3s; }
+        .modal.fade .modal-dialog .card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efeito de pulsação suave no ícone de alerta */
+        .modal-header .fa-exclamation-triangle {
+            animation: pulse-alert 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-alert {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Melhorar a aparência dos badges */
+        .hover-card .badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.7em;
+            border-radius: 0.375rem;
+        }
+
+        /* Efeito hover nos botões do modal */
+        .modal-footer .btn {
+            transition: all 0.3s ease;
+        }
+
+        .modal-footer .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Responsividade do modal */
+        @media (max-width: 768px) {
+            .modal-dialog {
+                margin: 1rem;
+            }
+            
+            .modal-body .row.align-items-center {
+                text-align: center;
+            }
+            
+            .modal-body .col-md-4 {
+                margin-top: 1rem;
+            }
+        }
     </style>
     {{-- escolher todas as tarefas ou somente a do usuario --}}
     <script>
@@ -1561,6 +1757,33 @@
                     window.location.href = url.toString();
                 });
             }
+            
+            // Auto-exibir modal de notificação de decurso de prazo
+            @if($periciasProximasDecurso->count() > 0)
+                const decursoPrazoModal = new bootstrap.Modal(document.getElementById('decursoPrazoModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                
+                // Mostrar o modal após um breve delay para garantir que a página carregou
+                setTimeout(function() {
+                    decursoPrazoModal.show();
+                }, 1000);
+                
+                // Adicionar efeito de hover nos cards do modal
+                document.querySelectorAll('.hover-card').forEach(function(card) {
+                    card.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-3px)';
+                        this.style.transition = 'all 0.3s ease';
+                        this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+                    });
+                    
+                    card.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    });
+                });
+            @endif
         });
     </script>
 

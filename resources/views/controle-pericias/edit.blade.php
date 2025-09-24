@@ -71,7 +71,7 @@
                                 </div>
 
                                 <!-- Linha 2 - Datas e Status -->
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-2">
                                     <label for="data_nomeacao" class="form-label">Data de Nomeação</label>
                                     <input type="date" class="form-control @error('data_nomeacao') is-invalid @enderror"
                                         id="data_nomeacao" name="data_nomeacao"
@@ -81,7 +81,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-2">
                                     <label for="data_vistoria" class="form-label">Data da Vistoria</label>
                                     <input type="date" class="form-control @error('data_vistoria') is-invalid @enderror"
                                         id="data_vistoria" name="data_vistoria"
@@ -91,17 +91,25 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3 mb-3">
-                                    <label for="prazo_final" class="form-label">Laudo Entregue</label>
-                                    <input type="date" class="form-control @error('prazo_final') is-invalid @enderror"
-                                        id="prazo_final" name="prazo_final"
-                                        value="{{ old('prazo_final', $controlePericia->prazo_final ? $controlePericia->prazo_final->format('Y-m-d') : '') }}">
-                                    @error('prazo_final')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                <div class="col-md-2 mb-2">
+                    <label for="prazo_final" class="form-label">Laudo Entregue</label>
+                    <input type="date" class="form-control @error('prazo_final') is-invalid @enderror"
+                        id="prazo_final" name="prazo_final"
+                        value="{{ old('prazo_final', $controlePericia->prazo_final ? $controlePericia->prazo_final->format('Y-m-d') : '') }}">
+                    @error('prazo_final')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                                <div class="col-md-3 mb-3">
+                <div class="col-md-2 mb-2">
+                    <label for="decurso_prazo" class="form-label">Decurso de Prazo</label>
+                    <input type="date" class="form-control @error('decurso_prazo') is-invalid @enderror"
+                        id="decurso_prazo" name="decurso_prazo"
+                        value="{{ old('decurso_prazo', $controlePericia->decurso_prazo ? $controlePericia->decurso_prazo->format('Y-m-d') : '') }}">
+                    @error('decurso_prazo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>                                <div class="col-md-3 mb-3">
                                     <label for="status_atual" class="form-label">Status Atual <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select @error('status_atual') is-invalid @enderror"

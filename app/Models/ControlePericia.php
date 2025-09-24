@@ -31,6 +31,7 @@ class ControlePericia extends Model
         'status_atual',
         'data_vistoria',
         'prazo_final',
+        'decurso_prazo',
         'valor',
         'responsavel_tecnico_id',
         'cadeia_dominial',
@@ -48,6 +49,7 @@ class ControlePericia extends Model
         'data_nomeacao' => 'date',
         'data_vistoria' => 'date',
         'prazo_final' => 'date',
+        'decurso_prazo' => 'date',
         'valor' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'

@@ -120,6 +120,16 @@ class DashboardController extends Controller
         $periciasPendentesVistoria = \App\Models\ControlePericia::where('status_atual', 'Aguardando Vistoria')->count();
         $periciasEmRedacao = \App\Models\ControlePericia::whereIn('status_atual', ['Em Redação', 'em redacao'])->count();
         $periciasEntregues = \App\Models\ControlePericia::whereIn('status_atual', ['Entregue', 'Concluído', 'concluido'])->count();
+
+        // Buscar perícias próximas do decurso de prazo (1 dia de antecedência)
+        $amanha = now()->addDay()->format('Y-m-d');
+        
+        $periciasProximasDecurso = \App\Models\ControlePericia::with(['requerente', 'responsavelTecnico'])
+            ->whereDate('decurso_prazo', $amanha)
+            ->whereNotIn('status_atual', ['Entregue', 'Concluído', 'concluido', 'Cancelado', 'cancelado', 'extinto'])
+            ->orderBy('decurso_prazo', 'asc')
+            ->get();
+
         // Buscar compromissos a partir de hoje (futuros)
         $hoje = now()->startOfDay();
         $proximosCompromissos = \App\Models\Agenda::where('data', '>=', $hoje)
@@ -220,7 +230,8 @@ class DashboardController extends Controller
             'periciasPrazosVencidos',
             'periciasPendentesVistoria',
             'periciasEmRedacao',
-            'periciasEntregues'
+            'periciasEntregues',
+            'periciasProximasDecurso'
         ));
     }
     /**
