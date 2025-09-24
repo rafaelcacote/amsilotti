@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Requisição AJAX para buscar os dados
-        fetch(`/entrega-laudos-financeiro/${entregaId}/details`, {
+        fetch(`{{ url('entrega-laudos-financeiro') }}/${entregaId}/details`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
