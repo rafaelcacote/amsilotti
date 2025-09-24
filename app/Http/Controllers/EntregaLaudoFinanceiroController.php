@@ -131,7 +131,7 @@ class EntregaLaudoFinanceiroController extends Controller
     /**
      * Update the specified entrega laudo financeiro in storage.
      */
-    public function update(Request $request, EntregaLaudoFinanceiro $entregaLaudosFinanceiro): RedirectResponse
+    public function update(Request $request, EntregaLaudoFinanceiro $entregaLaudosFinanceiro)
     {
         if (!auth()->user()->can('edit pericias')) {
             abort(403, 'Você não tem permissão para editar registros financeiros.');
@@ -143,9 +143,10 @@ class EntregaLaudoFinanceiroController extends Controller
             'financeiro' => 'nullable|string|max:50',
             'protocolo_laudo' => 'nullable|date',
             'valor' => 'nullable|string',
-            'numero_sei' => 'nullable|string|max:50',
-            'nota_fiscal' => 'nullable|string|max:50',
+            'sei' => 'nullable|string|max:50',
+            'nf' => 'nullable|string|max:50',
             'mes_pagamento' => 'nullable|string|max:50',
+            'empenho' => 'nullable|string|max:45',
             'observacoes' => 'nullable|string',
         ]);
 
@@ -162,13 +163,22 @@ class EntregaLaudoFinanceiroController extends Controller
             'financeiro' => $validated['financeiro'],
             'protocolo_laudo' => $validated['protocolo_laudo'],
             'valor' => $validated['valor'] ?? null,
-            'sei' => $validated['numero_sei'],
-            'nf' => $validated['nota_fiscal'],
+            'sei' => $validated['sei'],
+            'nf' => $validated['nf'],
             'mes_pagamento' => $validated['mes_pagamento'],
+            'empenho' => $validated['empenho'],
             'observacoes' => $validated['observacoes'],
         ];
 
         $entregaLaudosFinanceiro->update($updateData);
+
+        // Se for requisição AJAX, retornar JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Registro financeiro atualizado com sucesso!'
+            ]);
+        }
 
         return redirect()->route('entrega-laudos-financeiro.index')
             ->with('success', 'Registro financeiro atualizado com sucesso!');

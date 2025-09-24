@@ -164,10 +164,25 @@
                                                     <!-- 9. Ações -->
                                                     <td>
                                                         @can('edit pericias')
-                                                            <a href="{{ route('entrega-laudos-financeiro.edit', $entregaLaudo) }}"
-                                                                class="btn btn-sm btn-outline-primary" title="Editar">
+                                                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
+                                                                title="Editar"
+                                                                data-id="{{ $entregaLaudo->id }}"
+                                                                data-status="{{ $entregaLaudo->status }}"
+                                                                data-upj="{{ $entregaLaudo->upj }}"
+                                                                data-financeiro="{{ $entregaLaudo->financeiro }}"
+                                                                data-valor="{{ $entregaLaudo->valor }}"
+                                                                data-protocolo-laudo="{{ $entregaLaudo->protocolo_laudo ? $entregaLaudo->protocolo_laudo->format('Y-m-d') : '' }}"
+                                                                data-sei="{{ $entregaLaudo->sei }}"
+                                                                data-nf="{{ $entregaLaudo->nf }}"
+                                                                data-mes-pagamento="{{ $entregaLaudo->mes_pagamento }}"
+                                                                data-empenho="{{ $entregaLaudo->empenho }}"
+                                                                data-observacoes="{{ $entregaLaudo->observacoes }}"
+                                                                data-controle-pericias-id="{{ $entregaLaudo->controle_pericias_id }}"
+                                                                data-processo="{{ $entregaLaudo->controlePericia->numero_processo ?? '' }}"
+                                                                data-requerente="{{ $entregaLaudo->controlePericia->requerente->nome ?? '' }}"
+                                                                data-vara="{{ $entregaLaudo->controlePericia->vara ?? '' }}">
                                                                 <i class="fas fa-edit"></i>
-                                                            </a>
+                                                            </button>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -770,6 +785,203 @@ document.addEventListener('DOMContentLoaded', function() {
         letter-spacing: 0.5px;
     }
 </style>
+
+    <!-- Modal de Edição Financeiro -->
+    @include('components.modal-financeiro', [
+        'title' => 'Editar Registro Financeiro',
+        'action' => '#',
+        'method' => 'PUT',
+        'info' => 'Edite os dados financeiros abaixo:'
+    ])
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar máscaras monetárias quando jQuery estiver disponível
+            if (typeof $ !== 'undefined' && $.fn.mask) {
+                $('.money').mask('#.##0,00', {
+                    reverse: true,
+                    translation: {
+                        '#': {pattern: /[0-9]/}
+                    }
+                });
+            }
+
+            // Botões de editar
+            const botoesEdit = document.querySelectorAll('.btn-edit-financeiro');
+            
+            botoesEdit.forEach(botao => {
+                botao.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const status = this.dataset.status;
+                    const upj = this.dataset.upj;
+                    const financeiro = this.dataset.financeiro;
+                    const valor = this.dataset.valor;
+                    const protocoloLaudo = this.dataset.protocoloLaudo;
+                    const sei = this.dataset.sei;
+                    const nf = this.dataset.nf;
+                    const mesPagamento = this.dataset.mesPagamento;
+                    const empenho = this.dataset.empenho;
+                    const observacoes = this.dataset.observacoes;
+                    const controlePericiasId = this.dataset.controlePericiasId;
+                    const processo = this.dataset.processo;
+                    const requerente = this.dataset.requerente;
+                    const vara = this.dataset.vara;
+
+                    // Atualizar informações da perícia no modal
+                    if (typeof window.updateModalPericia === 'function') {
+                        window.updateModalPericia({
+                            processo: processo,
+                            requerente: requerente,
+                            vara: vara
+                        });
+                    }
+
+                    // Preencher o formulário do modal
+                    document.getElementById('status_financeiro').value = status || '';
+                    document.getElementById('financeiro').value = financeiro || '';
+                    document.getElementById('valor').value = valor || '';
+                    document.getElementById('protocolo_laudo').value = protocoloLaudo || '';
+                    document.getElementById('sei').value = sei || '';
+                    document.getElementById('nf').value = nf || '';
+                    document.getElementById('mes_pagamento').value = mesPagamento || '';
+                    document.getElementById('empenho').value = empenho || '';
+                    document.getElementById('observacoes').value = observacoes || '';
+                    document.getElementById('controle_pericias_id').value = controlePericiasId || '';
+                    
+                    // UPJ será preenchido automaticamente baseado na vara
+                    // Aguardar um pouco para a função de filtro processar
+                    setTimeout(() => {
+                        if (upj) {
+                            document.getElementById('upj').value = upj;
+                        }
+                    }, 100);
+                    
+                    // Aplicar máscara no valor depois de preencher
+                    if (typeof $ !== 'undefined') {
+                        $('#valor').trigger('input');
+                    }
+
+                    // Definir a ação do formulário para update
+                    const form = document.getElementById('formFinanceiro');
+                    form.action = `{{ route('entrega-laudos-financeiro.index') }}/${id}`;
+                    
+                    // Verificar se já existe o input method, caso não, adicionar
+                    let methodInput = form.querySelector('input[name="_method"]');
+                    if (!methodInput) {
+                        methodInput = document.createElement('input');
+                        methodInput.type = 'hidden';
+                        methodInput.name = '_method';
+                        methodInput.value = 'PUT';
+                        form.appendChild(methodInput);
+                    }
+
+                    // Abrir o modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalFinanceiro'));
+                    modal.show();
+                    
+                    // Adicionar event listener para limpar dados quando modal fechar
+                    modal._element.addEventListener('hidden.bs.modal', function() {
+                        if (typeof window.clearModalPericia === 'function') {
+                            window.clearModalPericia();
+                        }
+                    }, { once: true });
+                });
+            });
+
+            // Submissão do formulário via AJAX
+            document.getElementById('formFinanceiro').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const actionUrl = this.action;
+                
+                // Desabilitar botão de submit
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Salvando...';
+                
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Fechar modal
+                        bootstrap.Modal.getInstance(document.getElementById('modalFinanceiro')).hide();
+                        
+                        // Mostrar mensagem de sucesso
+                        showToast('success', data.message || 'Registro atualizado com sucesso!');
+                        
+                        // Recarregar a página após um pequeno delay
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        showToast('error', data.message || 'Erro ao atualizar registro');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showToast('error', 'Erro de conexão ao atualizar registro');
+                })
+                .finally(() => {
+                    // Reabilitar botão
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+            });
+
+            // Função para mostrar toast notifications
+            function showToast(type, message) {
+                // Criar o elemento do toast
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                toast.style.position = 'fixed';
+                toast.style.top = '20px';
+                toast.style.right = '20px';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '300px';
+                
+                const iconMap = {
+                    'success': 'check-circle',
+                    'error': 'exclamation-circle',
+                    'warning': 'exclamation-triangle',
+                    'info': 'info-circle'
+                };
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+                
+                // Adicionar o toast ao body
+                document.body.appendChild(toast);
+                
+                // Inicializar e mostrar o toast usando Bootstrap
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remover o elemento do DOM depois que o toast for ocultado
+                toast.addEventListener('hidden.bs.toast', function() {
+                    document.body.removeChild(toast);
+                });
+            }
+        });
+    </script>
 
 @endsection
 

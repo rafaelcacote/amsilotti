@@ -309,6 +309,9 @@
                                                                 class="form-select form-select-sm status-select {{ $statusColor['class'] }}" 
                                                                 data-pericia-id="{{ $pericia->id }}"
                                                                 data-original-status="{{ $pericia->status_atual }}"
+                                                                data-numero-processo="{{ $pericia->numero_processo ?? '' }}"
+                                                                data-requerente="{{ $pericia->requerente ? $pericia->requerente->nome : '' }}"
+                                                                data-vara="{{ $pericia->vara ?? '' }}"
                                                                 style="border: none; font-weight: 500; min-width: 180px;"
                                                                 {{ strtolower($pericia->status_atual) === 'entregue' ? 'disabled' : '' }}>
                                                                 @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
@@ -400,113 +403,11 @@
     @endif
 
     <!-- Modal de Registro Financeiro -->
-    <div class="modal fade" id="modalFinanceiro" tabindex="-1" aria-labelledby="modalFinanceiroLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="modalFinanceiroLabel">
-                        <i class="fas fa-money-bill-wave me-2"></i>Registro Financeiro do Laudo
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="formFinanceiro">
-                    <div class="modal-body">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            A perícia foi marcada como <strong>entregue</strong>. Preencha os dados financeiros abaixo:
-                        </div>
-                        
-                        <input type="hidden" id="controle_pericias_id" name="controle_pericias_id">
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="status_financeiro" class="form-label">Status *</label>
-                                <select class="form-select" id="status_financeiro" name="status" required>
-                                    <option value="">Selecione o status</option>
-                                    @foreach (App\Models\EntregaLaudoFinanceiro::statusOptions() as $statusOption)
-                                        <option value="{{ $statusOption }}" {{ $statusOption == 'Liquidado' ? 'selected' : '' }}>
-                                            {{ $statusOption }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="upj" class="form-label">UPJ</label>
-                                <select class="form-select" id="upj" name="upj">
-                                    <option value="">Selecione a UPJ</option>
-                                    @foreach (App\Models\EntregaLaudoFinanceiro::upjOptions() as $upjOption)
-                                        <option value="{{ $upjOption }}">{{ $upjOption }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="financeiro" class="form-label">Financeiro</label>
-                                <select class="form-select" id="financeiro" name="financeiro">
-                                    <option value="">Selecione o financeiro</option>
-                                    @foreach (App\Models\EntregaLaudoFinanceiro::financeiroOptions() as $financeiroOption)
-                                        <option value="{{ $financeiroOption }}">{{ $financeiroOption }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="protocolo_laudo" class="form-label">Protocolo do Laudo</label>
-                                <input type="date" class="form-control" id="protocolo_laudo" name="protocolo_laudo">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="valor" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="valor" name="valor" placeholder="R$ 0,00">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="sei" class="form-label">SEI</label>
-                                <input type="text" class="form-control" id="sei" name="sei" maxlength="50">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="nf" class="form-label">NF</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">NF nº</span>
-                                    <input type="text" class="form-control" id="nf" name="nf" placeholder="000000" maxlength="45">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="mes_pagamento" class="form-label">Mês de Pagamento</label>
-                                <select class="form-select" id="mes_pagamento" name="mes_pagamento">
-                                    <option value="">Selecione o mês</option>
-                                    @foreach (App\Models\EntregaLaudoFinanceiro::mesPagamentoOptions() as $mesOption)
-                                        <option value="{{ $mesOption }}">{{ $mesOption }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="empenho" class="form-label">Empenho</label>
-                            <div class="input-group">
-                                <span class="input-group-text">NE nº</span>
-                                <input type="text" class="form-control" id="empenho" name="empenho" placeholder="000000" maxlength="45">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-2"></i>Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save me-2"></i>Salvar Registro
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <x-modal-financeiro 
+        :title="'Registro Financeiro do Laudo'"
+        :info="'A perícia foi marcada como <strong>entregue</strong>. Preencha os dados financeiros abaixo:'"
+        :action="route('entrega-laudos-financeiro.store')"
+    />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -690,6 +591,18 @@
             function openFinanceiroModal(periciaId, originalStatus, newStatus, selectElement) {
                 document.getElementById('controle_pericias_id').value = periciaId;
                 
+                // Extrair informações da perícia dos atributos data
+                const periciaData = {
+                    processo: selectElement.dataset.numeroProcesso || '',
+                    requerente: selectElement.dataset.requerente || '',
+                    vara: selectElement.dataset.vara || ''
+                };
+                
+                // Atualizar informações no modal usando a função global
+                if (window.updateModalPericia) {
+                    window.updateModalPericia(periciaData);
+                }
+                
                 // Armazenar referências para usar após o envio do formulário
                 window.pendingStatusUpdate = {
                     periciaId: periciaId,
@@ -714,6 +627,10 @@
                         selectElement.value = originalStatus; // Manter status original
                         window.pendingStatusUpdate = null;
                         showToast('info', 'Alteração de status cancelada. É obrigatório preencher os dados financeiros.');
+                    }
+                    // Limpar as informações do modal
+                    if (window.clearModalPericia) {
+                        window.clearModalPericia();
                     }
                 }, { once: true });
             }
@@ -787,7 +704,7 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Salvando...';
                 
                 // Enviar dados
-                fetch('{{ route('entrega-laudos-financeiro.store') }}', {
+                fetch('{{ route("entrega-laudos-financeiro.store") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -816,7 +733,7 @@
                         
                         // Opcional: redirecionar para a página de financeiro
                         setTimeout(() => {
-                            window.open('{{ route('entrega-laudos-financeiro.index') }}', '_blank');
+                            window.open('{{ route("entrega-laudos-financeiro.index") }}', '_blank');
                         }, 1500);
                     } else {
                         showToast('error', data.message || 'Erro ao criar registro financeiro');

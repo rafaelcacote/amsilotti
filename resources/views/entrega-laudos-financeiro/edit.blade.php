@@ -122,8 +122,8 @@
                                     @enderror
                                 </div>
 
-                                <!-- Quarta linha - Número SEI e Nota Fiscal -->
-                                <div class="col-md-6 mb-3">
+                                <!-- Quarta linha - Número SEI, Nota Fiscal e Empenho -->
+                                <div class="col-md-4 mb-3">
                                     <label for="numero_sei" class="form-label">Número SEI</label>
                                     <input type="text" class="form-control @error('numero_sei') is-invalid @enderror" 
                                            id="numero_sei" name="numero_sei" value="{{ old('numero_sei', $entregaLaudosFinanceiro->sei) }}"
@@ -132,8 +132,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
-                                <div class="col-md-6 mb-3">
+
+                                <div class="col-md-4 mb-3">
                                     <label for="nota_fiscal" class="form-label">Nota Fiscal</label>
                                     <input type="text" class="form-control @error('nota_fiscal') is-invalid @enderror" 
                                            id="nota_fiscal" name="nota_fiscal" value="{{ old('nota_fiscal', $entregaLaudosFinanceiro->nf) }}"
@@ -141,6 +141,19 @@
                                     @error('nota_fiscal')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="empenho" class="form-label">Empenho</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">NE nº</span>
+                                        <input type="text" class="form-control @error('empenho') is-invalid @enderror" 
+                                               id="empenho" name="empenho" value="{{ old('empenho', $entregaLaudosFinanceiro->empenho) }}"
+                                               placeholder="000000" maxlength="45">
+                                        @error('empenho')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <!-- Quinta linha - Observações -->

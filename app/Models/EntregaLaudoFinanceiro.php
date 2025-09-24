@@ -87,7 +87,9 @@ class EntregaLaudoFinanceiro extends Model
     {
         return [
             'Pendente',
-            'Adiantamento'
+            'Adiantamento',
+            'Liquidado'
+
         ];
     }
 
