@@ -221,7 +221,7 @@
         </div>
     </div>
 
-    <!-- @if(array_filter($filtrosAplicados))
+    @if(array_filter($filtrosAplicados))
     <div class="filtros-section">
         <div class="filtros-title">Filtros Aplicados:</div>
         @if($filtrosAplicados['search'])
@@ -230,6 +230,9 @@
         @if($filtrosAplicados['status'])
             <div class="filtro-item"><strong>Status:</strong> {{ $filtrosAplicados['status'] }}</div>
         @endif
+        @if($filtrosAplicados['vara'])
+            <div class="filtro-item"><strong>Vara:</strong> {{ $filtrosAplicados['vara'] }}</div>
+        @endif
         @if($filtrosAplicados['upj'])
             <div class="filtro-item"><strong>UPJ:</strong> {{ $filtrosAplicados['upj'] }}</div>
         @endif
@@ -237,7 +240,7 @@
             <div class="filtro-item"><strong>Mês Pagamento:</strong> {{ $filtrosAplicados['mes_pagamento'] }}</div>
         @endif
     </div>
-    @endif -->
+    @endif
 
     <div class="table-container">
         @if($entregasLaudos->count() > 0)

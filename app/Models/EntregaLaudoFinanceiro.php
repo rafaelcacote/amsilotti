@@ -117,6 +117,22 @@ class EntregaLaudoFinanceiro extends Model
     }
 
     /**
+     * Get vara options for select
+     */
+    public static function varaOptions()
+    {
+        return static::whereHas('controlePericia')
+            ->join('controle_pericias', 'entrega_laudos_financeiro.controle_pericias_id', '=', 'controle_pericias.id')
+            ->whereNotNull('controle_pericias.vara')
+            ->distinct()
+            ->orderBy('controle_pericias.vara')
+            ->pluck('controle_pericias.vara')
+            ->filter()
+            ->values()
+            ->toArray();
+    }
+
+    /**
      * Get formatted value attribute
      */
     public function getValorFormatadoAttribute()

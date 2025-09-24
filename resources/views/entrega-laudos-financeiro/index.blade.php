@@ -8,6 +8,9 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between py-3">
                             <h3 class="mb-0 text-success"><i class="fas fa-money-bill-wave me-2"></i>Financeiro de Laudos</h3>
+                            <button type="button" class="btn btn-outline-info" id="btnImprimir">
+                                <i class="fas fa-print me-2"></i>Imprimir
+                            </button>
                         </div>
                         <div class="card-body bg-light">
                             <!-- Collapse Filtros -->
@@ -17,7 +20,7 @@
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
-                            <div class="collapse{{ request()->hasAny(['search', 'status', 'upj', 'mes_pagamento']) ? ' show' : '' }}"
+                            <div class="collapse{{ request()->hasAny(['search', 'status', 'vara', 'upj', 'mes_pagamento']) ? ' show' : '' }}"
                                 id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('entrega-laudos-financeiro.index') }}" method="GET">
@@ -41,6 +44,17 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
+                                                <label class="form-label" for="vara">Vara</label>
+                                                <select class="form-select" name="vara" id="vara">
+                                                    <option value="">Todas</option>
+                                                    @foreach (App\Models\EntregaLaudoFinanceiro::varaOptions() as $varaOption)
+                                                        <option value="{{ $varaOption }}"
+                                                            {{ request('vara') == $varaOption ? 'selected' : '' }}>
+                                                            {{ $varaOption }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1">
                                                 <label class="form-label" for="upj">UPJ</label>
                                                 <select class="form-select" name="upj" id="upj">
                                                     <option value="">Todas</option>
@@ -62,13 +76,10 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="d-flex gap-2">
                                                     <button type="submit" class="btn btn-success"><i class="fas fa-search me-2"></i>Pesquisar</button>
                                                     <a href="{{ route('entrega-laudos-financeiro.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
-                                                    <button type="button" class="btn btn-outline-info" id="btnImprimir">
-                                                        <i class="fas fa-print me-2"></i>Imprimir
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,20 +112,20 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped align-middle">
+                                <table class="table table-hover table-striped align-middle table-sm">
                                     <thead>
                                         <tr>
-                                            <th>Processo</th>
-                                            <th>Vara</th>
-                                            <th>UPJ</th>
-                                            <th>Financeiro</th>
-                                            <th>Protocolo Laudo</th>
-                                            <th>R$</th>
-                                            <th>SEI</th>
-                                            <th>Empenho</th>
-                                            <th>NF</th>
-                                            <th>Mês Pagamento</th>
-                                            <th style="min-width: 80px;">Ações</th>
+                                            <th style="width: 12%;">Processo</th>
+                                            <th style="width: 8%;">Vara</th>
+                                            <th style="width: 6%;">UPJ</th>
+                                            <th style="width: 10%;">Financeiro</th>
+                                            <th style="width: 8%;">Protocolo Laudo</th>
+                                            <th style="width: 8%;">R$</th>
+                                            <th style="width: 10%;">SEI</th>
+                                            <th style="width: 10%;">Empenho</th>
+                                            <th style="width: 8%;">NF</th>
+                                            <th style="width: 12%;">Mês Pagamento</th>
+                                            <th style="width: 8%; min-width: 80px;">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -994,6 +1005,57 @@ document.addEventListener('DOMContentLoaded', function() {
             window.open(printUrl, '_blank');
         });
     </script>
+
+    <style>
+        /* Garantir que a tabela seja sempre responsiva */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Estilização específica para a tabela de laudos financeiros */
+        .table-sm td, .table-sm th {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        /* Garantir que a coluna de ações seja sempre visível */
+        .table th:last-child,
+        .table td:last-child {
+            position: sticky;
+            right: 0;
+            background-color: #fff;
+            border-left: 1px solid #dee2e6;
+            z-index: 10;
+        }
+        
+        /* Ajuste para linhas alternadas com sticky column */
+        .table-striped tbody tr:nth-of-type(odd) td:last-child {
+            background-color: rgba(0,0,0,.05);
+        }
+        
+        /* Hover para a coluna sticky */
+        .table-hover tbody tr:hover td:last-child {
+            background-color: rgba(0,0,0,.075);
+        }
+        
+        /* Estilo específico para o botão de ação */
+        .btn-edit-financeiro {
+            white-space: nowrap;
+        }
+        
+        /* Responsividade adicional */
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.75rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.25rem;
+                white-space: nowrap;
+            }
+        }
+    </style>
 
 @endsection
 

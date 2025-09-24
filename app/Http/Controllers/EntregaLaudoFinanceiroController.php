@@ -22,6 +22,7 @@ class EntregaLaudoFinanceiroController extends Controller
 
         $search = $request->input('search');
         $status = $request->input('status');
+        $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
 
@@ -41,6 +42,11 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($status, function ($query, $status) {
                 return $query->where('status', $status);
             })
+            ->when($vara, function ($query, $vara) {
+                return $query->whereHas('controlePericia', function ($q) use ($vara) {
+                    $q->where('vara', $vara);
+                });
+            })
             ->when($upj, function ($query, $upj) {
                 return $query->where('upj', $upj);
             })
@@ -50,7 +56,7 @@ class EntregaLaudoFinanceiroController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'upj', 'mesPagamento'));
+        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento'));
     }
 
     /**
@@ -271,6 +277,7 @@ class EntregaLaudoFinanceiroController extends Controller
 
         $search = $request->input('search');
         $status = $request->input('status');
+        $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
 
@@ -291,6 +298,11 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($status, function ($query, $status) {
                 return $query->where('status', $status);
             })
+            ->when($vara, function ($query, $vara) {
+                return $query->whereHas('controlePericia', function ($q) use ($vara) {
+                    $q->where('vara', $vara);
+                });
+            })
             ->when($upj, function ($query, $upj) {
                 return $query->where('upj', $upj);
             })
@@ -304,6 +316,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $filtrosAplicados = [
             'search' => $search,
             'status' => $status,
+            'vara' => $vara,
             'upj' => $upj,
             'mes_pagamento' => $mesPagamento,
         ];
