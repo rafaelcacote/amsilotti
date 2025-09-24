@@ -259,4 +259,78 @@ class EntregaLaudoFinanceiroController extends Controller
         return redirect()->route('entrega-laudos-financeiro.index')
             ->with('success', 'Registro financeiro excluído com sucesso!');
     }
+
+    /**
+     * Generate a printable list of entrega laudos financeiro.
+     */
+    public function printList(Request $request)
+    {
+        if (!auth()->user()->can('view pericias')) {
+            abort(403, 'Você não tem permissão para visualizar registros financeiros de laudos.');
+        }
+
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $upj = $request->input('upj');
+        $mesPagamento = $request->input('mes_pagamento');
+
+        // Aplicar os mesmos filtros da listagem principal
+        $entregasLaudos = EntregaLaudoFinanceiro::query()
+            ->with(['controlePericia.requerente', 'controlePericia.responsavelTecnico'])
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('controlePericia', function ($q) use ($search) {
+                    $q->where('numero_processo', 'like', "%{$search}%")
+                      ->orWhere('vara', 'like', "%{$search}%")
+                      ->orWhereHas('requerente', function ($q2) use ($search) {
+                          $q2->where('nome', 'like', "%{$search}%");
+                      });
+                })->orWhere('financeiro', 'like', "%{$search}%")
+                  ->orWhere('sei', 'like', "%{$search}%")
+                  ->orWhere('nf', 'like', "%{$search}%");
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->when($upj, function ($query, $upj) {
+                return $query->where('upj', $upj);
+            })
+            ->when($mesPagamento, function ($query, $mesPagamento) {
+                return $query->where('mes_pagamento', $mesPagamento);
+            })
+            ->latest()
+            ->get(); // Usar get() ao invés de paginate() para pegar todos os registros
+
+        // Preparar os filtros aplicados para exibição no relatório
+        $filtrosAplicados = [
+            'search' => $search,
+            'status' => $status,
+            'upj' => $upj,
+            'mes_pagamento' => $mesPagamento,
+        ];
+
+        // Gerar o HTML da view
+        $html = view('entrega-laudos-financeiro.print-list', compact('entregasLaudos', 'filtrosAplicados'))->render();
+
+        // Configurar mPDF
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L', // Formato paisagem para acomodar mais colunas
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 10,
+            'margin_bottom' => 10,
+            'default_font' => 'Arial'
+        ]);
+
+        // Escrever o HTML no PDF
+        $mpdf->WriteHTML($html);
+
+        // Gerar nome do arquivo com data e hora
+        $filename = 'relatorio-financeiro-laudos-' . date('Y-m-d-H-i-s') . '.pdf';
+
+        // Retornar o PDF para download
+        return response($mpdf->Output($filename, 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
 }

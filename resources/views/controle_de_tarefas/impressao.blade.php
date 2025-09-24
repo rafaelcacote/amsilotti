@@ -112,7 +112,7 @@
 
 <body>
     <!-- Cabeçalho fixo que aparecerá em todas as páginas -->
-    <div class="header">
+    <!-- <div class="header">
         <div class="header-images">
             <img src="{{ $logo }}" alt="Logo">
         </div>
@@ -125,7 +125,7 @@
             pericias@amsilotti.com<br>
             (92) 99510-0573
         </div>
-    </div>
+    </div> -->
     <table border="1" width="100%">
         <thead>
             <tr>

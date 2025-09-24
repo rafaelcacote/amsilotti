@@ -104,6 +104,7 @@ Route::patch('controle-pericias/{pericia}/status', [\App\Http\Controllers\Contro
 // Rotas para Entrega de Laudos Financeiro
 Route::resource('entrega-laudos-financeiro', \App\Http\Controllers\EntregaLaudoFinanceiroController::class)->middleware('auth');
 Route::get('entrega-laudos-financeiro/{entregaLaudoFinanceiro}/details', [\App\Http\Controllers\EntregaLaudoFinanceiroController::class, 'getDetails'])->name('entrega-laudos-financeiro.details')->middleware('auth');
+Route::get('entrega-laudos-financeiro-imprimir', [\App\Http\Controllers\EntregaLaudoFinanceiroController::class, 'printList'])->name('entrega-laudos-financeiro.print')->middleware('auth');
 
 Route::resource('controle_de_tarefas', \App\Http\Controllers\ControleDeTarefasController::class)
     ->parameters(['controle_de_tarefas' => 'controleDeTarefas'])

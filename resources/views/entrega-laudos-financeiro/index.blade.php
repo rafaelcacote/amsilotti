@@ -66,6 +66,9 @@
                                                 <div class="d-flex gap-2">
                                                     <button type="submit" class="btn btn-success"><i class="fas fa-search me-2"></i>Pesquisar</button>
                                                     <a href="{{ route('entrega-laudos-financeiro.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
+                                                    <button type="button" class="btn btn-outline-info" id="btnImprimir">
+                                                        <i class="fas fa-print me-2"></i>Imprimir
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -102,15 +105,16 @@
                                     <thead>
                                         <tr>
                                             <th>Processo</th>
-                                            <th>Requerente</th>
-                                            <th>Status</th>
                                             <th>Vara</th>
                                             <th>UPJ</th>
                                             <th>Financeiro</th>
-                                            <th>Valor</th>
-                                            <th>Protocolo</th>
+                                            <th>Protocolo Laudo</th>
+                                            <th>R$</th>
+                                            <th>SEI</th>
+                                            <th>Empenho</th>
+                                            <th>NF</th>
                                             <th>Mês Pagamento</th>
-                                            <th>Ações</th>
+                                            <th style="min-width: 80px;">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -129,30 +133,15 @@
                                                             <span class="text-muted small fst-italic">sem processo</span>
                                                         @endif
                                                     </td>
-                                                    <!-- 2. Requerente -->
-                                                    <td class="text-truncate-col" title="{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->requerente ? $entregaLaudo->controlePericia->requerente->nome : '-' }}">
-                                                        {{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->requerente ? $entregaLaudo->controlePericia->requerente->nome : '-' }}
-                                                    </td>
-                                                    <!-- 3. Status -->
-                                                    <td>
-                                                        @php
-                                                            $statusClass = match (strtolower($entregaLaudo->status ?? '')) {
-                                                                'liquidado' => 'bg-success',
-                                                                'pagamento/presidencia' => 'bg-warning text-dark',
-                                                                'aguardando sei' => 'bg-info',
-                                                                'secoft/empenho' => 'bg-primary',
-                                                                default => 'bg-light text-dark',
-                                                            };
-                                                        @endphp
-                                                        <span class="badge {{ $statusClass }}">{{ $entregaLaudo->status ?? 'Não informado' }}</span>
-                                                    </td>
-                                                    <!-- 4. Vara -->
+                                                    <!-- 2. Vara -->
                                                     <td>{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
-                                                    <!-- 5. UPJ -->
+                                                    <!-- 3. UPJ -->
                                                     <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
-                                                    <!-- 6. Financeiro -->
+                                                    <!-- 4. Financeiro -->
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
-                                                    <!-- 7. Valor -->
+                                                    <!-- 5. Protocolo Laudo -->
+                                                    <td>{{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}</td>
+                                                    <!-- 6. R$ -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
                                                             <span class="fw-bold text-success">{{ $entregaLaudo->valor_formatado }}</span>
@@ -160,39 +149,41 @@
                                                             <span class="text-muted">-</span>
                                                         @endif
                                                     </td>
-                                                    <!-- 8. Protocolo -->
-                                                    <td>{{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}</td>
-                                                    <!-- 9. Mês Pagamento -->
+                                                    <!-- 7. SEI -->
+                                                    <td>{{ $entregaLaudo->sei ?? '-' }}</td>
+                                                    <!-- 8. Empenho -->
+                                                    <td>{{ $entregaLaudo->empenho ?? '-' }}</td>
+                                                    <!-- 9. NF -->
+                                                    <td>{{ $entregaLaudo->nf ?? '-' }}</td>
+                                                    <!-- 10. Mês Pagamento -->
                                                     <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}</td>
-                                                    <!-- 10. Ações -->
-                                                    <td>
-                                                        @can('edit pericias')
-                                                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
-                                                                title="Editar"
-                                                                data-id="{{ $entregaLaudo->id }}"
-                                                                data-status="{{ $entregaLaudo->status }}"
-                                                                data-upj="{{ $entregaLaudo->upj }}"
-                                                                data-financeiro="{{ $entregaLaudo->financeiro }}"
-                                                                data-valor="{{ $entregaLaudo->valor }}"
-                                                                data-protocolo-laudo="{{ $entregaLaudo->protocolo_laudo ? $entregaLaudo->protocolo_laudo->format('Y-m-d') : '' }}"
-                                                                data-sei="{{ $entregaLaudo->sei }}"
-                                                                data-nf="{{ $entregaLaudo->nf }}"
-                                                                data-mes-pagamento="{{ $entregaLaudo->mes_pagamento }}"
-                                                                data-empenho="{{ $entregaLaudo->empenho }}"
-                                                                data-observacoes="{{ $entregaLaudo->observacoes }}"
-                                                                data-controle-pericias-id="{{ $entregaLaudo->controle_pericias_id }}"
-                                                                data-processo="{{ $entregaLaudo->controlePericia->numero_processo ?? '' }}"
-                                                                data-requerente="{{ $entregaLaudo->controlePericia->requerente->nome ?? '' }}"
-                                                                data-vara="{{ $entregaLaudo->controlePericia->vara ?? '' }}">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-                                                        @endcan
+                                                    <!-- 11. Ações -->
+                                                    <td style="min-width: 80px;">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
+                                                            title="Editar"
+                                                            data-id="{{ $entregaLaudo->id }}"
+                                                            data-status="{{ $entregaLaudo->status }}"
+                                                            data-upj="{{ $entregaLaudo->upj }}"
+                                                            data-financeiro="{{ $entregaLaudo->financeiro }}"
+                                                            data-valor="{{ $entregaLaudo->valor }}"
+                                                            data-protocolo-laudo="{{ $entregaLaudo->protocolo_laudo ? $entregaLaudo->protocolo_laudo->format('Y-m-d') : '' }}"
+                                                            data-sei="{{ $entregaLaudo->sei }}"
+                                                            data-nf="{{ $entregaLaudo->nf }}"
+                                                            data-mes-pagamento="{{ $entregaLaudo->mes_pagamento }}"
+                                                            data-empenho="{{ $entregaLaudo->empenho }}"
+                                                            data-observacoes="{{ $entregaLaudo->observacoes }}"
+                                                            data-controle-pericias-id="{{ $entregaLaudo->controle_pericias_id }}"
+                                                            data-processo="{{ $entregaLaudo->controlePericia->numero_processo ?? '' }}"
+                                                            data-requerente="{{ $entregaLaudo->controlePericia->requerente->nome ?? '' }}"
+                                                            data-vara="{{ $entregaLaudo->controlePericia->vara ?? '' }}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="10" class="text-center py-4">
+                                                <td colspan="11" class="text-center py-4">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>
@@ -986,6 +977,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.removeChild(toast);
                 });
             }
+        });
+
+        // Botão de impressão
+        document.getElementById('btnImprimir').addEventListener('click', function() {
+            // Capturar os parâmetros de filtro da URL atual
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Construir a URL para impressão
+            let printUrl = "{{ route('entrega-laudos-financeiro.print') }}";
+            if (urlParams.toString()) {
+                printUrl += '?' + urlParams.toString();
+            }
+            
+            // Abrir a impressão em uma nova aba
+            window.open(printUrl, '_blank');
         });
     </script>
 
