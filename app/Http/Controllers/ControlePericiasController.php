@@ -14,6 +14,18 @@ use Mpdf\Mpdf;
 class ControlePericiasController extends Controller
 {
     /**
+     * AJAX: Checa se já existe o número de processo informado
+     */
+    public function checkNumeroProcesso(Request $request)
+    {
+        $numero = $request->input('numero_processo');
+        $existe = false;
+        if ($numero) {
+            $existe = \App\Models\ControlePericia::where('numero_processo', $numero)->exists();
+        }
+        return response()->json(['exists' => $existe]);
+    }
+    /**
      * Display a listing of the pericias.
      */
     public function index(Request $request): View
@@ -116,7 +128,7 @@ class ControlePericiasController extends Controller
         }
 
         $validated = $request->validate([
-            'numero_processo' => 'required|string|max:255',
+            'numero_processo' => 'required|string|max:255|unique:controle_pericias,numero_processo',
             'requerente_id' => 'required|exists:clientes,id',
             'requerido' => 'required|string|max:255',
             'vara' => 'required|string|max:255',
@@ -133,6 +145,8 @@ class ControlePericiasController extends Controller
             'protocolo' => 'nullable|string|max:255',
             'data_protocolo' => 'nullable|date',
             'observacoes' => 'nullable|string',
+        ], [
+            'numero_processo.unique' => 'Este número de processo já está cadastrado.'
         ]);
 
         // Conversão do valor se fornecido

@@ -22,6 +22,9 @@
                                         class="form-control @error('numero_processo') is-invalid @enderror"
                                         id="numero_processo" name="numero_processo" value="{{ old('numero_processo') }}"
                                         required>
+                                    <div id="numero_processo-exists-feedback" class="invalid-feedback d-none">
+                                        Este número de processo já existe!
+                                    </div>
                                     @error('numero_processo')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -115,6 +118,10 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <small class="form-text text-muted mt-1" style="font-size: 0.92em;">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        O status <strong>Entregue</strong> só pode ser definido na listagem geral.
+                                    </small>
                                     @error('status_atual')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -320,4 +327,5 @@
             });
         });
     </script>
+
 @endsection

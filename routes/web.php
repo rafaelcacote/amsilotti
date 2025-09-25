@@ -8,6 +8,7 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\DashboardTarefasController;
 use App\Http\Controllers\BairroController;
 use App\Http\Controllers\VigenciaPgmController;
+use App\Http\Controllers\ControlePericiasController;
 
 Route::resource('vias-especificas', ViaEspecificaController::class)->parameters(['vias-especificas' => 'viaEspecifica'])->middleware('auth');
 
@@ -100,6 +101,9 @@ Route::get('autocomplete-clientes', [\App\Http\Controllers\ControlePericiasContr
 Route::get('controle-pericias/{id}/print', [\App\Http\Controllers\ControlePericiasController::class, 'printPdf'])->name('controle-pericias.print')->middleware('auth');
 Route::get('controle-pericias-imprimir', [\App\Http\Controllers\ControlePericiasController::class, 'printList'])->name('controle-pericias.print-list')->middleware('auth');
 Route::patch('controle-pericias/{pericia}/status', [\App\Http\Controllers\ControlePericiasController::class, 'updateStatus'])->name('controle-pericias.update-status')->middleware('auth');
+
+// Checagem AJAX de número de processo duplicado
+Route::get('/controle-pericias/check-numero-processo', [ControlePericiasController::class, 'checkNumeroProcesso'])->name('controle-pericias.check-numero-processo');
 
 // Rotas para Entrega de Laudos Financeiro
 Route::resource('entrega-laudos-financeiro', \App\Http\Controllers\EntregaLaudoFinanceiroController::class)->middleware('auth');

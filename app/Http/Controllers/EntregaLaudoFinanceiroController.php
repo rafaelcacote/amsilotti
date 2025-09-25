@@ -25,6 +25,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
+        $financeiro = $request->input('financeiro');
 
         $entregasLaudos = EntregaLaudoFinanceiro::query()
             ->with(['controlePericia.requerente', 'controlePericia.responsavelTecnico'])
@@ -53,10 +54,13 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($mesPagamento, function ($query, $mesPagamento) {
                 return $query->where('mes_pagamento', $mesPagamento);
             })
+            ->when($financeiro, function ($query, $financeiro) {
+                return $query->where('financeiro', $financeiro);
+            })
             ->latest()
             ->paginate(15);
 
-        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento'));
+        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento', 'financeiro'));
     }
 
     /**

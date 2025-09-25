@@ -314,7 +314,7 @@
                                                                 data-vara="{{ $pericia->vara ?? '' }}"
                                                                 style="border: none; font-weight: 500; min-width: 180px;"
                                                                 {{ strtolower($pericia->status_atual) === 'entregue' ? 'disabled' : '' }}>
-                                                                @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
+                                                                @foreach (App\Models\ControlePericia::statusOptionsListagem() as $statusOption)
                                                                     @php
                                                                         $optionColor = App\Models\ControlePericia::getStatusColor($statusOption);
                                                                     @endphp

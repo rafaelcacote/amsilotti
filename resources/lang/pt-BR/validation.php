@@ -30,11 +30,46 @@ return [
             'size' => 'O CPF deve ter exatamente 11 números.',
             'regex' => 'O CPF deve conter apenas números.',
         ],
+        'requerente_id' => [
+            'required' => 'Por favor, selecione um requerente.',
+        ],
+        'numero_processo' => [
+            'required' => 'O campo número do processo é obrigatório.',
+        ],
+        'requerido' => [
+            'required' => 'O campo requerido é obrigatório.',
+        ],
+        'vara' => [
+            'required' => 'Por favor, selecione uma vara.',
+        ],
+        'tipo_pericia' => [
+            'required' => 'Por favor, selecione o tipo de perícia.',
+        ],
+        'status_atual' => [
+            'required' => 'Por favor, selecione o status atual.',
+        ],
     ],
 
     'attributes' => [
         'email' => 'e-mail',
         'password' => 'senha',
         'cpf' => 'CPF',
+        'numero_processo' => 'número do processo',
+        'requerente_id' => 'requerente',
+        'requerido' => 'requerido',
+        'vara' => 'vara',
+        'tipo_pericia' => 'tipo de perícia',
+        'data_nomeacao' => 'data de nomeação',
+        'status_atual' => 'status',
+        'data_vistoria' => 'data da vistoria',
+        'prazo_final' => 'prazo final',
+        'decurso_prazo' => 'decurso de prazo',
+        'valor' => 'valor',
+        'responsavel_tecnico_id' => 'responsável técnico',
+        'protocolo_responsavel_id' => 'protocolo responsável',
+        'cadeia_dominial' => 'cadeia dominial',
+        'protocolo' => 'protocolo',
+        'data_protocolo' => 'data do protocolo',
+        'observacoes' => 'observações',
     ],
 ];

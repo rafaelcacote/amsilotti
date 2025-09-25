@@ -44,6 +44,17 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
+                                                <label class="form-label" for="financeiro">Financeiro</label>
+                                                <select class="form-select" name="financeiro" id="financeiro">
+                                                    <option value="">Todos</option>
+                                                    @foreach (App\Models\EntregaLaudoFinanceiro::financeiroOptions() as $financeiroOption)
+                                                        <option value="{{ $financeiroOption }}" {{ request('financeiro') == $financeiroOption ? 'selected' : '' }}>
+                                                            {{ $financeiroOption }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label class="form-label" for="vara">Vara</label>
                                                 <select class="form-select" name="vara" id="vara">
                                                     <option value="">Todas</option>
@@ -119,9 +130,10 @@
                                             <th style="width: 8%;">Vara</th>
                                             <th style="width: 6%;">UPJ</th>
                                             <th style="width: 10%;">Financeiro</th>
+                                            <th style="width: 10%;">Status</th>
                                             <th style="width: 8%;">Protocolo Laudo</th>
                                             <th style="width: 8%;">R$</th>
-                                            <th style="width: 10%;">SEI</th>
+                                            <th style="width: 10%;">Proc Adm</th>
                                             <th style="width: 10%;">Empenho</th>
                                             <th style="width: 8%;">NF</th>
                                             <th style="width: 12%;">Mês Pagamento</th>
@@ -150,8 +162,10 @@
                                                     <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                                                     <!-- 4. Financeiro -->
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
+                                                    <!-- 5. Status -->
+                                                    <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                                                     <!-- 5. Protocolo Laudo -->
-                                                    <td>{{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}</td>
+                                                    <td>{{ $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td>
                                                     <!-- 6. R$ -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
@@ -484,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setElementText('drawer-upj', data.entrega?.upj);
         setElementText('drawer-financeiro', data.entrega?.financeiro);
         setElementText('drawer-valor', data.entrega?.valor_formatado);
-        setElementText('drawer-protocolo-laudo', data.entrega?.protocolo_laudo_formatted);
+        setElementText('drawer-protocolo-laudo', data.pericia?.prazo_final_formatted);
         setElementText('drawer-mes-pagamento', data.entrega?.mes_pagamento);
         setElementText('drawer-sei', data.entrega?.sei);
         setElementText('drawer-nf', data.entrega?.nf);
