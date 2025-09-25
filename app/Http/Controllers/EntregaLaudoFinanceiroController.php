@@ -55,7 +55,7 @@ class EntregaLaudoFinanceiroController extends Controller
                 return $query->where('mes_pagamento', $mesPagamento);
             })
             ->when($financeiro, function ($query, $financeiro) {
-                return $query->where('financeiro', $financeiro);
+                return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
             })
             ->latest()
             ->paginate(15);
@@ -284,6 +284,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
+        $financeiro = $request->input('financeiro');
 
         // Aplicar os mesmos filtros da listagem principal
         $entregasLaudos = EntregaLaudoFinanceiro::query()
@@ -313,6 +314,9 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($mesPagamento, function ($query, $mesPagamento) {
                 return $query->where('mes_pagamento', $mesPagamento);
             })
+            ->when($financeiro, function ($query, $financeiro) {
+                return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
+            })
             ->latest()
             ->get(); // Usar get() ao invés de paginate() para pegar todos os registros
 
@@ -323,6 +327,7 @@ class EntregaLaudoFinanceiroController extends Controller
             'vara' => $vara,
             'upj' => $upj,
             'mes_pagamento' => $mesPagamento,
+            'financeiro' => $financeiro,
         ];
 
         // Gerar o HTML da view

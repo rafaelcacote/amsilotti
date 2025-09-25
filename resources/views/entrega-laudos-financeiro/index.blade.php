@@ -143,6 +143,7 @@
                                     <tbody>
                                         @if ($entregasLaudos->count() > 0)
                                             @foreach ($entregasLaudos as $entregaLaudo)
+                                                @if(is_object($entregaLaudo) && method_exists($entregaLaudo, 'getAttribute'))
                                                 <tr class="drawer-row" data-id="{{ $entregaLaudo->id }}">
                                                     <!-- 1. Processo -->
                                                     <td>
@@ -187,7 +188,7 @@
                                                         <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
                                                             title="Editar"
                                                             data-id="{{ $entregaLaudo->id }}"
-                                                            data-status="{{ $entregaLaudo->status }}"
+                                                            data-status="{{ $entregaLaudo->status ?? '' }}"
                                                             data-upj="{{ $entregaLaudo->upj }}"
                                                             data-financeiro="{{ $entregaLaudo->financeiro }}"
                                                             data-valor="{{ $entregaLaudo->valor }}"
@@ -205,6 +206,7 @@
                                                         </button>
                                                     </td>
                                                 </tr>
+                                                @endif
                                             @endforeach
                                         @else
                                             <tr>

@@ -107,7 +107,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8px;
+            font-size: 10px;
         }
         
         th {
@@ -116,7 +116,7 @@
             padding: 10px 6px;
             text-align: left;
             font-weight: 600;
-            font-size: 9px;
+            font-size: 11px;
         }
         
         td {
@@ -179,16 +179,13 @@
             font-weight: 600;
         }
         
-        .col-processo { width: 12%; }
-        .col-vara { width: 8%; }
-        .col-upj { width: 8%; }
-        .col-financeiro { width: 10%; }
-        .col-protocolo { width: 10%; }
+        .col-processo { width: 20%; }
+        .col-vara { width: 15%; }
+        .col-upj { width: 10%; }
+        .col-financeiro { width: 15%; }
+        .col-protocolo { width: 15%; }
         .col-valor { width: 10%; }
-        .col-sei { width: 10%; }
-        .col-empenho { width: 10%; }
-        .col-nf { width: 8%; }
-        .col-mes { width: 14%; }
+        .col-sei { width: 15%; }
         
         .break-word {
             word-break: break-word;
@@ -236,8 +233,8 @@
         @if($filtrosAplicados['upj'])
             <div class="filtro-item"><strong>UPJ:</strong> {{ $filtrosAplicados['upj'] }}</div>
         @endif
-        @if($filtrosAplicados['mes_pagamento'])
-            <div class="filtro-item"><strong>Mês Pagamento:</strong> {{ $filtrosAplicados['mes_pagamento'] }}</div>
+        @if($filtrosAplicados['financeiro'])
+            <div class="filtro-item"><strong>Financeiro:</strong> {{ $filtrosAplicados['financeiro'] }}</div>
         @endif
     </div>
     @endif
@@ -253,10 +250,7 @@
                         <th class="col-financeiro">Financeiro</th>
                         <th class="col-protocolo">Protocolo Laudo</th>
                         <th class="col-valor">R$</th>
-                        <th class="col-sei">SEI</th>
-                        <th class="col-empenho">Empenho</th>
-                        <th class="col-nf">NF</th>
-                        <th class="col-mes">Mês Pagamento</th>
+                        <th class="col-sei">Proc. Adm</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -283,12 +277,22 @@
                                 @endif
                             </td>
                             <td class="break-word">{{ $entregaLaudo->sei ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->empenho ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr style="background-color: #e9ecef; font-weight: bold;">
+                        <td colspan="5" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                            <strong>TOTAL GERAL:</strong>
+                        </td>
+                        <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                            <span class="valor-money" style="font-weight: bold; font-size: 11px;">
+                                R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
+                            </span>
+                        </td>
+                        <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;"></td>
+                    </tr>
+                </tfoot>
             </table>
         @else
             <div class="no-data">
