@@ -251,6 +251,9 @@
                         <th class="col-protocolo">Protocolo Laudo</th>
                         <th class="col-valor">R$</th>
                         <th class="col-sei">Proc. Adm</th>
+                        <th class="col-sei">Empenho</th>
+                        <th class="col-sei">NF</th>
+                        <th class="col-sei">Mês Pagamento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -277,6 +280,9 @@
                                 @endif
                             </td>
                             <td class="break-word">{{ $entregaLaudo->sei ?? '-' }}</td>
+                            <td class="break-word">{{ $entregaLaudo->emprenho ?? '-' }}</td>
+                            <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
+                            <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
