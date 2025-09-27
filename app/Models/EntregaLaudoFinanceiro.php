@@ -64,9 +64,11 @@ class EntregaLaudoFinanceiro extends Model
     {
         return [
             'Aguardando Sei',
+            'Aguardando Proc. Adm',
             'Atesto Perícia',
+            'Emissão NF - Contador',
             'Liquidado',
-            'pagamento/presidencia',
+            'Presidencia - TJAM',
             'SECOFT/EMPENHO',
             
         ];

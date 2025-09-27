@@ -47,7 +47,7 @@
                                 </div>
 
                                 <!-- Primeira linha - Status, UPJ, Financeiro e Valor -->
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                     <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
                                         <option value="">Selecione o status</option>
@@ -62,7 +62,7 @@
                                     @enderror
                                 </div>
                                 
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="upj" class="form-label">UPJ</label>
                                     <select class="form-select @error('upj') is-invalid @enderror" id="upj" name="upj">
                                         <option value="">Selecione a UPJ</option>
@@ -116,6 +116,16 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="col-md-2 mb-3">
+                                        <label for="ano_pagamento" class="form-label">Ano do Pagamento</label>
+                                    <input type="text" class="form-control @error('ano_pagamento') is-invalid @enderror" 
+                                        id="ano_pagamento" name="ano_pagamento" maxlength="4" pattern="^(19|20)[0-9]{2}$" 
+                                        title="Digite um ano válido (ex: 2025)" placeholder="2025" value="{{ old('ano_pagamento', $entregaLaudosFinanceiro->ano_pagamento ?? '') }}">
+                                                    <small class="text-muted">Somente anos válidos (ex: 2025)</small>
+                                                    @error('ano_pagamento')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                    </div>
 
                                 <!-- Segunda linha - Protocolo do Laudo e Mês de Pagamento Número SEI, Nota Fiscal e Empenho --> 
                                 
@@ -131,7 +141,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-2 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="nf" class="form-label">Nota Fiscal</label>
                                     <input type="text" class="form-control @error('nf') is-invalid @enderror" 
                                            id="nf" name="nf" value="{{ old('nf', $entregaLaudosFinanceiro->nf) }}"
@@ -141,7 +151,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-2 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="empenho" class="form-label">Empenho</label>
                                     <div class="input-group">
                                         <span class="input-group-text">NE nº</span>
@@ -155,19 +165,10 @@
                                 </div>
 
                                     <!-- Nova linha - Ano do Pagamento e Tipo de Pessoa -->
-                                    <div class="col-md-2 mb-3">
-                                        <label for="ano_pagamento" class="form-label">Ano do Pagamento</label>
-                         <input type="text" class="form-control @error('ano_pagamento') is-invalid @enderror" 
-                             id="ano_pagamento" name="ano_pagamento" maxlength="4" pattern="^(19|20)[0-9]{2}$" 
-                             title="Digite um ano válido (ex: 2025)" placeholder="2025" value="{{ old('ano_pagamento', $entregaLaudosFinanceiro->ano_pagamento ?? '') }}" required>
-                                        <small class="text-muted">Somente anos válidos (ex: 2025)</small>
-                                        @error('ano_pagamento')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    
                                     <div class="col-md-3 mb-3">
                                         <label for="tipo_pessoa" class="form-label">Tipo de Pessoa</label>
-                                        <select class="form-select @error('tipo_pessoa') is-invalid @enderror" id="tipo_pessoa" name="tipo_pessoa" required>
+                                        <select class="form-select @error('tipo_pessoa') is-invalid @enderror" id="tipo_pessoa" name="tipo_pessoa">
                                             <option value="">Selecione o tipo</option>
                                             <option value="PJ" {{ old('tipo_pessoa', $entregaLaudosFinanceiro->tipo_pessoa ?? '') == 'PJ' ? 'selected' : '' }}>PJ - Pessoa Jurídica</option>
                                             <option value="PF" {{ old('tipo_pessoa', $entregaLaudosFinanceiro->tipo_pessoa ?? '') == 'PF' ? 'selected' : '' }}>PF - Pessoa Física</option>

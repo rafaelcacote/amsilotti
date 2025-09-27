@@ -109,14 +109,14 @@ class EntregaLaudoFinanceiroController extends Controller
         }
 
         // Verificar se já existe um registro para essa perícia
-        // $existingRecord = EntregaLaudoFinanceiro::where('controle_pericias_id', $validated['controle_pericias_id'])->first();
+        $existingRecord = EntregaLaudoFinanceiro::where('controle_pericias_id', $validated['controle_pericias_id'])->first();
         
-        // if ($existingRecord) {
-        //     return response()->json([
-        //         'success' => false, 
-        //         'message' => 'Já existe um registro financeiro para esta perícia.'
-        //     ], 422);
-        // }
+        if ($existingRecord) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Já existe um registro financeiro para esta perícia.'
+            ], 422);
+        }
 
         $entregaLaudo = EntregaLaudoFinanceiro::create($validated);
 
