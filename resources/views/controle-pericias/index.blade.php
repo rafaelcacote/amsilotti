@@ -312,9 +312,10 @@
                                                                 data-numero-processo="{{ $pericia->numero_processo ?? '' }}"
                                                                 data-requerente="{{ $pericia->requerente ? $pericia->requerente->nome : '' }}"
                                                                 data-vara="{{ $pericia->vara ?? '' }}"
+                                                                data-prazo_final="{{ $pericia->prazo_final ?? '' }}"
                                                                 style="border: none; font-weight: 500; min-width: 180px;"
                                                                 {{ strtolower($pericia->status_atual) === 'entregue' ? 'disabled' : '' }}>
-                                                                @foreach (App\Models\ControlePericia::statusOptionsListagem() as $statusOption)
+                                                                @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
                                                                     @php
                                                                         $optionColor = App\Models\ControlePericia::getStatusColor($statusOption);
                                                                     @endphp
@@ -595,7 +596,8 @@
                 const periciaData = {
                     processo: selectElement.dataset.numeroProcesso || '',
                     requerente: selectElement.dataset.requerente || '',
-                    vara: selectElement.dataset.vara || ''
+                    vara: selectElement.dataset.vara || '',
+                    prazo_final: selectElement.dataset.prazo_final || ''
                 };
                 
                 // Atualizar informações no modal usando a função global
@@ -614,7 +616,7 @@
                 // Limpar formulário
                 document.getElementById('formFinanceiro').reset();
                 document.getElementById('controle_pericias_id').value = periciaId;
-                document.getElementById('status_financeiro').value = 'Liquidado';
+                // Não força seleção de status
                 
                 // Mostrar modal
                 const modal = new bootstrap.Modal(document.getElementById('modalFinanceiro'));
@@ -696,6 +698,10 @@
                 
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData);
+                // Garantir que os campos estejam presentes
+                data.ano_pagamento = formData.get('ano_pagamento') || '';
+                data.tipo_pessoa = formData.get('tipo_pessoa') || '';
+                data.observacao = formData.get('observacao') || '';
                 
                 // Desabilitar botão de envio
                 const submitBtn = this.querySelector('button[type="submit"]');

@@ -7,16 +7,16 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between py-3">
-                            <h3 class="mb-0 text-success"><i class="fas fa-money-bill-wave me-2"></i>Financeiro de Laudos</h3>
+                            <h3 class="mb-0" style="color: #5c58cb;"><i class="fas fa-money-bill-wave me-2"></i>Financeiro de Laudos</h3>
                             <button type="button" class="btn btn-outline-info" id="btnImprimir">
                                 <i class="fas fa-print me-2"></i>Imprimir
                             </button>
                         </div>
                         <div class="card-body bg-light">
                             <!-- Collapse Filtros -->
-                            <button class="btn btn-outline-success mb-3 w-100 d-flex align-items-center justify-content-center gap-2"
+                            <button class="btn mb-3 w-100 d-flex align-items-center justify-content-center gap-2"
                                 type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse"
-                                aria-expanded="false" aria-controls="filtrosCollapse" style="font-size:1.1rem;">
+                                aria-expanded="false" aria-controls="filtrosCollapse" style="font-size:1.1rem; border: 1px solid #5c58cb; color: #5c58cb; background: #fff;">
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
@@ -87,9 +87,9 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <div class="d-flex gap-2">
-                                                    <button type="submit" class="btn btn-success"><i class="fas fa-search me-2"></i>Pesquisar</button>
+                                            <div class="col-md-12">
+                                                <div class="d-flex gap-2 justify-content-center mt-3">
+                                                    <button type="submit" class="btn" style="background: #5c58cb; color: #fff; border: 1px solid #5c58cb;"><i class="fas fa-search me-2"></i>Pesquisar</button>
                                                     <a href="{{ route('entrega-laudos-financeiro.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
                                                 </div>
                                             </div>
@@ -136,7 +136,7 @@
                                             <th style="width: 10%;">Proc Adm</th>
                                             <th style="width: 10%;">Empenho</th>
                                             <th style="width: 8%;">NF</th>
-                                            <th style="width: 12%;">Mês Pagamento</th>
+                                            <th style="width: 12%;">Mês/Ano Pagamento</th>
                                             <th style="width: 8%; min-width: 80px;">Ações</th>
                                         </tr>
                                     </thead>
@@ -182,28 +182,31 @@
                                                     <!-- 9. NF -->
                                                     <td>{{ $entregaLaudo->nf ?? '-' }}</td>
                                                     <!-- 10. Mês Pagamento -->
-                                                    <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}</td>
+                                                    <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}/{{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
                                                     <!-- 11. Ações -->
                                                     <td style="min-width: 80px;">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
+                                                        <!-- <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
                                                             title="Editar"
                                                             data-id="{{ $entregaLaudo->id }}"
                                                             data-status="{{ $entregaLaudo->status ?? '' }}"
-                                                            data-upj="{{ $entregaLaudo->upj }}"
-                                                            data-financeiro="{{ $entregaLaudo->financeiro }}"
-                                                            data-valor="{{ $entregaLaudo->valor }}"
+                                                            data-upj="{{ $entregaLaudo->upj ?? '' }}"
+                                                            data-financeiro="{{ $entregaLaudo->financeiro ?? '' }}"
+                                                            data-valor="{{ $entregaLaudo->valor ?? '' }}"
                                                             data-protocolo-laudo="{{ $entregaLaudo->protocolo_laudo ? $entregaLaudo->protocolo_laudo->format('Y-m-d') : '' }}"
-                                                            data-sei="{{ $entregaLaudo->sei }}"
-                                                            data-nf="{{ $entregaLaudo->nf }}"
-                                                            data-mes-pagamento="{{ $entregaLaudo->mes_pagamento }}"
-                                                            data-empenho="{{ $entregaLaudo->empenho }}"
-                                                            data-observacoes="{{ $entregaLaudo->observacoes }}"
+                                                            data-sei="{{ $entregaLaudo->sei ?? '' }}"
+                                                            data-nf="{{ $entregaLaudo->nf ?? '' }}"
+                                                            data-mes-pagamento="{{ $entregaLaudo->mes_pagamento ?? '' }}"
+                                                            data-empenho="{{ $entregaLaudo->empenho ?? '' }}"
+                                                            data-observacoes="{{ $entregaLaudo->observacoes ?? '' }}"
                                                             data-controle-pericias-id="{{ $entregaLaudo->controle_pericias_id }}"
                                                             data-processo="{{ $entregaLaudo->controlePericia->numero_processo ?? '' }}"
                                                             data-requerente="{{ $entregaLaudo->controlePericia->requerente->nome ?? '' }}"
                                                             data-vara="{{ $entregaLaudo->controlePericia->vara ?? '' }}">
                                                             <i class="fas fa-edit"></i>
-                                                        </button>
+                                                        </button> -->
+                                                            <a href="{{ route('entrega-laudos-financeiro.edit', $entregaLaudo->id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
                                                     </td>
                                                 </tr>
                                                 @endif
@@ -342,12 +345,19 @@
                                     <span class="info-value" id="drawer-protocolo-laudo">-</span>
                                 </div>
                                 <div class="info-item mb-3">
-                                    <label class="info-label">SEI:</label>
+                                    <label class="info-label">Proc Adm:</label>
                                     <span class="info-value" id="drawer-sei">-</span>
                                 </div>
                                 <div class="info-item mb-3">
                                     <label class="info-label">NF:</label>
                                     <span class="info-value" id="drawer-nf">-</span>
+                                </div>
+                               
+                            </div>
+                             <div class="col-4">
+                                <div class="info-item mb-6">
+                                    <label class="info-label">Observações:</label>
+                                    <span class="info-value" id="drawer-observacao">-</span>
                                 </div>
                             </div>
                         </div>
@@ -504,6 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setElementText('drawer-mes-pagamento', data.entrega?.mes_pagamento);
         setElementText('drawer-sei', data.entrega?.sei);
         setElementText('drawer-nf', data.entrega?.nf);
+        setElementText('drawer-observacao', data.entrega?.observacao);
     }
 
     function getStatusClass(status) {
@@ -567,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .drawer-header {
         padding: 1.5rem;
         border-bottom: 1px solid #e9ecef;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, #5c58cb 0%, #5c58cb 100%);
         color: white;
         display: flex;
         justify-content: space-between;
@@ -617,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     .section-title {
-        color: #28a745;
+    color: #5c58cb;
         font-size: 1rem;
         font-weight: 600;
         margin-bottom: 1rem;
@@ -629,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function() {
         background: #f8f9fa;
         border-radius: 10px;
         padding: 0.9rem;
-        border-left: 4px solid #28a745;
+    border-left: 4px solid #5c58cb;
         transition: all 0.3s ease;
         min-height: 65px;
         display: flex;
@@ -641,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
         background: #e9ecef;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-left-color: #20c997;
+    border-left-color: #5c58cb;
     }
 
     .info-label {
@@ -851,16 +862,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     const requerente = this.dataset.requerente;
                     const vara = this.dataset.vara;
 
-                    // Atualizar informações da perícia no modal
-                    if (typeof window.updateModalPericia === 'function') {
-                        window.updateModalPericia({
-                            processo: processo,
-                            requerente: requerente,
-                            vara: vara
-                        });
-                    }
+                    console.log('Dados do botão:', { upj, vara, status }); // Debug
 
-                    // Preencher o formulário do modal
+                    // Primeiro preencher os campos básicos do formulário
                     document.getElementById('status_financeiro').value = status || '';
                     document.getElementById('financeiro').value = financeiro || '';
                     document.getElementById('valor').value = valor || '';
@@ -872,13 +876,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('observacoes').value = observacoes || '';
                     document.getElementById('controle_pericias_id').value = controlePericiasId || '';
                     
-                    // UPJ será preenchido automaticamente baseado na vara
-                    // Aguardar um pouco para a função de filtro processar
-                    setTimeout(() => {
-                        if (upj) {
-                            document.getElementById('upj').value = upj;
-                        }
-                    }, 100);
+                    // Atualizar informações da perícia no modal e configurar UPJ
+                    if (typeof window.updateModalPericia === 'function') {
+                        window.updateModalPericia({
+                            processo: processo,
+                            requerente: requerente,
+                            vara: vara,
+                            upj: upj || '' // Passar a UPJ para a função, garantindo que não seja undefined
+                        });
+                    }
                     
                     // Aplicar máscara no valor depois de preencher
                     if (typeof $ !== 'undefined') {

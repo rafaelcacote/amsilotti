@@ -259,6 +259,8 @@
             </div>
         </div>
     </div>
+        <!-- Modal Financeiro -->
+            @include('components.modal-financeiro')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js">
     </script>
@@ -328,4 +330,49 @@
         });
     </script>
 
+    <script>
+    $(function() {
+        const form = $('form[action*="controle-pericias.store"]');
+        const statusSelect = $('#status_atual');
+        let shouldSubmitAfterFinanceiro = false;
+        let modalFinanceiro = $('#modalFinanceiro');
+        let formFinanceiro = $('#formFinanceiro');
+
+        if (form.length && statusSelect.length && modalFinanceiro.length && formFinanceiro.length) {
+            form.on('submit', function(e) {
+                if (statusSelect.val().toLowerCase() === 'entregue' && !shouldSubmitAfterFinanceiro) {
+                    e.preventDefault();
+                    // Abrir modal financeiro
+                    let bsModal = bootstrap.Modal.getOrCreateInstance(modalFinanceiro[0]);
+                    bsModal.show();
+                    // Exibir mensagem para o usuário (se função existir)
+                    if (typeof showToast === 'function') {
+                        showToast('info', 'Preencha os dados financeiros para salvar com status entregue.');
+                    }
+                }
+            });
+
+            // Handler único para submit do modal
+            formFinanceiro.on('submit', function(ev) {
+                ev.preventDefault();
+                shouldSubmitAfterFinanceiro = true;
+                let bsModal = bootstrap.Modal.getOrCreateInstance(modalFinanceiro[0]);
+                bsModal.hide();
+                form.submit();
+            });
+
+            // Handler para fechar o modal sem salvar
+            modalFinanceiro.on('hidden.bs.modal', function() {
+                if (!shouldSubmitAfterFinanceiro) {
+                    if (typeof showToast === 'function') {
+                        showToast('warning', 'Só é possível salvar com status entregue após preencher os dados financeiros.');
+                    }
+                }
+                shouldSubmitAfterFinanceiro = false;
+            });
+        }
+    });
+</script>
+
 @endsection
+

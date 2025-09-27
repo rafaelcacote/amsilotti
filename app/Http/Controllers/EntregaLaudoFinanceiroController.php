@@ -97,6 +97,9 @@ class EntregaLaudoFinanceiroController extends Controller
             'empenho' => 'nullable|string',
             'nf' => 'nullable|string|max:50',
             'mes_pagamento' => 'nullable|string|max:50',
+            'ano_pagamento' => 'nullable|string|max:4',
+            'tipo_pessoa' => 'nullable|string',
+            'observacao' => 'nullable|string',
         ]);
 
         // Conversão do valor se fornecido
@@ -106,14 +109,14 @@ class EntregaLaudoFinanceiroController extends Controller
         }
 
         // Verificar se já existe um registro para essa perícia
-        $existingRecord = EntregaLaudoFinanceiro::where('controle_pericias_id', $validated['controle_pericias_id'])->first();
+        // $existingRecord = EntregaLaudoFinanceiro::where('controle_pericias_id', $validated['controle_pericias_id'])->first();
         
-        if ($existingRecord) {
-            return response()->json([
-                'success' => false, 
-                'message' => 'Já existe um registro financeiro para esta perícia.'
-            ], 422);
-        }
+        // if ($existingRecord) {
+        //     return response()->json([
+        //         'success' => false, 
+        //         'message' => 'Já existe um registro financeiro para esta perícia.'
+        //     ], 422);
+        // }
 
         $entregaLaudo = EntregaLaudoFinanceiro::create($validated);
 
@@ -151,13 +154,14 @@ class EntregaLaudoFinanceiroController extends Controller
             'status' => 'required|string|max:100',
             'upj' => 'nullable|string|max:20',
             'financeiro' => 'nullable|string|max:50',
-            'protocolo_laudo' => 'nullable|date',
             'valor' => 'nullable|string',
             'sei' => 'nullable|string|max:50',
             'nf' => 'nullable|string|max:50',
             'mes_pagamento' => 'nullable|string|max:50',
+            'ano_pagamento' => 'nullable|digits:4',
+            'tipo_pessoa' => 'nullable|string|max:20',
             'empenho' => 'nullable|string|max:45',
-            'observacoes' => 'nullable|string',
+            'observacao' => 'nullable|string',
         ]);
 
         // Conversão do valor se fornecido
@@ -171,13 +175,14 @@ class EntregaLaudoFinanceiroController extends Controller
             'status' => $validated['status'],
             'upj' => $validated['upj'],
             'financeiro' => $validated['financeiro'],
-            'protocolo_laudo' => $validated['protocolo_laudo'],
             'valor' => $validated['valor'] ?? null,
             'sei' => $validated['sei'],
             'nf' => $validated['nf'],
             'mes_pagamento' => $validated['mes_pagamento'],
+            'ano_pagamento' => $validated['ano_pagamento'],
             'empenho' => $validated['empenho'],
-            'observacoes' => $validated['observacoes'],
+            'tipo_pessoa' => $validated['tipo_pessoa'],
+            'observacao' => $validated['observacao'],
         ];
 
         $entregaLaudosFinanceiro->update($updateData);
@@ -219,6 +224,7 @@ class EntregaLaudoFinanceiroController extends Controller
                 'nf' => $entregaLaudoFinanceiro->nf,
                 'mes_pagamento' => $entregaLaudoFinanceiro->mes_pagamento,
                 'empenho' => $entregaLaudoFinanceiro->empenho,
+                    'observacao' => $entregaLaudoFinanceiro->observacao,
             ],
             'pericia' => null
         ];

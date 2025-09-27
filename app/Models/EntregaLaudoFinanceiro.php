@@ -31,7 +31,10 @@ class EntregaLaudoFinanceiro extends Model
         'sei',
         'empenho',
         'nf',
-        'mes_pagamento'
+        'mes_pagamento',
+        'ano_pagamento',
+        'tipo_pessoa',
+        'observacao'
     ];
 
     /**

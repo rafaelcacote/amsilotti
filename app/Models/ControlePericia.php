@@ -155,29 +155,13 @@ class ControlePericia extends Model
                 'aguardando quesitos',
                 'Aguardando nomeação',
                 'em redação',
-                //'entregue',
-                'extinto',
-                'transferido projudi',
-                'suspenso'
-            ];
-        }
-
-         public static function statusOptionsListagem()
-        {
-            return [
-                'aguardando despacho',
-                'aguardando vistoria',
-                'aguardando pagamento',
-                'aguardando laudo do perito',
-                'aguardando quesitos',
-                'Aguardando nomeação',
-                'em redação',
                 'entregue',
                 'extinto',
                 'transferido projudi',
                 'suspenso'
             ];
         }
+
 
     /**
      * Get status color mapping

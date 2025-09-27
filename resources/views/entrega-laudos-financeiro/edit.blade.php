@@ -23,24 +23,31 @@
                                 
                                 <!-- Alert com informações da perícia -->
                                 <div class="col-12">
-                                    <div class="alert alert-info">
-                                        <h6 class="mb-2"><i class="fas fa-info-circle me-2"></i>Informações da Perícia</h6>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Processo:</strong> {{ $entregaLaudosFinanceiro->controlePericia->numero_processo ?? 'N/A' }}
+                                        <div class="card border-info mb-3" style="position:sticky;top:10px;z-index:2;">
+                                            <div class="card-header bg-info text-white">
+                                                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações da Perícia</h6>
                                             </div>
-                                            <div class="col-md-4">
-                                                <strong>Requerente:</strong> {{ $entregaLaudosFinanceiro->controlePericia->requerente->nome ?? 'N/A' }}
-                                            </div>
-                                            <div class="col-md-4">
-                                                <strong>Vara:</strong> {{ $entregaLaudosFinanceiro->controlePericia->vara ?? 'N/A' }}
+                                            <div class="card-body py-2">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <strong>Processo:</strong> {{ $entregaLaudosFinanceiro->controlePericia->numero_processo ?? 'N/A' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <strong>Requerente:</strong> {{ $entregaLaudosFinanceiro->controlePericia->requerente->nome ?? 'N/A' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <strong>Vara:</strong> {{ $entregaLaudosFinanceiro->controlePericia->vara ?? 'N/A' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <strong>Data Laudo:</strong> {{ $entregaLaudosFinanceiro->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudosFinanceiro->controlePericia->prazo_final)->format('d/m/Y') : 'N/A' }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
 
-                                <!-- Primeira linha - Status e UPJ -->
-                                <div class="col-md-6 mb-3">
+                                <!-- Primeira linha - Status, UPJ, Financeiro e Valor -->
+                                <div class="col-md-3 mb-3">
                                     <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                     <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
                                         <option value="">Selecione o status</option>
@@ -55,7 +62,7 @@
                                     @enderror
                                 </div>
                                 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="upj" class="form-label">UPJ</label>
                                     <select class="form-select @error('upj') is-invalid @enderror" id="upj" name="upj">
                                         <option value="">Selecione a UPJ</option>
@@ -70,8 +77,8 @@
                                     @enderror
                                 </div>
 
-                                <!-- Segunda linha - Financeiro e Valor -->
-                                <div class="col-md-6 mb-3">
+                               
+                                <div class="col-md-2 mb-3">
                                     <label for="financeiro" class="form-label">Financeiro</label>
                                     <select class="form-select @error('financeiro') is-invalid @enderror" id="financeiro" name="financeiro">
                                         <option value="">Selecione o financeiro</option>
@@ -86,7 +93,7 @@
                                     @enderror
                                 </div>
                                 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="valor" class="form-label">Valor</label>
                                     <input type="text" class="form-control money @error('valor') is-invalid @enderror" 
                                            id="valor" name="valor" value="{{ old('valor', $entregaLaudosFinanceiro->valor) }}"
@@ -95,19 +102,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-
-                                <!-- Terceira linha - Protocolo do Laudo e Mês de Pagamento -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="protocolo_laudo" class="form-label">Data do Protocolo do Laudo</label>
-                                    <input type="date" class="form-control @error('protocolo_laudo') is-invalid @enderror" 
-                                           id="protocolo_laudo" name="protocolo_laudo" 
-                                           value="{{ old('protocolo_laudo', $entregaLaudosFinanceiro->protocolo_laudo ? $entregaLaudosFinanceiro->protocolo_laudo->format('Y-m-d') : '') }}">
-                                    @error('protocolo_laudo')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="mes_pagamento" class="form-label">Mês de Pagamento</label>
                                     <select class="form-select @error('mes_pagamento') is-invalid @enderror" id="mes_pagamento" name="mes_pagamento">
                                         <option value="">Selecione o mês</option>
@@ -122,28 +117,31 @@
                                     @enderror
                                 </div>
 
-                                <!-- Quarta linha - Número SEI, Nota Fiscal e Empenho -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="numero_sei" class="form-label">Número SEI</label>
-                                    <input type="text" class="form-control @error('numero_sei') is-invalid @enderror" 
-                                           id="numero_sei" name="numero_sei" value="{{ old('numero_sei', $entregaLaudosFinanceiro->sei) }}"
-                                           placeholder="Digite o número SEI">
-                                    @error('numero_sei')
+                                <!-- Segunda linha - Protocolo do Laudo e Mês de Pagamento Número SEI, Nota Fiscal e Empenho --> 
+                                
+
+                               
+                                <div class="col-md-3 mb-3">
+                                    <label for="sei" class="form-label">Proc Adm</label>
+                                    <input type="text" class="form-control @error('sei') is-invalid @enderror" 
+                                           id="sei" name="sei" value="{{ old('sei', $entregaLaudosFinanceiro->sei) }}"
+                                           placeholder="Digite o número Proc Adm">
+                                    @error('sei')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label for="nota_fiscal" class="form-label">Nota Fiscal</label>
-                                    <input type="text" class="form-control @error('nota_fiscal') is-invalid @enderror" 
-                                           id="nota_fiscal" name="nota_fiscal" value="{{ old('nota_fiscal', $entregaLaudosFinanceiro->nf) }}"
+                                <div class="col-md-2 mb-3">
+                                    <label for="nf" class="form-label">Nota Fiscal</label>
+                                    <input type="text" class="form-control @error('nf') is-invalid @enderror" 
+                                           id="nf" name="nf" value="{{ old('nf', $entregaLaudosFinanceiro->nf) }}"
                                            placeholder="Digite o número da nota fiscal">
-                                    @error('nota_fiscal')
+                                    @error('nf')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="empenho" class="form-label">Empenho</label>
                                     <div class="input-group">
                                         <span class="input-group-text">NE nº</span>
@@ -156,13 +154,36 @@
                                     </div>
                                 </div>
 
+                                    <!-- Nova linha - Ano do Pagamento e Tipo de Pessoa -->
+                                    <div class="col-md-2 mb-3">
+                                        <label for="ano_pagamento" class="form-label">Ano do Pagamento</label>
+                         <input type="text" class="form-control @error('ano_pagamento') is-invalid @enderror" 
+                             id="ano_pagamento" name="ano_pagamento" maxlength="4" pattern="^(19|20)[0-9]{2}$" 
+                             title="Digite um ano válido (ex: 2025)" placeholder="2025" value="{{ old('ano_pagamento', $entregaLaudosFinanceiro->ano_pagamento ?? '') }}" required>
+                                        <small class="text-muted">Somente anos válidos (ex: 2025)</small>
+                                        @error('ano_pagamento')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="tipo_pessoa" class="form-label">Tipo de Pessoa</label>
+                                        <select class="form-select @error('tipo_pessoa') is-invalid @enderror" id="tipo_pessoa" name="tipo_pessoa" required>
+                                            <option value="">Selecione o tipo</option>
+                                            <option value="PJ" {{ old('tipo_pessoa', $entregaLaudosFinanceiro->tipo_pessoa ?? '') == 'PJ' ? 'selected' : '' }}>PJ - Pessoa Jurídica</option>
+                                            <option value="PF" {{ old('tipo_pessoa', $entregaLaudosFinanceiro->tipo_pessoa ?? '') == 'PF' ? 'selected' : '' }}>PF - Pessoa Física</option>
+                                        </select>
+                                        @error('tipo_pessoa')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
                                 <!-- Quinta linha - Observações -->
                                 <div class="col-12 mb-3">
-                                    <label for="observacoes" class="form-label">Observações</label>
-                                    <textarea class="form-control @error('observacoes') is-invalid @enderror" 
-                                              id="observacoes" name="observacoes" rows="3"
-                                              placeholder="Digite observações adicionais">{{ old('observacoes', $entregaLaudosFinanceiro->observacoes) }}</textarea>
-                                    @error('observacoes')
+                                    <label for="observacao" class="form-label">Observações</label>
+                                    <textarea class="form-control @error('observacao') is-invalid @enderror" 
+                                              id="observacao" name="observacao" rows="3"
+                                              placeholder="Digite observações adicionais">{{ old('observacao', $entregaLaudosFinanceiro->observacao) }}</textarea>
+                                    @error('observacao')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -197,6 +218,21 @@
                 '#': {pattern: /[0-9]/}
             }
         });
+            // Validação do campo ano_pagamento
+            $('#ano_pagamento').on('input', function() {
+                let val = this.value.replace(/[^0-9]/g, '');
+                if (val.length > 4) val = val.slice(0,4);
+                this.value = val;
+            });
+            $('#ano_pagamento').on('blur', function() {
+                const ano = parseInt(this.value, 10);
+                const anoAtual = new Date().getFullYear();
+                if (ano < 1900 || ano > anoAtual + 1) {
+                    this.setCustomValidity('Ano inválido. Informe um ano entre 1900 e ' + (anoAtual + 1));
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
     });
 
     // Bootstrap form validation
