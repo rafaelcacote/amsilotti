@@ -280,7 +280,7 @@
                                 @endif
                             </td>
                             <td class="break-word">{{ $entregaLaudo->sei ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->emprenho ?? '-' }}</td>
+                            <td class="break-word">{{ $entregaLaudo->empenho ?? '-' }}</td>
                             <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
                             <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
                         </tr>
