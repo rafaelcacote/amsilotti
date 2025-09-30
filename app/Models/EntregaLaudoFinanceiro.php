@@ -63,11 +63,11 @@ class EntregaLaudoFinanceiro extends Model
     public static function statusOptions()
     {
         return [
-            'Aguardando Proc. Adm',
             'Atesto Perícia',
             'Emissão NF - Contador',
             'Liquidado',
             'Presidencia - TJAM',
+            'Proc. Adm/SEI',
             'SECOFT/EMPENHO',
             
         ];
