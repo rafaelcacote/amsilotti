@@ -95,7 +95,7 @@ class EntregaLaudoFinanceiro extends Model
             'Pendente',
             'Adiantamento',
             'Liquidado',
-            'sem atesto'
+            'Sem atesto'
 
         ];
     }
