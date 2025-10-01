@@ -47,11 +47,18 @@
                                                 <label class="form-label" for="financeiro">Financeiro</label>
                                                 <select class="form-select" name="financeiro" id="financeiro">
                                                     <option value="">Todos</option>
-                                                    @foreach (App\Models\EntregaLaudoFinanceiro::financeiroOptions() as $financeiroOption)
-                                                        <option value="{{ $financeiroOption }}" {{ request('financeiro') == $financeiroOption ? 'selected' : '' }}>
-                                                            {{ $financeiroOption }}
-                                                        </option>
-                                                    @endforeach
+                                                    @php
+                                                        $financeiroOptions = App\Models\EntregaLaudoFinanceiro::financeiroOptions();
+                                                    @endphp
+                                                    @if(is_array($financeiroOptions))
+                                                        @foreach ($financeiroOptions as $financeiroOption)
+                                                            @if(is_string($financeiroOption))
+                                                                <option value="{{ $financeiroOption }}" {{ request('financeiro') == $financeiroOption ? 'selected' : '' }}>
+                                                                    {{ $financeiroOption }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
@@ -126,17 +133,18 @@
                                 <table class="table table-hover table-striped align-middle table-sm">
                                     <thead>
                                         <tr>
-                                            <th style="width: 12%;">Processo</th>
-                                            <th style="width: 8%;">Vara</th>
-                                            <th style="width: 6%;">UPJ</th>
-                                            <th style="width: 10%;">Financeiro</th>
-                                            <th style="width: 10%;">Status</th>
-                                            <th style="width: 8%;">Protocolo Laudo</th>
-                                            <th style="width: 8%;">R$</th>
-                                            <th style="width: 10%;">Proc Adm</th>
-                                            <th style="width: 10%;">Empenho</th>
-                                            <th style="width: 8%;">NF</th>
-                                            <th style="width: 12%;">Mês/Ano Pagamento</th>
+                                            <th style="width: 11%;">Processo</th>
+                                            <th style="width: 7%;">Vara</th>
+                                            <th style="width: 5%;">UPJ</th>
+                                            <th style="width: 9%;">Financeiro</th>
+                                            <th style="width: 9%;">Status</th>
+                                            <th style="width: 7%;">Protocolo Laudo</th>
+                                            <th style="width: 7%;">R$</th>
+                                            <th style="width: 9%;">Proc Adm</th>
+                                            <th style="width: 9%;">Empenho</th>
+                                            <th style="width: 7%;">NF</th>
+                                            <th style="width: 11%;">Mês/Ano Pagamento</th>
+                                            <th style="width: 8%;">Tipo</th>
                                             <th style="width: 8%; min-width: 80px;">Ações</th>
                                         </tr>
                                     </thead>
@@ -165,9 +173,9 @@
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                                                     <!-- 5. Status -->
                                                     <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
-                                                    <!-- 5. Protocolo Laudo -->
+                                                    <!-- 7. Protocolo Laudo -->
                                                     <td>{{ $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td>
-                                                    <!-- 6. R$ -->
+                                                    <!-- 8. R$ -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
                                                             <span class="fw-bold text-success">{{ $entregaLaudo->valor_formatado }}</span>
@@ -175,15 +183,17 @@
                                                             <span class="text-muted">-</span>
                                                         @endif
                                                     </td>
-                                                    <!-- 7. SEI -->
+                                                    <!-- 9. SEI -->
                                                     <td>{{ $entregaLaudo->sei ?? '-' }}</td>
-                                                    <!-- 8. Empenho -->
+                                                    <!-- 10. Empenho -->
                                                     <td>{{ $entregaLaudo->empenho ?? '-' }}</td>
-                                                    <!-- 9. NF -->
+                                                    <!-- 11. NF -->
                                                     <td>{{ $entregaLaudo->nf ?? '-' }}</td>
-                                                    <!-- 10. Mês Pagamento -->
+                                                    <!-- 12. Mês Pagamento -->
                                                     <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}/{{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
-                                                    <!-- 11. Ações -->
+                                                    <!-- 6. Tipo Pessoa -->
+                                                    <td>{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
+                                                    <!-- 13. Ações -->
                                                     <td style="min-width: 80px;">
                                                         <!-- <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
                                                             title="Editar"
@@ -213,7 +223,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="11" class="text-center py-4">
+                                                <td colspan="12" class="text-center py-4">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>
@@ -325,6 +335,10 @@
                                 <div class="info-item mb-3">
                                     <label class="info-label">Financeiro:</label>
                                     <span class="info-value" id="drawer-financeiro">-</span>
+                                </div>
+                                <div class="info-item mb-3">
+                                    <label class="info-label">Tipo Pessoa:</label>
+                                    <span class="info-value" id="drawer-tipo-pessoa">-</span>
                                 </div>
                             </div>
                             <!-- Coluna 2 - Valores e Pagamento -->
@@ -509,6 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `<span class="status-badge ${getStatusClass(data.entrega.status)}">${data.entrega.status}</span>` : '-');
         setElementText('drawer-upj', data.entrega?.upj);
         setElementText('drawer-financeiro', data.entrega?.financeiro);
+        setElementText('drawer-tipo-pessoa', data.entrega?.tipo_pessoa);
         setElementText('drawer-valor', data.entrega?.valor_formatado);
         setElementText('drawer-protocolo-laudo', data.pericia?.prazo_final_formatted);
         setElementText('drawer-mes-pagamento', data.entrega?.mes_pagamento);
@@ -681,15 +696,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .table thead th:nth-child(1) { width: 11%; } /* Processo */
-    .table thead th:nth-child(2) { width: 18%; } /* Requerente */
-    .table thead th:nth-child(3) { width: 10%; } /* Status */
-    .table thead th:nth-child(4) { width: 8%; }  /* UPJ */
-    .table thead th:nth-child(5) { width: 9%; }  /* Vara */
-    .table thead th:nth-child(6) { width: 9%; }  /* Financeiro */
-    .table thead th:nth-child(7) { width: 9%; }  /* Valor */
-    .table thead th:nth-child(8) { width: 9%; }  /* Protocolo */
-    .table thead th:nth-child(9) { width: 11%; } /* Mês Pagamento */
-    .table thead th:nth-child(10) { width: 6%; } /* Ações */
+    .table thead th:nth-child(2) { width: 7%; }  /* Vara */
+    .table thead th:nth-child(3) { width: 5%; }  /* UPJ */
+    .table thead th:nth-child(4) { width: 9%; }  /* Financeiro */
+    .table thead th:nth-child(5) { width: 9%; }  /* Status */
+    .table thead th:nth-child(6) { width: 8%; }  /* Tipo Pessoa */
+    .table thead th:nth-child(7) { width: 7%; }  /* Protocolo */
+    .table thead th:nth-child(8) { width: 7%; }  /* Valor */
+    .table thead th:nth-child(9) { width: 9%; }  /* Proc Adm */
+    .table thead th:nth-child(10) { width: 9%; } /* Empenho */
+    .table thead th:nth-child(11) { width: 7%; } /* NF */
+    .table thead th:nth-child(12) { width: 11%; } /* Mês Pagamento */
+    .table thead th:nth-child(13) { width: 6%; } /* Ações */
     
     .table th,
     .table td {
@@ -711,23 +729,29 @@ document.addEventListener('DOMContentLoaded', function() {
     .table tbody td:nth-child(1),
     .table thead th:nth-child(1) { text-align: left; }   /* Processo */
     .table tbody td:nth-child(2),
-    .table thead th:nth-child(2) { text-align: left; }   /* Requerente */
+    .table thead th:nth-child(2) { text-align: center; } /* Vara */
     .table tbody td:nth-child(3),
-    .table thead th:nth-child(3) { text-align: center; } /* Status */
+    .table thead th:nth-child(3) { text-align: center; } /* UPJ */
     .table tbody td:nth-child(4),
-    .table thead th:nth-child(4) { text-align: center; } /* UPJ */
+    .table thead th:nth-child(4) { text-align: center; } /* Financeiro */
     .table tbody td:nth-child(5),
-    .table thead th:nth-child(5) { text-align: center; } /* Vara */
+    .table thead th:nth-child(5) { text-align: center; } /* Status */
     .table tbody td:nth-child(6),
-    .table thead th:nth-child(6) { text-align: center; } /* Financeiro */
+    .table thead th:nth-child(6) { text-align: center; } /* Tipo Pessoa */
     .table tbody td:nth-child(7),
-    .table thead th:nth-child(7) { text-align: right; }  /* Valor */
+    .table thead th:nth-child(7) { text-align: center; } /* Protocolo */
     .table tbody td:nth-child(8),
-    .table thead th:nth-child(8) { text-align: center; } /* Protocolo */
+    .table thead th:nth-child(8) { text-align: right; }  /* Valor */
     .table tbody td:nth-child(9),
-    .table thead th:nth-child(9) { text-align: center; } /* Mês Pagamento */
+    .table thead th:nth-child(9) { text-align: center; } /* Proc Adm */
     .table tbody td:nth-child(10),
-    .table thead th:nth-child(10) { text-align: center; } /* Ações */
+    .table thead th:nth-child(10) { text-align: center; } /* Empenho */
+    .table tbody td:nth-child(11),
+    .table thead th:nth-child(11) { text-align: center; } /* NF */
+    .table tbody td:nth-child(12),
+    .table thead th:nth-child(12) { text-align: center; } /* Mês Pagamento */
+    .table tbody td:nth-child(13),
+    .table thead th:nth-child(13) { text-align: center; } /* Ações */
 
     /* Simplified row hover - sem transformações que podem afetar layout */
     .drawer-row {

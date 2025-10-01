@@ -217,6 +217,7 @@ class EntregaLaudoFinanceiroController extends Controller
                 'status' => $entregaLaudoFinanceiro->status,
                 'upj' => $entregaLaudoFinanceiro->upj,
                 'financeiro' => $entregaLaudoFinanceiro->financeiro,
+                'tipo_pessoa' => $entregaLaudoFinanceiro->tipo_pessoa,
                 'valor_formatado' => $entregaLaudoFinanceiro->valor_formatado,
                 'protocolo_laudo_formatted' => $entregaLaudoFinanceiro->protocolo_laudo ? 
                     $entregaLaudoFinanceiro->protocolo_laudo->format('d/m/Y') : null,

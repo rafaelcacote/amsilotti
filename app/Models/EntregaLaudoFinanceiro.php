@@ -138,6 +138,17 @@ class EntregaLaudoFinanceiro extends Model
     }
 
     /**
+     * Get tipo pessoa options for select
+     */
+    public static function tipoPessoaOptions()
+    {
+        return [
+            'Física',
+            'Jurídica'
+        ];
+    }
+
+    /**
      * Get formatted value attribute
      */
     public function getValorFormatadoAttribute()

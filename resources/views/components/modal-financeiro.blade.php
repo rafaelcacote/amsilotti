@@ -47,7 +47,7 @@
                             <select class="form-select" id="status_financeiro" name="status" required>
                                 <option value="">Selecione o status</option>
                                 @foreach (App\Models\EntregaLaudoFinanceiro::statusOptions() as $statusOption)
-                                    <option value="{{ $statusOption }}" {{ (isset($financeiro) && $financeiro->status == $statusOption) ? 'selected' : '' }}>{{ $statusOption }}</option>
+                                    <option value="{{ $statusOption }}" {{ (isset($financeiro) && is_object($financeiro) && $financeiro->status == $statusOption) ? 'selected' : '' }}>{{ $statusOption }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -61,7 +61,7 @@
                                                       ($upjOption === '2ª UPJ' ? '2ª Cível,6ª Cível,15ª Cível,13ª Cível' : 
                                                       ($upjOption === '3ª UPJ' ? '14ª Cível,16ª Cível,17ª Cível,18ª Cível' : 
                                                       ($upjOption === '4ª UPJ' ? '1ª Cível,2ª Cível,5ª Cível,11ª Cível,12ª Cível' : ''))) }}"
-                                            {{ (isset($financeiro) && $financeiro->upj == $upjOption) ? 'selected' : '' }}>
+                                            {{ (isset($financeiro) && is_object($financeiro) && $financeiro->upj == $upjOption) ? 'selected' : '' }}>
                                         {{ $upjOption }}
                                     </option>
                                 @endforeach
@@ -73,7 +73,7 @@
                             <select class="form-select" id="financeiro" name="financeiro">
                                 <option value="">Selecione o financeiro</option>
                                 @foreach (App\Models\EntregaLaudoFinanceiro::financeiroOptions() as $financeiroOption)
-                                    <option value="{{ $financeiroOption }}" {{ (isset($financeiro) && $financeiro->financeiro == $financeiroOption) ? 'selected' : '' }}>{{ $financeiroOption }}</option>
+                                    <option value="{{ $financeiroOption }}" {{ (isset($financeiro) && is_object($financeiro) && $financeiro->financeiro == $financeiroOption) ? 'selected' : '' }}>{{ $financeiroOption }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -82,20 +82,20 @@
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <label for="valor" class="form-label">Valor</label>
-                            <input type="text" class="form-control money" id="valor" name="valor" placeholder="R$ 0,00" value="{{ isset($financeiro) ? $financeiro->valor : '' }}">
+                            <input type="text" class="form-control money" id="valor" name="valor" placeholder="R$ 0,00" value="{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->valor : '' }}">
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="mes_pagamento" class="form-label">Mês de Pagamento</label>
                             <select class="form-select" id="mes_pagamento" name="mes_pagamento">
                                 <option value="">Selecione o mês</option>
                                 @foreach (App\Models\EntregaLaudoFinanceiro::mesPagamentoOptions() as $mesOption)
-                                    <option value="{{ $mesOption }}" {{ (isset($financeiro) && $financeiro->mes_pagamento == $mesOption) ? 'selected' : '' }}>{{ $mesOption }}</option>
+                                    <option value="{{ $mesOption }}" {{ (isset($financeiro) && is_object($financeiro) && $financeiro->mes_pagamento == $mesOption) ? 'selected' : '' }}>{{ $mesOption }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="ano_pagamento" class="form-label">Ano de Pagamento</label>
-                            <input type="text" class="form-control" id="ano_pagamento" name="ano_pagamento" maxlength="4" value="{{ isset($financeiro) ? $financeiro->ano_pagamento : '' }}">
+                            <input type="text" class="form-control" id="ano_pagamento" name="ano_pagamento" maxlength="4" value="{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->ano_pagamento : '' }}">
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="tipo_pessoa" class="form-label">Tipo Pessoa</label>
@@ -110,13 +110,13 @@
                     <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="sei" class="form-label">Proc Adm</label>
-                                <input type="text" class="form-control" id="sei" name="sei" maxlength="50" value="{{ isset($financeiro) ? $financeiro->sei : '' }}">
+                                <input type="text" class="form-control" id="sei" name="sei" maxlength="50" value="{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->sei : '' }}">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="nf" class="form-label">NF</label>
                                 <div class="input-group">
                                     <span class="input-group-text">NF nº</span>
-                                    <input type="text" class="form-control" id="nf" name="nf" placeholder="000000" maxlength="45" value="{{ isset($financeiro) ? $financeiro->nf : '' }}">
+                                    <input type="text" class="form-control" id="nf" name="nf" placeholder="000000" maxlength="45" value="{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->nf : '' }}">
                                 </div>
                             </div>
                         
@@ -124,7 +124,7 @@
                                 <label for="empenho" class="form-label">Empenho</label>
                                 <div class="input-group">
                                     <span class="input-group-text">NE nº</span>
-                                    <input type="text" class="form-control" id="empenho" name="empenho" placeholder="000000" maxlength="45" value="{{ isset($financeiro) ? $financeiro->empenho : '' }}">
+                                    <input type="text" class="form-control" id="empenho" name="empenho" placeholder="000000" maxlength="45" value="{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->empenho : '' }}">
                                 </div>
                             </div>
                     </div>
@@ -135,7 +135,7 @@
                    
                     <div class="mb-3">
                         <label for="observacao" class="form-label">Observações</label>
-                        <textarea class="form-control" id="observacao" name="observacao" rows="3" placeholder="Digite observações adicionais">{{ isset($financeiro) ? $financeiro->observacao : '' }}</textarea>
+                        <textarea class="form-control" id="observacao" name="observacao" rows="3" placeholder="Digite observações adicionais">{{ (isset($financeiro) && is_object($financeiro)) ? $financeiro->observacao : '' }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
