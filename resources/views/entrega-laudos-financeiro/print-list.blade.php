@@ -16,8 +16,8 @@
         
         body {
             font-family: Arial, sans-serif;
-            font-size: 10px;
-            line-height: 1.3;
+            font-size: 12px;
+            line-height: 1.4;
             color: #222;
         }
         
@@ -87,14 +87,14 @@
             font-weight: 600;
             color: #856404;
             margin-bottom: 8px;
-            font-size: 11px;
+            font-size: 12px;
         }
         
         .filtro-item {
             display: inline-block;
             margin-right: 15px;
             margin-bottom: 3px;
-            font-size: 9px;
+            font-size: 10px;
         }
         
         .table-container {
@@ -107,7 +107,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 10px;
+            font-size: 12px;
         }
         
         th {
@@ -116,7 +116,7 @@
             padding: 10px 6px;
             text-align: left;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 13px;
         }
         
         td {
@@ -124,6 +124,7 @@
             border-bottom: 1px solid #eee;
             vertical-align: top;
             word-wrap: break-word;
+            font-size: 12px;
         }
         
         tr:nth-child(even) {
@@ -153,7 +154,7 @@
         .footer {
             margin-top: 20px;
             text-align: center;
-            font-size: 8px;
+            font-size: 10px;
             color: #6c757d;
             border-top: 1px solid #ddd;
             padding-top: 10px;
@@ -306,7 +307,7 @@
                             <strong>TOTAL GERAL:</strong>
                         </td>
                         <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
-                            <span class="valor-money" style="font-weight: bold; font-size: 11px;">
+                            <span class="valor-money" style="font-weight: bold; font-size: 12px;">
                                 R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
                             </span>
                         </td>
