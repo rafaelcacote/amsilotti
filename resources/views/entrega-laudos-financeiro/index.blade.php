@@ -20,7 +20,7 @@
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
-                            <div class="collapse{{ request()->hasAny(['search', 'status', 'vara', 'upj', 'mes_pagamento']) ? ' show' : '' }}"
+                            <div class="collapse{{ request()->hasAny(['search', 'status', 'vara', 'upj', 'mes_pagamento', 'ano_pagamento']) ? ' show' : '' }}"
                                 id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('entrega-laudos-financeiro.index') }}" method="GET">
@@ -94,6 +94,26 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="ano_pagamento">Ano Pagamento</label>
+                                                <select class="form-select" name="ano_pagamento" id="ano_pagamento">
+                                                    <option value="">Todos</option>
+                                                    @php
+                                                        $anosDisponiveis = App\Models\EntregaLaudoFinanceiro::select('ano_pagamento')
+                                                            ->whereNotNull('ano_pagamento')
+                                                            ->distinct()
+                                                            ->orderBy('ano_pagamento', 'desc')
+                                                            ->pluck('ano_pagamento')
+                                                            ->filter()
+                                                            ->values();
+                                                    @endphp
+                                                    @foreach ($anosDisponiveis as $ano)
+                                                        <option value="{{ $ano }}"
+                                                            {{ request('ano_pagamento') == $ano ? 'selected' : '' }}>
+                                                            {{ $ano }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="d-flex gap-2 justify-content-center mt-3">
                                                     <button type="submit" class="btn" style="background: #5c58cb; color: #fff; border: 1px solid #5c58cb;"><i class="fas fa-search me-2"></i>Pesquisar</button>
@@ -113,26 +133,52 @@
                 <div class="col-sm-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <!-- Contadores -->
-                            <div class="mb-3 d-flex gap-3 align-items-center flex-wrap">
-                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
-                                    <span class="fw-semibold text-success" style="font-size: 1.1rem;">
-                                        <i class="fas fa-database me-2"></i>Total registros:
-                                    </span>
-                                    <span class="badge bg-success fs-5">{{ $entregasLaudos->total() }}</span>
+                            <!-- Contadores e Controles de Seleção -->
+                            <div class="mb-3 d-flex gap-3 align-items-center flex-wrap justify-content-between">
+                                <div class="d-flex gap-3 align-items-center flex-wrap">
+                                    <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                        <span class="fw-semibold text-success" style="font-size: 1.1rem;">
+                                            <i class="fas fa-database me-2"></i>Total registros:
+                                        </span>
+                                        <span class="badge bg-success fs-5">{{ $entregasLaudos->total() }}</span>
+                                    </div>
+                                    <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                        <span class="fw-semibold text-info" style="font-size: 1.1rem;">
+                                            <i class="fas fa-filter me-2"></i>Exibindo:
+                                        </span>
+                                        <span class="badge bg-info fs-5">{{ $entregasLaudos->count() }}</span>
+                                    </div>
                                 </div>
-                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
-                                    <span class="fw-semibold text-info" style="font-size: 1.1rem;">
-                                        <i class="fas fa-filter me-2"></i>Exibindo:
-                                    </span>
-                                    <span class="badge bg-info fs-5">{{ $entregasLaudos->count() }}</span>
+                                
+                                <!-- Controles de Seleção -->
+                                <div class="d-flex gap-2 align-items-center">
+                                    <span class="text-muted small">Seleção:</span>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllRecords">
+                                        <i class="fas fa-check-square me-1"></i>Selecionar Todos
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllRecords">
+                                        <i class="fas fa-square me-1"></i>Desmarcar Todos
+                                    </button>
+                                    <span class="badge bg-primary" id="selectedCount">0 selecionados</span>
                                 </div>
                             </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped align-middle table-sm">
                                     <thead>
                                         <tr>
+                                            <th style="width: 3%;">
+                                                <input type="checkbox" id="selectAllCheckbox" class="form-check-input">
+                                            </th>
                                             <th style="width: 11%;">Processo</th>
                                             <th style="width: 7%;">Vara</th>
                                             <th style="width: 5%;">UPJ</th>
@@ -153,6 +199,12 @@
                                             @foreach ($entregasLaudos as $entregaLaudo)
                                                 @if(is_object($entregaLaudo) && method_exists($entregaLaudo, 'getAttribute'))
                                                 <tr class="drawer-row" data-id="{{ $entregaLaudo->id }}">
+                                                    <!-- Checkbox de Seleção -->
+                                                    <td>
+                                                        <input type="checkbox" class="form-check-input record-checkbox" 
+                                                               value="{{ $entregaLaudo->id }}" 
+                                                               data-processo="{{ $entregaLaudo->controlePericia->numero_processo ?? '' }}">
+                                                    </td>
                                                     <!-- 1. Processo -->
                                                     <td>
                                                         @if ($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->numero_processo)
@@ -396,8 +448,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Abrir drawer ao clicar na linha
     drawerRows.forEach(row => {
         row.addEventListener('click', function(e) {
-            // Evitar abrir drawer se clicar em botões de ação
-            if (e.target.closest('.btn') || e.target.closest('a') || e.target.closest('form')) {
+            // Evitar abrir drawer se clicar em botões de ação, links, formulários ou checkboxes
+            if (e.target.closest('.btn') || e.target.closest('a') || e.target.closest('form') || e.target.closest('input[type="checkbox"]')) {
                 console.log('Click cancelado - elemento de ação detectado');
                 return;
             }
@@ -695,19 +747,20 @@ document.addEventListener('DOMContentLoaded', function() {
         border-collapse: collapse;
     }
     
-    .table thead th:nth-child(1) { width: 11%; } /* Processo */
-    .table thead th:nth-child(2) { width: 7%; }  /* Vara */
-    .table thead th:nth-child(3) { width: 5%; }  /* UPJ */
-    .table thead th:nth-child(4) { width: 9%; }  /* Financeiro */
-    .table thead th:nth-child(5) { width: 9%; }  /* Status */
-    .table thead th:nth-child(6) { width: 8%; }  /* Tipo Pessoa */
+    .table thead th:nth-child(1) { width: 3%; }  /* Checkbox */
+    .table thead th:nth-child(2) { width: 11%; } /* Processo */
+    .table thead th:nth-child(3) { width: 7%; }  /* Vara */
+    .table thead th:nth-child(4) { width: 5%; }  /* UPJ */
+    .table thead th:nth-child(5) { width: 9%; }  /* Financeiro */
+    .table thead th:nth-child(6) { width: 9%; }  /* Status */
     .table thead th:nth-child(7) { width: 7%; }  /* Protocolo */
     .table thead th:nth-child(8) { width: 7%; }  /* Valor */
     .table thead th:nth-child(9) { width: 9%; }  /* Proc Adm */
     .table thead th:nth-child(10) { width: 9%; } /* Empenho */
     .table thead th:nth-child(11) { width: 7%; } /* NF */
     .table thead th:nth-child(12) { width: 11%; } /* Mês Pagamento */
-    .table thead th:nth-child(13) { width: 6%; } /* Ações */
+    .table thead th:nth-child(13) { width: 8%; } /* Tipo */
+    .table thead th:nth-child(14) { width: 6%; } /* Ações */
     
     .table th,
     .table td {
@@ -727,17 +780,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     /* Força alinhamento específico por coluna */
     .table tbody td:nth-child(1),
-    .table thead th:nth-child(1) { text-align: left; }   /* Processo */
+    .table thead th:nth-child(1) { text-align: center; } /* Checkbox */
     .table tbody td:nth-child(2),
-    .table thead th:nth-child(2) { text-align: center; } /* Vara */
+    .table thead th:nth-child(2) { text-align: left; }   /* Processo */
     .table tbody td:nth-child(3),
-    .table thead th:nth-child(3) { text-align: center; } /* UPJ */
+    .table thead th:nth-child(3) { text-align: center; } /* Vara */
     .table tbody td:nth-child(4),
-    .table thead th:nth-child(4) { text-align: center; } /* Financeiro */
+    .table thead th:nth-child(4) { text-align: center; } /* UPJ */
     .table tbody td:nth-child(5),
-    .table thead th:nth-child(5) { text-align: center; } /* Status */
+    .table thead th:nth-child(5) { text-align: center; } /* Financeiro */
     .table tbody td:nth-child(6),
-    .table thead th:nth-child(6) { text-align: center; } /* Tipo Pessoa */
+    .table thead th:nth-child(6) { text-align: center; } /* Status */
     .table tbody td:nth-child(7),
     .table thead th:nth-child(7) { text-align: center; } /* Protocolo */
     .table tbody td:nth-child(8),
@@ -751,7 +804,9 @@ document.addEventListener('DOMContentLoaded', function() {
     .table tbody td:nth-child(12),
     .table thead th:nth-child(12) { text-align: center; } /* Mês Pagamento */
     .table tbody td:nth-child(13),
-    .table thead th:nth-child(13) { text-align: center; } /* Ações */
+    .table thead th:nth-child(13) { text-align: center; } /* Tipo */
+    .table tbody td:nth-child(14),
+    .table thead th:nth-child(14) { text-align: center; } /* Ações */
 
     /* Simplified row hover - sem transformações que podem afetar layout */
     .drawer-row {
@@ -990,56 +1045,133 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.innerHTML = originalText;
                 });
             });
-
-            // Função para mostrar toast notifications
-            function showToast(type, message) {
-                // Criar o elemento do toast
-                const toast = document.createElement('div');
-                toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} border-0`;
-                toast.setAttribute('role', 'alert');
-                toast.setAttribute('aria-live', 'assertive');
-                toast.setAttribute('aria-atomic', 'true');
-                toast.style.position = 'fixed';
-                toast.style.top = '20px';
-                toast.style.right = '20px';
-                toast.style.zIndex = '9999';
-                toast.style.minWidth = '300px';
-                
-                const iconMap = {
-                    'success': 'check-circle',
-                    'error': 'exclamation-circle',
-                    'warning': 'exclamation-triangle',
-                    'info': 'info-circle'
-                };
-                
-                toast.innerHTML = `
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                `;
-                
-                // Adicionar o toast ao body
-                document.body.appendChild(toast);
-                
-                // Inicializar e mostrar o toast usando Bootstrap
-                const bsToast = new bootstrap.Toast(toast);
-                bsToast.show();
-                
-                // Remover o elemento do DOM depois que o toast for ocultado
-                toast.addEventListener('hidden.bs.toast', function() {
-                    document.body.removeChild(toast);
-                });
-            }
         });
+
+        // Funcionalidade de seleção de registros
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const recordCheckboxes = document.querySelectorAll('.record-checkbox');
+        const selectedCountElement = document.getElementById('selectedCount');
+        
+        console.log('Elementos encontrados:', {
+            selectAllCheckbox: selectAllCheckbox,
+            recordCheckboxes: recordCheckboxes.length,
+            selectedCountElement: selectedCountElement
+        });
+        
+        // Função para atualizar contador de selecionados
+        function updateSelectedCount() {
+            const selectedCount = document.querySelectorAll('.record-checkbox:checked').length;
+            selectedCountElement.textContent = `${selectedCount} selecionados`;
+            
+            // Atualizar estado do checkbox "Selecionar Todos"
+            if (selectedCount === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (selectedCount === recordCheckboxes.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+        
+        // Checkbox "Selecionar Todos"
+        selectAllCheckbox.addEventListener('change', function() {
+            recordCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateSelectedCount();
+        });
+        
+        // Checkboxes individuais
+        recordCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectedCount);
+        });
+        
+        // Botões de seleção em massa
+        document.getElementById('selectAllRecords').addEventListener('click', function() {
+            recordCheckboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateSelectedCount();
+        });
+        
+        document.getElementById('deselectAllRecords').addEventListener('click', function() {
+            recordCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateSelectedCount();
+        });
+        
+        // Função para mostrar toast notifications (escopo global)
+        function showToast(type, message) {
+            console.log('showToast chamada:', type, message);
+            // Criar o elemento do toast
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+            
+            const iconMap = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Adicionar o toast ao body
+            document.body.appendChild(toast);
+            
+            // Inicializar e mostrar o toast usando Bootstrap
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            // Remover o elemento do DOM depois que o toast for ocultado
+            toast.addEventListener('hidden.bs.toast', function() {
+                document.body.removeChild(toast);
+            });
+        }
 
         // Botão de impressão
         document.getElementById('btnImprimir').addEventListener('click', function() {
+            console.log('Botão imprimir clicado');
+            
             // Capturar os parâmetros de filtro da URL atual
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // Capturar os registros selecionados para impressão
+            const selectedRecords = [];
+            document.querySelectorAll('.record-checkbox:checked').forEach(checkbox => {
+                selectedRecords.push(checkbox.value);
+            });
+            
+            console.log('Registros selecionados:', selectedRecords);
+            
+            // Verificar se pelo menos um registro foi selecionado
+            if (selectedRecords.length === 0) {
+                console.log('Nenhum registro selecionado, mostrando toast de aviso');
+                showToast('warning', '⚠️ Por favor, selecione pelo menos um registro usando os checkboxes antes de imprimir!');
+                return;
+            }
+            
+            // Adicionar os registros selecionados aos parâmetros
+            urlParams.set('selected_records', selectedRecords.join(','));
             
             // Construir a URL para impressão
             let printUrl = "{{ route('entrega-laudos-financeiro.print') }}";
@@ -1047,12 +1179,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 printUrl += '?' + urlParams.toString();
             }
             
+            console.log('URL de impressão:', printUrl);
+            
+            // Mostrar toast de sucesso
+            showToast('success', `✅ Gerando impressão de ${selectedRecords.length} registro(s) selecionado(s)...`);
+            
             // Abrir a impressão em uma nova aba
             window.open(printUrl, '_blank');
         });
     </script>
 
     <style>
+        /* Estilos para checkboxes maiores e mais fáceis de clicar */
+        .record-checkbox {
+            transform: scale(1.3);
+            margin: 0.2rem;
+            cursor: pointer;
+        }
+        
+        .record-checkbox:hover {
+            transform: scale(1.4);
+        }
+        
+        #selectAllCheckbox {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        /* Estilos específicos para a coluna de checkbox */
+        .table td:first-child {
+            padding: 0.8rem 0.5rem !important;
+            text-align: center;
+            vertical-align: middle;
+            min-width: 50px;
+        }
+        
+        .table th:first-child {
+            padding: 0.8rem 0.5rem !important;
+            text-align: center;
+            vertical-align: middle;
+            min-width: 50px;
+        }
+        
         /* Garantir que a tabela seja sempre responsiva */
         .table-responsive {
             overflow-x: auto;

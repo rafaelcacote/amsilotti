@@ -183,6 +183,7 @@
         .col-vara { width: 15%; }
         .col-upj { width: 10%; }
         .col-financeiro { width: 15%; }
+        .col-status { width: 15%; }
         .col-protocolo { width: 15%; }
         .col-valor { width: 10%; }
         .col-sei { width: 15%; }
@@ -233,8 +234,17 @@
         @if($filtrosAplicados['upj'])
             <div class="filtro-item"><strong>UPJ:</strong> {{ $filtrosAplicados['upj'] }}</div>
         @endif
+        @if($filtrosAplicados['mes_pagamento'])
+            <div class="filtro-item"><strong>Mês Pagamento:</strong> {{ $filtrosAplicados['mes_pagamento'] }}</div>
+        @endif
+        @if($filtrosAplicados['ano_pagamento'])
+            <div class="filtro-item"><strong>Ano Pagamento:</strong> {{ $filtrosAplicados['ano_pagamento'] }}</div>
+        @endif
         @if($filtrosAplicados['financeiro'])
             <div class="filtro-item"><strong>Financeiro:</strong> {{ $filtrosAplicados['financeiro'] }}</div>
+        @endif
+        @if($filtrosAplicados['selected_records'])
+            <div class="filtro-item"><strong>Registros Selecionados:</strong> {{ count(explode(',', $filtrosAplicados['selected_records'])) }} registro(s)</div>
         @endif
     </div>
     @endif
@@ -248,12 +258,14 @@
                         <th class="col-vara">Vara</th>
                         <th class="col-upj">UPJ</th>
                         <th class="col-financeiro">Financeiro</th>
+                        <th class="col-status">Status</th>
                         <th class="col-protocolo">Protocolo Laudo</th>
                         <th class="col-valor">R$</th>
                         <th class="col-sei">Proc. Adm</th>
                         <th class="col-sei">Empenho</th>
                         <th class="col-sei">NF</th>
-                        <th class="col-sei">Mês Pagamento</th>
+                        <th class="col-sei">Mês/Ano Pagamento</th>
+                        <th class="col-sei">Tipo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -269,6 +281,7 @@
                             <td class="break-word">{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
+                            <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                             <td class="break-word">
                                 {{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
                             </td>
@@ -283,12 +296,13 @@
                             <td class="break-word">{{ $entregaLaudo->empenho ?? '-' }}</td>
                             <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
                             <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
+                            <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr style="background-color: #e9ecef; font-weight: bold;">
-                        <td colspan="5" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                        <td colspan="11" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
                             <strong>TOTAL GERAL:</strong>
                         </td>
                         <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
@@ -296,7 +310,6 @@
                                 R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
                             </span>
                         </td>
-                        <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;"></td>
                     </tr>
                 </tfoot>
             </table>

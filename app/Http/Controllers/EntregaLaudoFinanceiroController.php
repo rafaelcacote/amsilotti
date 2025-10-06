@@ -25,6 +25,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
+        $anoPagamento = $request->input('ano_pagamento');
         $financeiro = $request->input('financeiro');
 
         $entregasLaudos = EntregaLaudoFinanceiro::query()
@@ -54,13 +55,16 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($mesPagamento, function ($query, $mesPagamento) {
                 return $query->where('mes_pagamento', $mesPagamento);
             })
+            ->when($anoPagamento, function ($query, $anoPagamento) {
+                return $query->where('ano_pagamento', $anoPagamento);
+            })
             ->when($financeiro, function ($query, $financeiro) {
                 return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
             })
             ->latest()
             ->paginate(15);
 
-        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento', 'financeiro'));
+        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento', 'anoPagamento', 'financeiro'));
     }
 
     /**
@@ -291,10 +295,12 @@ class EntregaLaudoFinanceiroController extends Controller
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
+        $anoPagamento = $request->input('ano_pagamento');
         $financeiro = $request->input('financeiro');
+        $selectedRecords = $request->input('selected_records');
 
         // Aplicar os mesmos filtros da listagem principal
-        $entregasLaudos = EntregaLaudoFinanceiro::query()
+        $query = EntregaLaudoFinanceiro::query()
             ->with(['controlePericia.requerente', 'controlePericia.responsavelTecnico'])
             ->when($search, function ($query, $search) {
                 return $query->whereHas('controlePericia', function ($q) use ($search) {
@@ -321,11 +327,20 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($mesPagamento, function ($query, $mesPagamento) {
                 return $query->where('mes_pagamento', $mesPagamento);
             })
+            ->when($anoPagamento, function ($query, $anoPagamento) {
+                return $query->where('ano_pagamento', $anoPagamento);
+            })
             ->when($financeiro, function ($query, $financeiro) {
                 return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
-            })
-            ->latest()
-            ->get(); // Usar get() ao invés de paginate() para pegar todos os registros
+            });
+
+        // Se registros específicos foram selecionados, filtrar apenas esses
+        if ($selectedRecords) {
+            $recordIds = explode(',', $selectedRecords);
+            $query->whereIn('id', $recordIds);
+        }
+
+        $entregasLaudos = $query->latest()->get();
 
         // Preparar os filtros aplicados para exibição no relatório
         $filtrosAplicados = [
@@ -334,7 +349,9 @@ class EntregaLaudoFinanceiroController extends Controller
             'vara' => $vara,
             'upj' => $upj,
             'mes_pagamento' => $mesPagamento,
+            'ano_pagamento' => $anoPagamento,
             'financeiro' => $financeiro,
+            'selected_records' => $selectedRecords,
         ];
 
         // Gerar o HTML da view
