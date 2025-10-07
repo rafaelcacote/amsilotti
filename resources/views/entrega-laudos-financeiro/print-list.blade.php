@@ -116,7 +116,7 @@
             padding: 10px 6px;
             text-align: left;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 20px;
         }
         
         td {
@@ -124,7 +124,7 @@
             border-bottom: 1px solid #eee;
             vertical-align: top;
             word-wrap: break-word;
-            font-size: 12px;
+            font-size: 18px;
         }
         
         tr:nth-child(even) {
@@ -307,7 +307,7 @@
                             <strong>TOTAL GERAL:</strong>
                         </td>
                         <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
-                            <span class="valor-money" style="font-weight: bold; font-size: 12px;">
+                            <span class="valor-money" style="font-weight: bold; font-size: 18px;">
                                 R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
                             </span>
                         </td>
