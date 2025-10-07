@@ -284,7 +284,7 @@
                             <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                             <td class="break-word">
-                                {{ $entregaLaudo->protocolo_laudo ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
+                                {{ $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
                             </td>
                             <td class="break-word">
                                 @if($entregaLaudo->valor)
