@@ -30,16 +30,16 @@
                                             <div class="card-body py-2">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <strong>Processo:</strong> {{ $entregaLaudosFinanceiro->controlePericia->numero_processo ?? 'N/A' }}
+                                                        <strong>Processo:</strong> {{ optional($entregaLaudosFinanceiro->controlePericia)->numero_processo ?? 'N/A' }}
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <strong>Requerente:</strong> {{ $entregaLaudosFinanceiro->controlePericia->requerente->nome ?? 'N/A' }}
+                                                        <strong>Requerente:</strong> {{ optional(optional($entregaLaudosFinanceiro->controlePericia)->requerente)->nome ?? 'N/A' }}
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <strong>Vara:</strong> {{ $entregaLaudosFinanceiro->controlePericia->vara ?? 'N/A' }}
+                                                        <strong>Vara:</strong> {{ optional($entregaLaudosFinanceiro->controlePericia)->vara ?? 'N/A' }}
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <strong>Data Laudo:</strong> {{ $entregaLaudosFinanceiro->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudosFinanceiro->controlePericia->prazo_final)->format('d/m/Y') : 'N/A' }}
+                                                        <strong>Data Laudo:</strong> {{ $entregaLaudosFinanceiro->controlePericia && $entregaLaudosFinanceiro->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudosFinanceiro->controlePericia->prazo_final)->format('d/m/Y') : 'N/A' }}
                                                     </div>
                                                 </div>
                                             </div>

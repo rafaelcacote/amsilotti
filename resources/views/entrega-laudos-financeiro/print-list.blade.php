@@ -279,12 +279,12 @@
                                     <em style="color: #6c757d; font-size: 7px;">sem processo</em>
                                 @endif
                             </td>
-                            <td class="break-word">{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
+                            <td class="break-word">{{ optional($entregaLaudo->controlePericia)->vara ?? '-' }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                             <td class="break-word">
-                                {{ $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
+                                {{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
                             </td>
                             <td class="break-word">
                                 @if($entregaLaudo->valor)
