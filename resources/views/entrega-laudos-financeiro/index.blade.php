@@ -218,7 +218,7 @@
                                                         @endif
                                                     </td>
                                                     <!-- 2. Vara -->
-                                                    <td>{{ $entregaLaudo->controlePericia->vara ?? '-' }}</td>
+                                                    <td>{{ optional($entregaLaudo->controlePericia)->vara ?? '-' }}</td>
                                                     <!-- 3. UPJ -->
                                                     <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                                                     <!-- 4. Financeiro -->
@@ -226,7 +226,7 @@
                                                     <!-- 5. Status -->
                                                     <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                                                     <!-- 7. Protocolo Laudo -->
-                                                    <td>{{ $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td>
+                                                    <td>{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td>
                                                     <!-- 8. R$ -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
