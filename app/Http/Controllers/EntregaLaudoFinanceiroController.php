@@ -27,6 +27,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $mesPagamento = $request->input('mes_pagamento');
         $anoPagamento = $request->input('ano_pagamento');
         $financeiro = $request->input('financeiro');
+        $tipoPericia = $request->input('tipo_pericia');
 
         $entregasLaudos = EntregaLaudoFinanceiro::query()
             ->with(['controlePericia.requerente', 'controlePericia.responsavelTecnico'])
@@ -61,10 +62,13 @@ class EntregaLaudoFinanceiroController extends Controller
             ->when($financeiro, function ($query, $financeiro) {
                 return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
             })
+            ->when($tipoPericia, function ($query, $tipoPericia) {
+                return $query->where('tipo_pericia', $tipoPericia);
+            })
             ->latest()
             ->paginate(15);
 
-        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento', 'anoPagamento', 'financeiro'));
+        return view('entrega-laudos-financeiro.index', compact('entregasLaudos', 'search', 'status', 'vara', 'upj', 'mesPagamento', 'anoPagamento', 'financeiro', 'tipoPericia'));
     }
 
     /**
@@ -103,6 +107,7 @@ class EntregaLaudoFinanceiroController extends Controller
             'mes_pagamento' => 'nullable|string|max:50',
             'ano_pagamento' => 'nullable|string|max:4',
             'tipo_pessoa' => 'nullable|string',
+            'tipo_pericia' => 'nullable|string|max:50',
             'observacao' => 'nullable|string',
         ]);
 
@@ -164,6 +169,7 @@ class EntregaLaudoFinanceiroController extends Controller
             'mes_pagamento' => 'nullable|string|max:50',
             'ano_pagamento' => 'nullable|digits:4',
             'tipo_pessoa' => 'nullable|string|max:20',
+            'tipo_pericia' => 'nullable|string|max:50',
             'empenho' => 'nullable|string|max:45',
             'observacao' => 'nullable|string',
         ]);
@@ -186,6 +192,7 @@ class EntregaLaudoFinanceiroController extends Controller
             'ano_pagamento' => $validated['ano_pagamento'],
             'empenho' => $validated['empenho'],
             'tipo_pessoa' => $validated['tipo_pessoa'],
+            'tipo_pericia' => $validated['tipo_pericia'],
             'observacao' => $validated['observacao'],
         ];
 
@@ -222,6 +229,7 @@ class EntregaLaudoFinanceiroController extends Controller
                 'upj' => $entregaLaudoFinanceiro->upj,
                 'financeiro' => $entregaLaudoFinanceiro->financeiro,
                 'tipo_pessoa' => $entregaLaudoFinanceiro->tipo_pessoa,
+                'tipo_pericia' => $entregaLaudoFinanceiro->tipo_pericia,
                 'valor_formatado' => $entregaLaudoFinanceiro->valor_formatado,
                 'protocolo_laudo_formatted' => $entregaLaudoFinanceiro->protocolo_laudo ? 
                     $entregaLaudoFinanceiro->protocolo_laudo->format('d/m/Y') : null,
@@ -297,6 +305,7 @@ class EntregaLaudoFinanceiroController extends Controller
         $mesPagamento = $request->input('mes_pagamento');
         $anoPagamento = $request->input('ano_pagamento');
         $financeiro = $request->input('financeiro');
+        $tipoPericia = $request->input('tipo_pericia');
         $selectedRecords = $request->input('selected_records');
 
         // Aplicar os mesmos filtros da listagem principal
@@ -332,6 +341,9 @@ class EntregaLaudoFinanceiroController extends Controller
             })
             ->when($financeiro, function ($query, $financeiro) {
                 return $query->whereRaw('LOWER(financeiro) = ?', [strtolower($financeiro)]);
+            })
+            ->when($tipoPericia, function ($query, $tipoPericia) {
+                return $query->where('tipo_pericia', $tipoPericia);
             });
 
         // Se registros específicos foram selecionados, filtrar apenas esses
@@ -351,6 +363,7 @@ class EntregaLaudoFinanceiroController extends Controller
             'mes_pagamento' => $mesPagamento,
             'ano_pagamento' => $anoPagamento,
             'financeiro' => $financeiro,
+            'tipo_pericia' => $tipoPericia,
             'selected_records' => $selectedRecords,
         ];
 

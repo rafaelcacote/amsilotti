@@ -147,6 +147,10 @@
                                                     <td class="fw-bold">Mês de Pagamento:</td>
                                                     <td>{{ $entregaLaudoFinanceiro->mes_pagamento ?? 'Não informado' }}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td class="fw-bold">Tipo de Perícia:</td>
+                                                    <td>{{ $entregaLaudoFinanceiro->tipo_pericia ?? 'Não informado' }}</td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>

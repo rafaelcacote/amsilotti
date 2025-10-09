@@ -244,6 +244,9 @@
         @if($filtrosAplicados['financeiro'])
             <div class="filtro-item"><strong>Financeiro:</strong> {{ $filtrosAplicados['financeiro'] }}</div>
         @endif
+        @if($filtrosAplicados['tipo_pericia'])
+            <div class="filtro-item"><strong>Tipo Perícia:</strong> {{ $filtrosAplicados['tipo_pericia'] }}</div>
+        @endif
         @if($filtrosAplicados['selected_records'])
             <div class="filtro-item"><strong>Registros Selecionados:</strong> {{ count(explode(',', $filtrosAplicados['selected_records'])) }} registro(s)</div>
         @endif
@@ -266,7 +269,8 @@
                         <th class="col-sei">Empenho</th>
                         <th class="col-sei">NF</th>
                         <th class="col-sei">Mês/Ano Pagamento</th>
-                        <th class="col-sei">Tipo</th>
+                        <th class="col-sei">Tipo Pessoa</th>
+                        <th class="col-sei">Tipo Perícia</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -298,12 +302,13 @@
                             <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
                             <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
+                            <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pericia ?? '-') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr style="background-color: #e9ecef; font-weight: bold;">
-                        <td colspan="11" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                        <td colspan="12" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
                             <strong>TOTAL GERAL:</strong>
                         </td>
                         <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">

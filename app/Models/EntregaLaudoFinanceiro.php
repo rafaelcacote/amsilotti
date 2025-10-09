@@ -34,6 +34,7 @@ class EntregaLaudoFinanceiro extends Model
         'mes_pagamento',
         'ano_pagamento',
         'tipo_pessoa',
+        'tipo_pericia',
         'observacao'
     ];
 
@@ -145,6 +146,17 @@ class EntregaLaudoFinanceiro extends Model
         return [
             'Física',
             'Jurídica'
+        ];
+    }
+
+    /**
+     * Get tipo pericia options for select
+     */
+    public static function tipoPericiaOptions()
+    {
+        return [
+            'Particular',
+            'Justiça comum'
         ];
     }
 

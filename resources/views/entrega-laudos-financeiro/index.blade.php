@@ -20,7 +20,7 @@
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
-                            <div class="collapse{{ request()->hasAny(['search', 'status', 'vara', 'upj', 'mes_pagamento', 'ano_pagamento']) ? ' show' : '' }}"
+                            <div class="collapse{{ request()->hasAny(['search', 'status', 'vara', 'upj', 'mes_pagamento', 'ano_pagamento', 'tipo_pericia']) ? ' show' : '' }}"
                                 id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('entrega-laudos-financeiro.index') }}" method="GET">
@@ -80,6 +80,17 @@
                                                         <option value="{{ $upjOption }}"
                                                             {{ request('upj') == $upjOption ? 'selected' : '' }}>
                                                             {{ $upjOption }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label" for="tipo_pericia">Tipo Perícia</label>
+                                                <select class="form-select" name="tipo_pericia" id="tipo_pericia">
+                                                    <option value="">Todos</option>
+                                                    @foreach (App\Models\EntregaLaudoFinanceiro::tipoPericiaOptions() as $tipoPericiaOption)
+                                                        <option value="{{ $tipoPericiaOption }}"
+                                                            {{ request('tipo_pericia') == $tipoPericiaOption ? 'selected' : '' }}>
+                                                            {{ $tipoPericiaOption }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -189,9 +200,10 @@
                                             <th style="width: 9%;">Proc Adm</th>
                                             <th style="width: 9%;">Empenho</th>
                                             <th style="width: 7%;">NF</th>
-                                            <th style="width: 11%;">Mês/Ano Pagamento</th>
-                                            <th style="width: 8%;">Tipo</th>
-                                            <th style="width: 8%; min-width: 80px;">Ações</th>
+                                            <th style="width: 10%;">Mês/Ano Pagamento</th>
+                                            <th style="width: 8%;">Tipo Pessoa</th>
+                                            <th style="width: 8%;">Tipo Perícia</th>
+                                            <th style="width: 7%; min-width: 80px;">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -245,6 +257,8 @@
                                                     <td>{{ $entregaLaudo->mes_pagamento ?? '-' }}/{{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
                                                     <!-- 6. Tipo Pessoa -->
                                                     <td>{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
+                                                    <!-- 7. Tipo Perícia -->
+                                                    <td>{{ ucfirst($entregaLaudo->tipo_pericia ?? '-') }}</td>
                                                     <!-- 13. Ações -->
                                                     <td style="min-width: 80px;">
                                                         <!-- <button type="button" class="btn btn-sm btn-outline-primary btn-edit-financeiro" 
@@ -275,7 +289,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="12" class="text-center py-4">
+                                                <td colspan="15" class="text-center py-4">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>
@@ -347,7 +361,7 @@
                                 </div>
                                 <div class="info-item mb-3">
                                     <label class="info-label">Tipo Perícia:</label>
-                                    <span class="info-value" id="drawer-tipo-pericia">-</span>
+                                    <span class="info-value" id="drawer-tipo-pericia-field">-</span>
                                 </div>
                             </div>
                             <!-- Coluna 3 - Datas -->
@@ -564,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setElementText('drawer-processo', data.pericia?.numero_processo);
         setElementText('drawer-requerente', data.pericia?.requerente?.nome);
         setElementText('drawer-vara', data.pericia?.vara);
-        setElementText('drawer-tipo-pericia', data.pericia?.tipo_pericia);
+        setElementText('drawer-tipo-pericia-field', data.entrega?.tipo_pericia);
         setElementText('drawer-status-pericia', data.pericia?.status_atual);
         setElementText('drawer-data-nomeacao', data.pericia?.data_nomeacao_formatted);
         setElementText('drawer-data-vistoria', data.pericia?.data_vistoria_formatted);
@@ -748,19 +762,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .table thead th:nth-child(1) { width: 3%; }  /* Checkbox */
-    .table thead th:nth-child(2) { width: 11%; } /* Processo */
+    .table thead th:nth-child(2) { width: 10%; } /* Processo */
     .table thead th:nth-child(3) { width: 7%; }  /* Vara */
     .table thead th:nth-child(4) { width: 5%; }  /* UPJ */
-    .table thead th:nth-child(5) { width: 9%; }  /* Financeiro */
-    .table thead th:nth-child(6) { width: 9%; }  /* Status */
+    .table thead th:nth-child(5) { width: 8%; }  /* Financeiro */
+    .table thead th:nth-child(6) { width: 8%; }  /* Status */
     .table thead th:nth-child(7) { width: 7%; }  /* Protocolo */
-    .table thead th:nth-child(8) { width: 7%; }  /* Valor */
-    .table thead th:nth-child(9) { width: 9%; }  /* Proc Adm */
-    .table thead th:nth-child(10) { width: 9%; } /* Empenho */
-    .table thead th:nth-child(11) { width: 7%; } /* NF */
-    .table thead th:nth-child(12) { width: 11%; } /* Mês Pagamento */
-    .table thead th:nth-child(13) { width: 8%; } /* Tipo */
-    .table thead th:nth-child(14) { width: 6%; } /* Ações */
+    .table thead th:nth-child(8) { width: 6%; }  /* Valor */
+    .table thead th:nth-child(9) { width: 8%; }  /* Proc Adm */
+    .table thead th:nth-child(10) { width: 8%; } /* Empenho */
+    .table thead th:nth-child(11) { width: 6%; } /* NF */
+    .table thead th:nth-child(12) { width: 9%; } /* Mês Pagamento */
+    .table thead th:nth-child(13) { width: 7%; } /* Tipo Pessoa */
+    .table thead th:nth-child(14) { width: 7%; } /* Tipo Perícia */
+    .table thead th:nth-child(15) { width: 6%; } /* Ações */
     
     .table th,
     .table td {
@@ -804,9 +819,11 @@ document.addEventListener('DOMContentLoaded', function() {
     .table tbody td:nth-child(12),
     .table thead th:nth-child(12) { text-align: center; } /* Mês Pagamento */
     .table tbody td:nth-child(13),
-    .table thead th:nth-child(13) { text-align: center; } /* Tipo */
+    .table thead th:nth-child(13) { text-align: center; } /* Tipo Pessoa */
     .table tbody td:nth-child(14),
-    .table thead th:nth-child(14) { text-align: center; } /* Ações */
+    .table thead th:nth-child(14) { text-align: center; } /* Tipo Perícia */
+    .table tbody td:nth-child(15),
+    .table thead th:nth-child(15) { text-align: center; } /* Ações */
 
     /* Simplified row hover - sem transformações que podem afetar layout */
     .drawer-row {

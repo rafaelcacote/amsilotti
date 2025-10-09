@@ -178,6 +178,21 @@
                                         @enderror
                                     </div>
 
+                                    <div class="col-md-3 mb-3">
+                                        <label for="tipo_pericia" class="form-label">Tipo de Perícia</label>
+                                        <select class="form-select @error('tipo_pericia') is-invalid @enderror" id="tipo_pericia" name="tipo_pericia">
+                                            <option value="">Selecione o tipo</option>
+                                            @foreach (App\Models\EntregaLaudoFinanceiro::tipoPericiaOptions() as $tipoPericiaOption)
+                                                <option value="{{ $tipoPericiaOption }}" {{ old('tipo_pericia', $entregaLaudosFinanceiro->tipo_pericia ?? '') == $tipoPericiaOption ? 'selected' : '' }}>
+                                                    {{ $tipoPericiaOption }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('tipo_pericia')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
                                 <!-- Quinta linha - Observações -->
                                 <div class="col-12 mb-3">
                                     <label for="observacao" class="form-label">Observações</label>
