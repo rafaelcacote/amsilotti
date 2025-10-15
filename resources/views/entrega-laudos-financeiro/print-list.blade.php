@@ -288,7 +288,7 @@
                             <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                             <td class="break-word">
-                                @if($entregaLaudo->controlePericia->prazo_final)
+                                @if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final)
                                     {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
                                 @endif
                             </td>

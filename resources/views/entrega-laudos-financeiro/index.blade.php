@@ -242,7 +242,7 @@
                                                     <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                                                     <!-- 7. Protocolo Laudo -->
                                                     <!-- <td>{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td> -->
-                                                     <td>@if($entregaLaudo->controlePericia->prazo_final)
+                                                     <td>@if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final)
                                                             {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
                                                         @endif
                                                     </td>
