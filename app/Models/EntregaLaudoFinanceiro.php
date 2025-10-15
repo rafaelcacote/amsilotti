@@ -97,7 +97,6 @@ class EntregaLaudoFinanceiro extends Model
             'Adiantamento',
             'Liquidado',
             'Parcialmente',
-            'Sem atesto'
         ];
     }
 
@@ -167,4 +166,6 @@ class EntregaLaudoFinanceiro extends Model
     {
         return $this->valor ? 'R$ ' . number_format($this->valor, 2, ',', '.') : null;
     }
+
+    
 }

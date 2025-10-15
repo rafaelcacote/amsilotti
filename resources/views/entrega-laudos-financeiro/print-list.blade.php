@@ -288,7 +288,9 @@
                             <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
                             <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                             <td class="break-word">
-                                {{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->protocolo_laudo)->format('d/m/Y') : '-' }}
+                                @if($entregaLaudo->controlePericia->prazo_final)
+                                    {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
+                                @endif
                             </td>
                             <td class="break-word">
                                 @if($entregaLaudo->valor)

@@ -170,6 +170,9 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllRecords">
                                         <i class="fas fa-square me-1"></i>Desmarcar Todos
                                     </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="clearAllSelections" title="Limpar todas as seleções de todas as páginas">
+                                        <i class="fas fa-trash me-1"></i>Limpar Tudo
+                                    </button>
                                     <span class="badge bg-primary" id="selectedCount">0 selecionados</span>
                                 </div>
                             </div>
@@ -238,7 +241,11 @@
                                                     <!-- 5. Status -->
                                                     <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                                                     <!-- 7. Protocolo Laudo -->
-                                                    <td>{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td>
+                                                    <!-- <td>{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td> -->
+                                                     <td>@if($entregaLaudo->controlePericia->prazo_final)
+                                                            {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
+                                                        @endif
+                                                    </td>
                                                     <!-- 8. R$ -->
                                                     <td>
                                                         @if($entregaLaudo->valor)
@@ -1064,10 +1071,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Funcionalidade de seleção de registros
+        // Funcionalidade de seleção de registros com persistência multi-página
         const selectAllCheckbox = document.getElementById('selectAllCheckbox');
         const recordCheckboxes = document.querySelectorAll('.record-checkbox');
         const selectedCountElement = document.getElementById('selectedCount');
+        
+        // Chave para localStorage baseada na rota atual
+        const STORAGE_KEY = 'entrega_laudos_selected_records';
         
         console.log('Elementos encontrados:', {
             selectAllCheckbox: selectAllCheckbox,
@@ -1075,16 +1085,51 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedCountElement: selectedCountElement
         });
         
-        // Função para atualizar contador de selecionados
+        // Função para obter seleções salvas do localStorage
+        function getSavedSelections() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : [];
+            } catch (e) {
+                console.error('Erro ao ler seleções do localStorage:', e);
+                return [];
+            }
+        }
+        
+        // Função para salvar seleções no localStorage
+        function saveSelections(selections) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
+            } catch (e) {
+                console.error('Erro ao salvar seleções no localStorage:', e);
+            }
+        }
+        
+        // Função para limpar todas as seleções
+        function clearAllSelections() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+        
+        // Função para atualizar contador de selecionados (incluindo outras páginas)
         function updateSelectedCount() {
-            const selectedCount = document.querySelectorAll('.record-checkbox:checked').length;
-            selectedCountElement.textContent = `${selectedCount} selecionados`;
+            const currentPageSelections = document.querySelectorAll('.record-checkbox:checked').length;
+            const allSelections = getSavedSelections();
+            const totalSelections = allSelections.length;
             
-            // Atualizar estado do checkbox "Selecionar Todos"
-            if (selectedCount === 0) {
+            // Mostrar contador com informações de outras páginas
+            if (totalSelections > currentPageSelections) {
+                selectedCountElement.textContent = `${totalSelections} selecionados (${currentPageSelections} nesta página)`;
+                selectedCountElement.className = 'badge bg-warning';
+            } else {
+                selectedCountElement.textContent = `${currentPageSelections} selecionados`;
+                selectedCountElement.className = 'badge bg-primary';
+            }
+            
+            // Atualizar estado do checkbox "Selecionar Todos" apenas para a página atual
+            if (currentPageSelections === 0) {
                 selectAllCheckbox.indeterminate = false;
                 selectAllCheckbox.checked = false;
-            } else if (selectedCount === recordCheckboxes.length) {
+            } else if (currentPageSelections === recordCheckboxes.length) {
                 selectAllCheckbox.indeterminate = false;
                 selectAllCheckbox.checked = true;
             } else {
@@ -1092,33 +1137,111 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Função para restaurar seleções da página atual
+        function restoreCurrentPageSelections() {
+            const savedSelections = getSavedSelections();
+            recordCheckboxes.forEach(checkbox => {
+                if (savedSelections.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+        
         // Checkbox "Selecionar Todos"
         selectAllCheckbox.addEventListener('change', function() {
+            const savedSelections = getSavedSelections();
+            
             recordCheckboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
+                
+                // Atualizar localStorage
+                if (this.checked) {
+                    if (!savedSelections.includes(checkbox.value)) {
+                        savedSelections.push(checkbox.value);
+                    }
+                } else {
+                    const index = savedSelections.indexOf(checkbox.value);
+                    if (index > -1) {
+                        savedSelections.splice(index, 1);
+                    }
+                }
             });
+            
+            saveSelections(savedSelections);
             updateSelectedCount();
         });
         
         // Checkboxes individuais
         recordCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateSelectedCount);
+            checkbox.addEventListener('change', function() {
+                const savedSelections = getSavedSelections();
+                
+                if (this.checked) {
+                    if (!savedSelections.includes(this.value)) {
+                        savedSelections.push(this.value);
+                    }
+                } else {
+                    const index = savedSelections.indexOf(this.value);
+                    if (index > -1) {
+                        savedSelections.splice(index, 1);
+                    }
+                }
+                
+                saveSelections(savedSelections);
+                updateSelectedCount();
+            });
         });
         
         // Botões de seleção em massa
         document.getElementById('selectAllRecords').addEventListener('click', function() {
+            const savedSelections = getSavedSelections();
+            
             recordCheckboxes.forEach(checkbox => {
                 checkbox.checked = true;
+                if (!savedSelections.includes(checkbox.value)) {
+                    savedSelections.push(checkbox.value);
+                }
             });
+            
+            saveSelections(savedSelections);
             updateSelectedCount();
         });
         
         document.getElementById('deselectAllRecords').addEventListener('click', function() {
+            const savedSelections = getSavedSelections();
+            
             recordCheckboxes.forEach(checkbox => {
                 checkbox.checked = false;
+                const index = savedSelections.indexOf(checkbox.value);
+                if (index > -1) {
+                    savedSelections.splice(index, 1);
+                }
             });
+            
+            saveSelections(savedSelections);
             updateSelectedCount();
         });
+        
+        // Botão para limpar todas as seleções (todas as páginas)
+        document.getElementById('clearAllSelections').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja limpar todas as seleções de todas as páginas?')) {
+                clearAllSelections();
+                recordCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedCount();
+                showToast('info', 'Todas as seleções foram limpas!');
+            }
+        });
+        
+        // Restaurar seleções ao carregar a página
+        restoreCurrentPageSelections();
+        updateSelectedCount();
+        
+        // Limpar seleções quando os filtros mudarem (opcional - descomente se desejar)
+        // document.querySelector('form[action="{{ route('entrega-laudos-financeiro.index') }}"]').addEventListener('submit', function() {
+        //     clearAllSelections();
+        // });
         
         // Função para mostrar toast notifications (escopo global)
         function showToast(type, message) {
@@ -1172,23 +1295,20 @@ document.addEventListener('DOMContentLoaded', function() {
             // Capturar os parâmetros de filtro da URL atual
             const urlParams = new URLSearchParams(window.location.search);
             
-            // Capturar os registros selecionados para impressão
-            const selectedRecords = [];
-            document.querySelectorAll('.record-checkbox:checked').forEach(checkbox => {
-                selectedRecords.push(checkbox.value);
-            });
+            // Capturar TODOS os registros selecionados (incluindo outras páginas)
+            const allSelectedRecords = getSavedSelections();
             
-            console.log('Registros selecionados:', selectedRecords);
+            console.log('Registros selecionados (todas as páginas):', allSelectedRecords);
             
             // Verificar se pelo menos um registro foi selecionado
-            if (selectedRecords.length === 0) {
+            if (allSelectedRecords.length === 0) {
                 console.log('Nenhum registro selecionado, mostrando toast de aviso');
                 showToast('warning', '⚠️ Por favor, selecione pelo menos um registro usando os checkboxes antes de imprimir!');
                 return;
             }
             
             // Adicionar os registros selecionados aos parâmetros
-            urlParams.set('selected_records', selectedRecords.join(','));
+            urlParams.set('selected_records', allSelectedRecords.join(','));
             
             // Construir a URL para impressão
             let printUrl = "{{ route('entrega-laudos-financeiro.print') }}";
@@ -1198,8 +1318,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('URL de impressão:', printUrl);
             
-            // Mostrar toast de sucesso
-            showToast('success', `✅ Gerando impressão de ${selectedRecords.length} registro(s) selecionado(s)...`);
+            // Mostrar toast de sucesso com informações sobre múltiplas páginas
+            const currentPageSelections = document.querySelectorAll('.record-checkbox:checked').length;
+            let message = `✅ Gerando impressão de ${allSelectedRecords.length} registro(s) selecionado(s)`;
+            if (allSelectedRecords.length > currentPageSelections) {
+                message += ` (incluindo ${allSelectedRecords.length - currentPageSelections} de outras páginas)`;
+            }
+            message += '...';
+            showToast('success', message);
             
             // Abrir a impressão em uma nova aba
             window.open(printUrl, '_blank');
