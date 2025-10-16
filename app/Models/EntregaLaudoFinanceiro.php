@@ -67,9 +67,10 @@ class EntregaLaudoFinanceiro extends Model
             'Atesto Perícia',
             'Emissão NF - Contador',
             'Liquidado',
-            'Presidencia - TJAM',
+            'GABPRES/TJ',
             'Proc. Adm/SEI',
             'SECOFT/EMPENHO',
+            'SECOP/DVCOP',
             
         ];
     }

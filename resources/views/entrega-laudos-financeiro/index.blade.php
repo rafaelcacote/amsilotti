@@ -255,7 +255,25 @@
                                                         @endif
                                                     </td>
                                                     <!-- 9. SEI -->
-                                                    <td>{{ $entregaLaudo->sei ?? '-' }}</td>
+                                                    <td>
+                                                        @if ($entregaLaudo->sei)
+                                                            <div class="d-flex align-items-center gap-1">
+                                                                <a href="https://sei.tjam.jus.br/sei/modulos/pesquisa/md_pesq_processo_pesquisar.php?acao_externa=protocolo_pesquisar&acao_origem_externa=protocolo_pesquisar&id_orgao_acesso_externo=0"
+                                                                    target="_blank" class="text-decoration-none"
+                                                                    title="Abrir SEI">
+                                                                    <i class="fas fa-external-link-alt text-primary"></i>
+                                                                </a>
+                                                                <span class="sei-number" 
+                                                                      data-sei="{{ $entregaLaudo->sei }}"
+                                                                      style="cursor: pointer; color: #5c58cb; font-weight: 500;"
+                                                                      title="Clique para copiar: {{ $entregaLaudo->sei }}">
+                                                                    {{ $entregaLaudo->sei }}
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
                                                     <!-- 10. Empenho -->
                                                     <td>{{ $entregaLaudo->empenho ?? '-' }}</td>
                                                     <!-- 11. NF -->
@@ -469,8 +487,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Abrir drawer ao clicar na linha
     drawerRows.forEach(row => {
         row.addEventListener('click', function(e) {
-            // Evitar abrir drawer se clicar em botões de ação, links, formulários ou checkboxes
-            if (e.target.closest('.btn') || e.target.closest('a') || e.target.closest('form') || e.target.closest('input[type="checkbox"]')) {
+            // Evitar abrir drawer se clicar em botões de ação, links, formulários, checkboxes ou números SEI
+            if (e.target.closest('.btn') || e.target.closest('a') || e.target.closest('form') || e.target.closest('input[type="checkbox"]') || e.target.closest('.sei-number')) {
                 console.log('Click cancelado - elemento de ação detectado');
                 return;
             }
@@ -1511,6 +1529,40 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Abrir a impressão em uma nova aba
             window.open(printUrl, '_blank');
+        });
+
+        // Funcionalidade para copiar número SEI automaticamente
+        document.addEventListener('DOMContentLoaded', function() {
+            const seiNumbers = document.querySelectorAll('.sei-number');
+            
+            seiNumbers.forEach(span => {
+                span.addEventListener('click', function(e) {
+                    // Impedir que o evento se propague para a linha (evitar abrir drawer)
+                    e.stopPropagation();
+                    
+                    const seiNumber = this.getAttribute('data-sei');
+                    
+                    // Copiar para a área de transferência
+                    navigator.clipboard.writeText(seiNumber).then(() => {
+                        // Mostrar feedback visual
+                        const originalText = this.textContent;
+                        this.textContent = 'Copiado!';
+                        this.style.color = '#28a745';
+                        
+                        // Restaurar após 2 segundos
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.color = '#5c58cb';
+                        }, 2000);
+                        
+                        // Mostrar toast de sucesso
+                        showToast('success', `Número SEI "${seiNumber}" copiado! Cole no campo de pesquisa do SEI.`);
+                    }).catch(err => {
+                        console.error('Erro ao copiar:', err);
+                        showToast('error', 'Erro ao copiar número SEI');
+                    });
+                });
+            });
         });
     </script>
 
