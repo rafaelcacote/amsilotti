@@ -155,7 +155,8 @@ class EntregaLaudoFinanceiro extends Model
     {
         return [
             'Particular',
-            'Justiça comum'
+            'Justiça comum',
+            'Justiça Gratuita'
         ];
     }
 

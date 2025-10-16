@@ -1,5 +1,17 @@
 @php
     $imgPath = public_path('img/cabecalho_pericia.png');
+    
+    // Definir colunas selecionadas (padrão: todas)
+    $columnsParam = request('columns');
+    $selectedColumns = $columnsParam ? explode(',', $columnsParam) : [
+        'processo', 'vara', 'upj', 'financeiro', 'status', 'protocolo_laudo', 
+        'valor', 'sei', 'empenho', 'nf', 'mes_ano_pagamento', 'tipo_pessoa', 'tipo_pericia'
+    ];
+    
+    // Função para verificar se uma coluna está selecionada
+    $hasColumn = function($column) use ($selectedColumns) {
+        return in_array($column, $selectedColumns);
+    };
 @endphp
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -250,6 +262,9 @@
         @if($filtrosAplicados['selected_records'])
             <div class="filtro-item"><strong>Registros Selecionados:</strong> {{ count(explode(',', $filtrosAplicados['selected_records'])) }} registro(s)</div>
         @endif
+        @if(request('columns'))
+            <div class="filtro-item"><strong>Colunas Selecionadas:</strong> {{ count($selectedColumns) }} coluna(s)</div>
+        @endif
     </div>
     @endif
 
@@ -258,68 +273,122 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="col-processo">Processo</th>
-                        <th class="col-vara">Vara</th>
-                        <th class="col-upj">UPJ</th>
-                        <th class="col-financeiro">Financeiro</th>
-                        <th class="col-status">Status</th>
-                        <th class="col-protocolo">Protocolo Laudo</th>
-                        <th class="col-valor">R$</th>
-                        <th class="col-sei">Proc. Adm</th>
-                        <th class="col-sei">Empenho</th>
-                        <th class="col-sei">NF</th>
-                        <th class="col-sei">Mês/Ano Pagamento</th>
-                        <th class="col-sei">Tipo Pessoa</th>
-                        <th class="col-sei">Tipo Perícia</th>
+                        @if($hasColumn('processo'))
+                            <th class="col-processo">Processo</th>
+                        @endif
+                        @if($hasColumn('vara'))
+                            <th class="col-vara">Vara</th>
+                        @endif
+                        @if($hasColumn('upj'))
+                            <th class="col-upj">UPJ</th>
+                        @endif
+                        @if($hasColumn('financeiro'))
+                            <th class="col-financeiro">Financeiro</th>
+                        @endif
+                        @if($hasColumn('status'))
+                            <th class="col-status">Status</th>
+                        @endif
+                        @if($hasColumn('protocolo_laudo'))
+                            <th class="col-protocolo">Protocolo Laudo</th>
+                        @endif
+                        @if($hasColumn('valor'))
+                            <th class="col-valor">R$</th>
+                        @endif
+                        @if($hasColumn('sei'))
+                            <th class="col-sei">Proc. Adm</th>
+                        @endif
+                        @if($hasColumn('empenho'))
+                            <th class="col-sei">Empenho</th>
+                        @endif
+                        @if($hasColumn('nf'))
+                            <th class="col-sei">NF</th>
+                        @endif
+                        @if($hasColumn('mes_ano_pagamento'))
+                            <th class="col-sei">Mês/Ano Pagamento</th>
+                        @endif
+                        @if($hasColumn('tipo_pessoa'))
+                            <th class="col-sei">Tipo Pessoa</th>
+                        @endif
+                        @if($hasColumn('tipo_pericia'))
+                            <th class="col-sei">Tipo Perícia</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($entregasLaudos as $entregaLaudo)
                         <tr>
-                            <td class="break-word">
-                                @if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->numero_processo)
-                                    <span class="processo-link">{{ $entregaLaudo->controlePericia->numero_processo }}</span>
-                                @else
-                                    <em style="color: #6c757d; font-size: 7px;">sem processo</em>
-                                @endif
-                            </td>
-                            <td class="break-word">{{ optional($entregaLaudo->controlePericia)->vara ?? '-' }}</td>
-                            <td class="break-word">{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
-                            <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
-                            <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
-                            <td class="break-word">
-                                @if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final)
-                                    {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
-                                @endif
-                            </td>
-                            <td class="break-word">
-                                @if($entregaLaudo->valor)
-                                    <span class="valor-money">{{ $entregaLaudo->valor_formatado }}</span>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="break-word">{{ $entregaLaudo->sei ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->empenho ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
-                            <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
-                            <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
-                            <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pericia ?? '-') }}</td>
+                            @if($hasColumn('processo'))
+                                <td class="break-word">
+                                    @if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->numero_processo)
+                                        <span class="processo-link">{{ $entregaLaudo->controlePericia->numero_processo }}</span>
+                                    @else
+                                        <em style="color: #6c757d; font-size: 7px;">sem processo</em>
+                                    @endif
+                                </td>
+                            @endif
+                            @if($hasColumn('vara'))
+                                <td class="break-word">{{ optional($entregaLaudo->controlePericia)->vara ?? '-' }}</td>
+                            @endif
+                            @if($hasColumn('upj'))
+                                <td class="break-word">{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
+                            @endif
+                            @if($hasColumn('financeiro'))
+                                <td class="break-word">{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
+                            @endif
+                            @if($hasColumn('status'))
+                                <td class="break-word">{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
+                            @endif
+                            @if($hasColumn('protocolo_laudo'))
+                                <td class="break-word">
+                                    @if($entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final)
+                                        {{ date('d/m/Y', strtotime($entregaLaudo->controlePericia->prazo_final)) }}
+                                    @endif
+                                </td>
+                            @endif
+                            @if($hasColumn('valor'))
+                                <td class="break-word">
+                                    @if($entregaLaudo->valor)
+                                        <span class="valor-money">{{ $entregaLaudo->valor_formatado }}</span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            @endif
+                            @if($hasColumn('sei'))
+                                <td class="break-word">{{ $entregaLaudo->sei ?? '-' }}</td>
+                            @endif
+                            @if($hasColumn('empenho'))
+                                <td class="break-word">{{ $entregaLaudo->empenho ?? '-' }}</td>
+                            @endif
+                            @if($hasColumn('nf'))
+                                <td class="break-word">{{ $entregaLaudo->nf ?? '-' }}</td>
+                            @endif
+                            @if($hasColumn('mes_ano_pagamento'))
+                                <td class="break-word">{{ $entregaLaudo->mes_pagamento ?? '-' }} / {{ $entregaLaudo->ano_pagamento ?? '-' }}</td>
+                            @endif
+                            @if($hasColumn('tipo_pessoa'))
+                                <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pessoa ?? '-') }}</td>
+                            @endif
+                            @if($hasColumn('tipo_pericia'))
+                                <td class="break-word">{{ ucfirst($entregaLaudo->tipo_pericia ?? '-') }}</td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr style="background-color: #e9ecef; font-weight: bold;">
-                        <td colspan="12" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
-                            <strong>TOTAL GERAL:</strong>
-                        </td>
-                        <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
-                            <span class="valor-money" style="font-weight: bold; font-size: 18px;">
-                                R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
-                            </span>
-                        </td>
-                    </tr>
-                </tfoot>
+                @if($hasColumn('valor'))
+                    <tfoot>
+                        <tr style="background-color: #e9ecef; font-weight: bold;">
+                            <td colspan="{{ count($selectedColumns) - 1 }}" style="text-align: right; padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                                <strong>TOTAL GERAL:</strong>
+                            </td>
+                            <td style="padding: 10px 6px; border-top: 2px solid #0d6efd;">
+                                <span class="valor-money" style="font-weight: bold; font-size: 18px;">
+                                    R$ {{ number_format($entregasLaudos->sum('valor'), 2, ',', '.') }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                @endif
             </table>
         @else
             <div class="no-data">

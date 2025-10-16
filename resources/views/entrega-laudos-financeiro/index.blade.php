@@ -924,6 +924,137 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </style>
 
+    <!-- Modal de Seleção de Colunas para Impressão -->
+    <div class="modal fade" id="modalSelecaoColunas" tabindex="-1" aria-labelledby="modalSelecaoColunasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #5c58cb 0%, #5c58cb 100%); color: white;">
+                    <h5 class="modal-title" id="modalSelecaoColunasLabel">
+                        <i class="fas fa-columns me-2"></i>Selecionar Colunas para Impressão
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Selecione as colunas que deseja exibir no relatório de impressão:
+                    </p>
+                    
+                    <div class="row g-2">
+                        <div class="col-12 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAllColumns">
+                                <label class="form-check-label fw-bold" for="selectAllColumns">
+                                    <i class="fas fa-check-double me-1"></i>Selecionar Todas
+                                </label>
+                            </div>
+                            <hr class="my-2">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="processo" id="col_processo" checked>
+                                <label class="form-check-label" for="col_processo">Processo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="vara" id="col_vara" checked>
+                                <label class="form-check-label" for="col_vara">Vara</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="upj" id="col_upj" checked>
+                                <label class="form-check-label" for="col_upj">UPJ</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="financeiro" id="col_financeiro" checked>
+                                <label class="form-check-label" for="col_financeiro">Financeiro</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="status" id="col_status" checked>
+                                <label class="form-check-label" for="col_status">Status</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="protocolo_laudo" id="col_protocolo_laudo" checked>
+                                <label class="form-check-label" for="col_protocolo_laudo">Protocolo Laudo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="valor" id="col_valor" checked>
+                                <label class="form-check-label" for="col_valor">Valor (R$)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="sei" id="col_sei" checked>
+                                <label class="form-check-label" for="col_sei">Proc. Adm (SEI)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="empenho" id="col_empenho" checked>
+                                <label class="form-check-label" for="col_empenho">Empenho</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="nf" id="col_nf" checked>
+                                <label class="form-check-label" for="col_nf">NF</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="mes_ano_pagamento" id="col_mes_ano_pagamento" checked>
+                                <label class="form-check-label" for="col_mes_ano_pagamento">Mês/Ano Pagamento</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="tipo_pessoa" id="col_tipo_pessoa" checked>
+                                <label class="form-check-label" for="col_tipo_pessoa">Tipo Pessoa</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="tipo_pericia" id="col_tipo_pericia" checked>
+                                <label class="form-check-label" for="col_tipo_pericia">Tipo Perícia</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmarImpressao" style="background: #5c58cb; border-color: #5c58cb;">
+                        <i class="fas fa-print me-1"></i>Gerar Impressão
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Edição Financeiro -->
     @include('components.modal-financeiro', [
         'title' => 'Editar Registro Financeiro',
@@ -1288,12 +1419,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Botão de impressão
+        // Botão de impressão - Abrir modal de seleção de colunas
         document.getElementById('btnImprimir').addEventListener('click', function() {
             console.log('Botão imprimir clicado');
-            
-            // Capturar os parâmetros de filtro da URL atual
-            const urlParams = new URLSearchParams(window.location.search);
             
             // Capturar TODOS os registros selecionados (incluindo outras páginas)
             const allSelectedRecords = getSavedSelections();
@@ -1307,8 +1435,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Abrir modal de seleção de colunas
+            const modal = new bootstrap.Modal(document.getElementById('modalSelecaoColunas'));
+            modal.show();
+        });
+        
+        // Funcionalidade do modal de seleção de colunas
+        const selectAllColumnsCheckbox = document.getElementById('selectAllColumns');
+        const columnCheckboxes = document.querySelectorAll('.column-checkbox');
+        
+        // Checkbox "Selecionar Todas as Colunas"
+        selectAllColumnsCheckbox.addEventListener('change', function() {
+            columnCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Atualizar checkbox "Selecionar Todas" quando colunas individuais mudam
+        columnCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = Array.from(columnCheckboxes).every(cb => cb.checked);
+                const noneChecked = Array.from(columnCheckboxes).every(cb => !cb.checked);
+                
+                selectAllColumnsCheckbox.checked = allChecked;
+                selectAllColumnsCheckbox.indeterminate = !allChecked && !noneChecked;
+            });
+        });
+        
+        // Botão de confirmar impressão no modal
+        document.getElementById('btnConfirmarImpressao').addEventListener('click', function() {
+            // Capturar os parâmetros de filtro da URL atual
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Capturar TODOS os registros selecionados (incluindo outras páginas)
+            const allSelectedRecords = getSavedSelections();
+            
+            // Capturar colunas selecionadas
+            const selectedColumns = Array.from(columnCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            
+            console.log('Colunas selecionadas:', selectedColumns);
+            
+            // Verificar se pelo menos uma coluna foi selecionada
+            if (selectedColumns.length === 0) {
+                showToast('warning', '⚠️ Por favor, selecione pelo menos uma coluna para impressão!');
+                return;
+            }
+            
             // Adicionar os registros selecionados aos parâmetros
             urlParams.set('selected_records', allSelectedRecords.join(','));
+            
+            // Adicionar colunas selecionadas aos parâmetros
+            urlParams.set('columns', selectedColumns.join(','));
             
             // Construir a URL para impressão
             let printUrl = "{{ route('entrega-laudos-financeiro.print') }}";
@@ -1318,11 +1497,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('URL de impressão:', printUrl);
             
+            // Fechar o modal
+            bootstrap.Modal.getInstance(document.getElementById('modalSelecaoColunas')).hide();
+            
             // Mostrar toast de sucesso com informações sobre múltiplas páginas
             const currentPageSelections = document.querySelectorAll('.record-checkbox:checked').length;
-            let message = `✅ Gerando impressão de ${allSelectedRecords.length} registro(s) selecionado(s)`;
+            let message = `✅ Gerando impressão de ${allSelectedRecords.length} registro(s) com ${selectedColumns.length} coluna(s)`;
             if (allSelectedRecords.length > currentPageSelections) {
-                message += ` (incluindo ${allSelectedRecords.length - currentPageSelections} de outras páginas)`;
+                message += ` (incluindo ${allSelectedRecords.length - currentPageSelections} registro(s) de outras páginas)`;
             }
             message += '...';
             showToast('success', message);
