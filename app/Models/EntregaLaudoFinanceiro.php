@@ -69,7 +69,7 @@ class EntregaLaudoFinanceiro extends Model
             'Liquidado',
             'GABPRES/TJ',
             'Proc. Adm/SEI',
-            'SECOFT/EMPENHO',
+            'SECOFT',
             'SECOP/DVCOP',
             
         ];
