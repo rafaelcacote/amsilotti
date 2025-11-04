@@ -568,13 +568,13 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="cpf" class="form-label">CPF</label>
+                                                <label for="cpf" class="form-label">CPF/CNPJ</label>
                                                 <input type="text"
                                                     class="form-control @error('cpf') is-invalid @enderror" id="cpf"
-                                                    name="cpf" value="{{ old('cpf', $vistoria->cpf) }}" maxlength="11"
-                                                    pattern="\d{11}" inputmode="numeric"
-                                                    oninput="this.value = this.value.replace(/\D/g, '').slice(0,11)"
-                                                    title="Digite apenas 11 números">
+                                                    name="cpf" value="{{ old('cpf', $vistoria->cpf) }}" maxlength="14"
+                                                    pattern="\d{11}|\d{14}" inputmode="numeric"
+                                                    oninput="this.value = this.value.replace(/\D/g, '').slice(0,14)"
+                                                    title="Digite CPF (11 dígitos) ou CNPJ (14 dígitos)">
                                                 @error('cpf')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -1188,15 +1188,15 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="cpf_acompanhante" class="form-label">CPF do
+                                                <label for="cpf_acompanhante" class="form-label">CPF/CNPJ do
                                                     Acompanhante</label>
                                                 <input type="text"
                                                     class="form-control @error('cpf_acompanhante') is-invalid @enderror"
                                                     id="cpf_acompanhante" name="cpf_acompanhante"
                                                     value="{{ old('cpf_acompanhante', $vistoria->cpf_acompanhante) }}"
-                                                    maxlength="11" pattern="\d{11}" inputmode="numeric"
-                                                    oninput="this.value = this.value.replace(/\D/g, '').slice(0,11)"
-                                                    title="Digite apenas 11 números">
+                                                    maxlength="14" pattern="\d{11}|\d{14}" inputmode="numeric"
+                                                    oninput="this.value = this.value.replace(/\D/g, '').slice(0,14)"
+                                                    title="Digite CPF (11 dígitos) ou CNPJ (14 dígitos)">
                                                 @error('cpf_acompanhante')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror

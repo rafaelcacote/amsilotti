@@ -81,7 +81,7 @@
                                         <label class="form-label text-muted">CPF:</label>
                                         <p class="fw-bold">
                                             @if ($vistoria->cpf)
-                                                {{ substr($vistoria->cpf, 0, 3) }}.{{ substr($vistoria->cpf, 3, 3) }}.{{ substr($vistoria->cpf, 6, 3) }}-{{ substr($vistoria->cpf, 9, 2) }}
+                                                {{ \App\Helpers\CpfHelper::format($vistoria->cpf) }}
                                             @else
                                                 N/A
                                             @endif
@@ -331,7 +331,7 @@
                                 <label class="form-label text-muted">CPF do Acompanhante:</label>
                                 <p class="fw-bold">
                                     @if ($vistoria->cpf_acompanhante)
-                                        {{ substr($vistoria->cpf_acompanhante, 0, 3) }}.{{ substr($vistoria->cpf_acompanhante, 3, 3) }}.{{ substr($vistoria->cpf_acompanhante, 6, 3) }}-{{ substr($vistoria->cpf_acompanhante, 9, 2) }}
+                                        {{ \App\Helpers\CpfHelper::format($vistoria->cpf_acompanhante) }}
                                     @else
                                         N/A
                                     @endif

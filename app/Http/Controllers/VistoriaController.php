@@ -91,7 +91,7 @@ class VistoriaController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cpf' => 'nullable|digits:11',
+            'cpf' => ['nullable', 'regex:/^\d{11}$|^\d{14}$/'],
             'telefone' => 'nullable|string|max:15',
             'endereco' => 'required|string|max:255',
             'num' => 'nullable|string|max:10',
@@ -121,7 +121,7 @@ class VistoriaController extends Controller
             'estado_conservacao' => 'nullable|string|max:100',
             'observacoes' => 'nullable|string',
             'acompanhamento_vistoria' => 'nullable|string|max:255',
-            'cpf_acompanhante' => 'nullable|digits:11',
+            'cpf_acompanhante' => ['nullable', 'regex:/^\d{11}$|^\d{14}$/'],
             'telefone_acompanhante' => 'nullable|string|max:15',
             'croqui' => 'nullable|string',
             'fotos.*' => 'nullable|image|max:2048',
@@ -247,7 +247,7 @@ class VistoriaController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cpf' => 'nullable|digits:11',
+            'cpf' => ['nullable', 'regex:/^\d{11}$|^\d{14}$/'],
             'telefone' => 'nullable|string|max:15',
             'endereco' => 'required|string|max:255',
             'num' => 'nullable|string|max:10',
@@ -279,7 +279,7 @@ class VistoriaController extends Controller
             'estado_conservacao' => 'nullable|string|max:100',
             'observacoes' => 'nullable|string',
             'acompanhamento_vistoria' => 'nullable|string|max:255',
-            'cpf_acompanhante' => 'nullable|digits:11',
+            'cpf_acompanhante' => ['nullable', 'regex:/^\d{11}$|^\d{14}$/'],
             'telefone_acompanhante' => 'nullable|string|max:15',
             'croqui' => 'nullable|string',
             'fotos.*' => 'nullable|image|max:2048',

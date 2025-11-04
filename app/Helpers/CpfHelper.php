@@ -37,20 +37,28 @@ class CpfHelper
     }
 
     /**
-     * Formata um CPF para exibição
+     * Formata um CPF ou CNPJ para exibição
      */
-    public static function format(string $cpf): string
+    public static function format(string $cpfCnpj): string
     {
-        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        $cpfCnpj = preg_replace('/[^0-9]/', '', $cpfCnpj);
         
-        if (strlen($cpf) === 11) {
-            return substr($cpf, 0, 3) . '.' . 
-                   substr($cpf, 3, 3) . '.' . 
-                   substr($cpf, 6, 3) . '-' . 
-                   substr($cpf, 9, 2);
+        if (strlen($cpfCnpj) === 11) {
+            // Formato CPF: XXX.XXX.XXX-XX
+            return substr($cpfCnpj, 0, 3) . '.' . 
+                   substr($cpfCnpj, 3, 3) . '.' . 
+                   substr($cpfCnpj, 6, 3) . '-' . 
+                   substr($cpfCnpj, 9, 2);
+        } elseif (strlen($cpfCnpj) === 14) {
+            // Formato CNPJ: XX.XXX.XXX/XXXX-XX
+            return substr($cpfCnpj, 0, 2) . '.' . 
+                   substr($cpfCnpj, 2, 3) . '.' . 
+                   substr($cpfCnpj, 5, 3) . '/' . 
+                   substr($cpfCnpj, 8, 4) . '-' . 
+                   substr($cpfCnpj, 12, 2);
         }
         
-        return $cpf;
+        return $cpfCnpj;
     }
 
     /**

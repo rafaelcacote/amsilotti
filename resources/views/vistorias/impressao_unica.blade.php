@@ -657,7 +657,7 @@ box-shadow: none;
                     <td class="label">CPF do Acompanhante:</td>
                     <td class="value">
                         @if ($vistoria->cpf_acompanhante)
-                            {{ substr($vistoria->cpf_acompanhante, 0, 3) }}.{{ substr($vistoria->cpf_acompanhante, 3, 3) }}.{{ substr($vistoria->cpf_acompanhante, 6, 3) }}-{{ substr($vistoria->cpf_acompanhante, 9, 2) }}
+                            {{ \App\Helpers\CpfHelper::format($vistoria->cpf_acompanhante) }}
                         @else
                             -
                         @endif
