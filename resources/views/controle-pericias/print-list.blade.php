@@ -16,7 +16,7 @@
         
         body {
             font-family: Arial, sans-serif;
-            font-size: 10px;
+            font-size: 13px;
             line-height: 1.3;
             color: #222;
         }
@@ -87,14 +87,14 @@
             font-weight: 600;
             color: #856404;
             margin-bottom: 8px;
-            font-size: 11px;
+            font-size: 14px;
         }
         
         .filtro-item {
             display: inline-block;
             margin-right: 15px;
             margin-bottom: 3px;
-            font-size: 9px;
+            font-size: 12px;
         }
         
         .table-container {
@@ -107,20 +107,20 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8px;
+            font-size: 11px;
         }
         
         th {
             background: linear-gradient(90deg, #0d6efd 0%, #0056b3 100%);
             color: white;
-            padding: 10px 6px;
+            padding: 13px 9px;
             text-align: left;
             font-weight: 600;
-            font-size: 9px;
+            font-size: 12px;
         }
         
         td {
-            padding: 8px 6px;
+            padding: 11px 9px;
             border-bottom: 1px solid #eee;
             vertical-align: top;
             word-wrap: break-word;
@@ -135,9 +135,9 @@
         }
         
         .status-badge {
-            padding: 3px 8px;
+            padding: 5px 11px;
             border-radius: 12px;
-            font-size: 7px;
+            font-size: 10px;
             font-weight: 600;
             text-align: center;
             color: white;
@@ -156,7 +156,7 @@
         .footer {
             margin-top: 20px;
             text-align: center;
-            font-size: 8px;
+            font-size: 11px;
             color: #6c757d;
             border-top: 1px solid #ddd;
             padding-top: 10px;
@@ -266,7 +266,7 @@
                                 @if($pericia->numero_processo)
                                     <span class="processo-link">{{ $pericia->numero_processo }}</span>
                                 @else
-                                    <em style="color: #6c757d; font-size: 7px;">sem processo</em>
+                                    <em style="color: #6c757d; font-size: 10px;">sem processo</em>
                                 @endif
                             </td>
                             <td class="break-word">

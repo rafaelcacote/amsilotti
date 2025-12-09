@@ -51,7 +51,7 @@
 
         .info-table th,
         .info-table td {
-            padding: 10px 8px;
+            padding: 14px 12px;
             border-bottom: 1px solid #eee;
             text-align: left;
         }
@@ -64,11 +64,11 @@
 
         .label {
             color: #6c757d;
-            font-size: 0.95rem;
+            font-size: 1.15rem;
         }
 
         .value {
-            font-size: 1.08rem;
+            font-size: 1.30rem;
             font-weight: 500;
         }
     </style>
@@ -91,7 +91,7 @@
         <table class="info-table" style="border-radius: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);">
             <tr style="background: linear-gradient(90deg, #e3f0ff 0%, #f8f9fa 100%);">
                 <th class="label" style="width: 180px;">Nº Processo</th>
-                <td class="value" style="font-size: 1.15rem; color: #0d6efd; font-weight: 600;">
+                <td class="value" style="font-size: 1.40rem; color: #0d6efd; font-weight: 600;">
                     {{ $pericia->numero_processo ?? '-' }}</td>
             </tr>
             <tr>
@@ -115,7 +115,7 @@
                 <th class="label">Status</th>
                 <td class="value">
                     <span
-                        style="display: inline-block; padding: 4px 14px; border-radius: 16px; background: #e9ecef; color: #0d6efd; font-weight: 600; font-size: 1rem;">
+                        style="display: inline-block; padding: 4px 14px; border-radius: 16px; background: #e9ecef; color: #0d6efd; font-weight: 600; font-size: 1.10rem;">
                         {{ $pericia->status_atual }}
                     </span>
                 </td>
@@ -126,7 +126,7 @@
                     @if ($pericia->tipo_pericia)
                         {{ $pericia->tipo_pericia }}
                     @else
-                        <span style="font-style: italic; font-size: 0.9em; color: #777;">Não informado</span>
+                        <span style="font-style: italic; font-size: 1em; color: #777;">Não informado</span>
                     @endif
                 </td>
             </tr>
