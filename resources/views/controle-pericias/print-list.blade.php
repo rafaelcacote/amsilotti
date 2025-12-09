@@ -177,14 +177,24 @@
             font-weight: 500;
         }
         
-        .col-processo { width: 12%; }
-        .col-requerente { width: 15%; }
-        .col-requerido { width: 15%; }
-        .col-vara { width: 12%; }
-        .col-responsavel { width: 12%; }
-        .col-tipo { width: 10%; }
-        .col-status { width: 8%; }
-        .col-entrega { width: 8%; }
+        /* Larguras flexíveis baseadas no número de colunas */
+        .col-processo { width: auto; min-width: 12%; }
+        .col-requerente { width: auto; min-width: 15%; }
+        .col-requerido { width: auto; min-width: 15%; }
+        .col-vara { width: auto; min-width: 12%; }
+        .col-responsavel { width: auto; min-width: 12%; }
+        .col-tipo { width: auto; min-width: 10%; }
+        .col-status { width: auto; min-width: 8%; }
+        .col-entrega { width: auto; min-width: 8%; }
+        
+        /* Ajustar largura da tabela baseado no número de colunas */
+        table {
+            table-layout: auto;
+        }
+        
+        th, td {
+            width: auto;
+        }
         
         .break-word {
             word-break: break-word;
@@ -249,59 +259,91 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="col-processo">Nº Processo</th>
-                        <th class="col-requerente">Requerente</th>
-                        <th class="col-requerido">Requerido</th>
-                        <th class="col-vara">Vara</th>
-                        <th class="col-responsavel">Responsável</th>
-                        <th class="col-tipo">Tipo de Perícia</th>
-                        <th class="col-status">Status</th>
-                        <th class="col-entrega">Laudo Entregue</th>
+                        @if(in_array('processo', $columns))
+                            <th class="col-processo">Nº Processo</th>
+                        @endif
+                        @if(in_array('requerente', $columns))
+                            <th class="col-requerente">Requerente</th>
+                        @endif
+                        @if(in_array('requerido', $columns))
+                            <th class="col-requerido">Requerido</th>
+                        @endif
+                        @if(in_array('vara', $columns))
+                            <th class="col-vara">Vara</th>
+                        @endif
+                        @if(in_array('responsavel', $columns))
+                            <th class="col-responsavel">Responsável</th>
+                        @endif
+                        @if(in_array('tipo_pericia', $columns))
+                            <th class="col-tipo">Tipo de Perícia</th>
+                        @endif
+                        @if(in_array('status', $columns))
+                            <th class="col-status">Status</th>
+                        @endif
+                        @if(in_array('laudo_entregue', $columns))
+                            <th class="col-entrega">Laudo Entregue</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($pericias as $pericia)
                         <tr>
-                            <td class="break-word">
-                                @if($pericia->numero_processo)
-                                    <span class="processo-link">{{ $pericia->numero_processo }}</span>
-                                @else
-                                    <em style="color: #6c757d; font-size: 10px;">sem processo</em>
-                                @endif
-                            </td>
-                            <td class="break-word">
-                                {{ $pericia->requerente ? $pericia->requerente->nome : '-' }}
-                            </td>
-                            <td class="break-word">
-                                {{ $pericia->requerido ?? '-' }}
-                            </td>
-                            <td class="break-word">{{ $pericia->vara }}</td>
-                            <td class="break-word">
-                                {{ $pericia->responsavelTecnico ? $pericia->responsavelTecnico->nome : 'Não atribuído' }}
-                            </td>
-                            <td class="break-word">
-                                {{ $pericia->tipo_pericia ?: 'Não informado' }}
-                            </td>
-                            <td>
-                                @php
-                                    $statusClass = match (strtolower($pericia->status_atual)) {
-                                        'aguardando vistoria' => 'status-aguardando-vistoria',
-                                        'em redação', 'em redacao' => 'status-em-redacao',
-                                        'aguardando pagamento' => 'status-aguardando-pagamento',
-                                        'aguardando documentação' => 'status-aguardando-documentacao',
-                                        'concluído', 'concluido' => 'status-concluido',
-                                        'entregue' => 'status-entregue',
-                                        'cancelado' => 'status-cancelado',
-                                        default => 'status-default',
-                                    };
-                                @endphp
-                                <span class="status-badge {{ $statusClass }}">
-                                    {{ $pericia->status_atual }}
-                                </span>
-                            </td>
-                            <td>
-                                {{ $pericia->prazo_final ? $pericia->prazo_final->format('d/m/Y') : 'Não definido' }}
-                            </td>
+                            @if(in_array('processo', $columns))
+                                <td class="break-word">
+                                    @if($pericia->numero_processo)
+                                        <span class="processo-link">{{ $pericia->numero_processo }}</span>
+                                    @else
+                                        <em style="color: #6c757d; font-size: 10px;">sem processo</em>
+                                    @endif
+                                </td>
+                            @endif
+                            @if(in_array('requerente', $columns))
+                                <td class="break-word">
+                                    {{ $pericia->requerente ? $pericia->requerente->nome : '-' }}
+                                </td>
+                            @endif
+                            @if(in_array('requerido', $columns))
+                                <td class="break-word">
+                                    {{ $pericia->requerido ?? '-' }}
+                                </td>
+                            @endif
+                            @if(in_array('vara', $columns))
+                                <td class="break-word">{{ $pericia->vara }}</td>
+                            @endif
+                            @if(in_array('responsavel', $columns))
+                                <td class="break-word">
+                                    {{ $pericia->responsavelTecnico ? $pericia->responsavelTecnico->nome : 'Não atribuído' }}
+                                </td>
+                            @endif
+                            @if(in_array('tipo_pericia', $columns))
+                                <td class="break-word">
+                                    {{ $pericia->tipo_pericia ?: 'Não informado' }}
+                                </td>
+                            @endif
+                            @if(in_array('status', $columns))
+                                <td>
+                                    @php
+                                        $statusClass = match (strtolower($pericia->status_atual)) {
+                                            'aguardando vistoria' => 'status-aguardando-vistoria',
+                                            'em redação', 'em redacao' => 'status-em-redacao',
+                                            'aguardando pagamento' => 'status-aguardando-pagamento',
+                                            'aguardando documentação' => 'status-aguardando-documentacao',
+                                            'concluído', 'concluido' => 'status-concluido',
+                                            'entregue' => 'status-entregue',
+                                            'cancelado' => 'status-cancelado',
+                                            default => 'status-default',
+                                        };
+                                    @endphp
+                                    <span class="status-badge {{ $statusClass }}">
+                                        {{ $pericia->status_atual }}
+                                    </span>
+                                </td>
+                            @endif
+                            @if(in_array('laudo_entregue', $columns))
+                                <td>
+                                    {{ $pericia->prazo_final ? $pericia->prazo_final->format('d/m/Y') : 'Não definido' }}
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

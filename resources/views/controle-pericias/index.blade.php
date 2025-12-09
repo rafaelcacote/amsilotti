@@ -410,19 +410,178 @@
         :action="route('entrega-laudos-financeiro.store')"
     />
 
+    <!-- Modal de Seleção de Colunas para Impressão -->
+    <div class="modal fade" id="modalSelecaoColunas" tabindex="-1" aria-labelledby="modalSelecaoColunasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%); color: white;">
+                    <h5 class="modal-title" id="modalSelecaoColunasLabel">
+                        <i class="fas fa-columns me-2"></i>Selecionar Colunas para Impressão
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Selecione as colunas que deseja exibir no relatório de impressão:
+                    </p>
+                    
+                    <div class="row g-2">
+                        <div class="col-12 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAllColumns">
+                                <label class="form-check-label fw-bold" for="selectAllColumns">
+                                    <i class="fas fa-check-double me-1"></i>Selecionar Todas
+                                </label>
+                            </div>
+                            <hr class="my-2">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="processo" id="col_processo" checked>
+                                <label class="form-check-label" for="col_processo">Nº Processo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="requerente" id="col_requerente" checked>
+                                <label class="form-check-label" for="col_requerente">Requerente</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="requerido" id="col_requerido" checked>
+                                <label class="form-check-label" for="col_requerido">Requerido</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="vara" id="col_vara" checked>
+                                <label class="form-check-label" for="col_vara">Vara</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="responsavel" id="col_responsavel" checked>
+                                <label class="form-check-label" for="col_responsavel">Responsável</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="tipo_pericia" id="col_tipo_pericia" checked>
+                                <label class="form-check-label" for="col_tipo_pericia">Tipo de Perícia</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="status" id="col_status" checked>
+                                <label class="form-check-label" for="col_status">Status</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="laudo_entregue" id="col_laudo_entregue" checked>
+                                <label class="form-check-label" for="col_laudo_entregue">Laudo Entregue</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmarImpressao" style="background: #0d6efd; border-color: #0d6efd;">
+                        <i class="fas fa-print me-1"></i>Gerar Impressão
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btnImprimir = document.getElementById('btnImprimir');
             
             if (btnImprimir) {
                 btnImprimir.addEventListener('click', function() {
-                    // Capturar os parâmetros atuais da URL
+                    // Abrir modal de seleção de colunas
+                    const modal = new bootstrap.Modal(document.getElementById('modalSelecaoColunas'));
+                    modal.show();
+                });
+            }
+
+            // Funcionalidade do modal de seleção de colunas
+            const selectAllColumnsCheckbox = document.getElementById('selectAllColumns');
+            const columnCheckboxes = document.querySelectorAll('.column-checkbox');
+            
+            // Checkbox "Selecionar Todas as Colunas"
+            if (selectAllColumnsCheckbox) {
+                selectAllColumnsCheckbox.addEventListener('change', function() {
+                    columnCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
+            }
+            
+            // Atualizar checkbox "Selecionar Todas" quando colunas individuais mudam
+            columnCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const allChecked = Array.from(columnCheckboxes).every(cb => cb.checked);
+                    const noneChecked = Array.from(columnCheckboxes).every(cb => !cb.checked);
+                    
+                    if (selectAllColumnsCheckbox) {
+                        selectAllColumnsCheckbox.checked = allChecked;
+                        selectAllColumnsCheckbox.indeterminate = !allChecked && !noneChecked;
+                    }
+                });
+            });
+            
+            // Botão de confirmar impressão no modal
+            const btnConfirmarImpressao = document.getElementById('btnConfirmarImpressao');
+            if (btnConfirmarImpressao) {
+                btnConfirmarImpressao.addEventListener('click', function() {
+                    // Capturar os parâmetros de filtro da URL atual
                     const urlParams = new URLSearchParams(window.location.search);
                     
-                    // Construir a URL de impressão com os mesmos parâmetros
-                    const printUrl = '{{ route("controle-pericias.print-list") }}?' + urlParams.toString();
+                    // Capturar colunas selecionadas
+                    const selectedColumns = Array.from(columnCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.value);
                     
-                    // Abrir em nova aba
+                    console.log('Colunas selecionadas:', selectedColumns);
+                    
+                    // Verificar se pelo menos uma coluna foi selecionada
+                    if (selectedColumns.length === 0) {
+                        showToast('warning', '⚠️ Por favor, selecione pelo menos uma coluna para impressão!');
+                        return;
+                    }
+                    
+                    // Adicionar colunas selecionadas aos parâmetros
+                    urlParams.set('columns', selectedColumns.join(','));
+                    
+                    // Construir a URL para impressão
+                    let printUrl = "{{ route('controle-pericias.print-list') }}";
+                    if (urlParams.toString()) {
+                        printUrl += '?' + urlParams.toString();
+                    }
+                    
+                    console.log('URL de impressão:', printUrl);
+                    
+                    // Fechar o modal
+                    bootstrap.Modal.getInstance(document.getElementById('modalSelecaoColunas')).hide();
+                    
+                    // Mostrar toast de sucesso
+                    showToast('success', `✅ Gerando impressão com ${selectedColumns.length} coluna(s)...`);
+                    
+                    // Abrir a impressão em uma nova aba
                     window.open(printUrl, '_blank');
                 });
             }
@@ -779,7 +938,8 @@
         function showToast(type, message) {
             // Criar o elemento do toast
             const toast = document.createElement('div');
-            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            const bgColor = type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info';
+            toast.className = `toast align-items-center text-white bg-${bgColor} border-0`;
             toast.setAttribute('role', 'alert');
             toast.setAttribute('aria-live', 'assertive');
             toast.setAttribute('aria-atomic', 'true');
@@ -789,10 +949,17 @@
             toast.style.zIndex = '9999';
             toast.style.minWidth = '300px';
             
+            const iconMap = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            
             toast.innerHTML = `
                 <div class="d-flex">
                     <div class="toast-body">
-                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                        <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
                         ${message}
                     </div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>

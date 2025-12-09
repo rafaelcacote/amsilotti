@@ -397,6 +397,16 @@ class ControlePericiasController extends Controller
             'ano' => $prazoFinalAno
         ];
 
+        // Processar colunas selecionadas
+        $selectedColumns = $request->input('columns');
+        $columns = [];
+        if ($selectedColumns) {
+            $columns = explode(',', $selectedColumns);
+        } else {
+            // Se nenhuma coluna foi selecionada, mostrar todas por padrão
+            $columns = ['processo', 'requerente', 'requerido', 'vara', 'responsavel', 'tipo_pericia', 'status', 'laudo_entregue'];
+        }
+
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4-L', // Paisagem para melhor visualização da tabela
@@ -406,7 +416,7 @@ class ControlePericiasController extends Controller
             'margin_right' => 10,
         ]);
 
-        $html = view('controle-pericias.print-list', compact('pericias', 'filtrosAplicados'))->render();
+        $html = view('controle-pericias.print-list', compact('pericias', 'filtrosAplicados', 'columns'))->render();
         $mpdf->WriteHTML($html);
         
         $filename = 'listagem_pericias_' . date('Y-m-d_H-i-s') . '.pdf';

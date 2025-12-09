@@ -377,11 +377,43 @@ class ControleDeTarefasController extends Controller
         return $tarefa;
     });
 
-    // Caminho para o logo
-    $logo = public_path('/img/impressao.png');
+    // Buscar nome do responsável se houver filtro
+    $responsavelNome = null;
+    if ($request->has('responsavel') && $request->responsavel != '') {
+        $responsavel = MembrosEquipeTecnica::find($request->responsavel);
+        $responsavelNome = $responsavel ? $responsavel->nome : null;
+    }
+
+    // Preparar os filtros aplicados para exibição no relatório
+    $filtrosAplicados = [
+        'cliente' => $request->cliente,
+        'prioridade' => $request->prioridade,
+        'situacao' => $request->situacao,
+        'status' => $request->status,
+        'tipo_atividade' => $request->tipo_atividade,
+        'responsavel' => $responsavelNome,
+        'mes_termino' => $request->mes_termino,
+        'ano_termino' => $request->ano_termino,
+    ];
+
+    // Processar colunas selecionadas
+    $selectedColumns = [];
+    if ($request->has('columns') && !empty($request->columns)) {
+        $selectedColumns = array_filter(explode(',', $request->columns));
+        // Se após filtrar estiver vazio, usar todas por padrão
+        if (empty($selectedColumns)) {
+            $selectedColumns = ['processo', 'cliente', 'tipo_atividade', 'descricao', 'responsavel', 'prioridade', 'prazo', 'situacao'];
+        }
+    } else {
+        // Se não houver colunas selecionadas, usar todas por padrão
+        $selectedColumns = ['processo', 'cliente', 'tipo_atividade', 'descricao', 'responsavel', 'prioridade', 'prazo', 'situacao'];
+    }
+    
+    // Garantir que seja um array indexado numericamente
+    $selectedColumns = array_values($selectedColumns);
 
     // Gerar PDF
-    $pdf = Pdf::loadView('controle_de_tarefas.impressao', compact('tarefas', 'logo'))
+    $pdf = Pdf::loadView('controle_de_tarefas.impressao', compact('tarefas', 'filtrosAplicados', 'selectedColumns'))
         ->setPaper('a4', 'landscape');
 
     // Definir nome do arquivo

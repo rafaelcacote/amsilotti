@@ -19,7 +19,7 @@
                                 </a>
                                 @endcan
                                 @can('export tarefas')
-                                <button onclick="imprimirTarefas()"
+                                <button type="button" id="btnImprimir"
                                     class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2"
                                     style="transition: all 0.2s ease;">
                                     <i class="fas fa-print" style="font-size: 0.9rem;"></i>
@@ -651,49 +651,249 @@
         });
     </script>
 
+    <!-- Modal de Seleção de Colunas para Impressão -->
+    <div class="modal fade" id="modalSelecaoColunas" tabindex="-1" aria-labelledby="modalSelecaoColunasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%); color: white;">
+                    <h5 class="modal-title" id="modalSelecaoColunasLabel">
+                        <i class="fas fa-columns me-2"></i>Selecionar Colunas para Impressão
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Selecione as colunas que deseja exibir no relatório de impressão:
+                    </p>
+                    
+                    <div class="row g-2">
+                        <div class="col-12 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAllColumns">
+                                <label class="form-check-label fw-bold" for="selectAllColumns">
+                                    <i class="fas fa-check-double me-1"></i>Selecionar Todas
+                                </label>
+                            </div>
+                            <hr class="my-2">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="processo" id="col_processo" checked>
+                                <label class="form-check-label" for="col_processo">Processo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="cliente" id="col_cliente" checked>
+                                <label class="form-check-label" for="col_cliente">Cliente</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="tipo_atividade" id="col_tipo_atividade" checked>
+                                <label class="form-check-label" for="col_tipo_atividade">Tipo de Atividade</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="descricao" id="col_descricao" checked>
+                                <label class="form-check-label" for="col_descricao">Descrição</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="responsavel" id="col_responsavel" checked>
+                                <label class="form-check-label" for="col_responsavel">Responsável</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="prioridade" id="col_prioridade" checked>
+                                <label class="form-check-label" for="col_prioridade">Prioridade</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="prazo" id="col_prazo" checked>
+                                <label class="form-check-label" for="col_prazo">Prazo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input column-checkbox" type="checkbox" value="situacao" id="col_situacao" checked>
+                                <label class="form-check-label" for="col_situacao">Situação</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmarImpressao" style="background: #0d6efd; border-color: #0d6efd;">
+                        <i class="fas fa-print me-1"></i>Gerar Impressão
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function imprimirTarefas() {
-            // Pegar os filtros atuais corretamente
-            const filtros = {
-                cliente: document.getElementById('cliente').value,
-                prioridade: document.getElementById('prioridade').value,
-                status: document.getElementById('status').value,
-                situacao: document.getElementById('situacao').value,
-                tipo_atividade: document.getElementById('tipo_atividade').value,
-                responsavel: document.getElementById('responsavel').value,
-                mes_termino: document.getElementById('mes_termino').value,
-                ano_termino: document.getElementById('ano_termino').value,
-            };
-
-            // Criar um formulário dinâmico para enviar os filtros
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route('controle_de_tarefas.exportar_para_impressao') }}';
-            form.target = '_blank'; // Isso faz abrir em nova aba/janela
-
-            // Adicionar token CSRF
-            const csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '_token';
-            csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
-            form.appendChild(csrfToken);
-
-            // Adicionar filtros como campos ocultos
-            Object.keys(filtros).forEach(key => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = filtros[key];
-                form.appendChild(input);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Botão de impressão - Abrir modal de seleção de colunas
+            document.getElementById('btnImprimir').addEventListener('click', function() {
+                console.log('Botão imprimir clicado');
+                
+                // Abrir modal de seleção de colunas
+                const modal = new bootstrap.Modal(document.getElementById('modalSelecaoColunas'));
+                modal.show();
             });
+            
+            // Funcionalidade do modal de seleção de colunas
+            const selectAllColumnsCheckbox = document.getElementById('selectAllColumns');
+            const columnCheckboxes = document.querySelectorAll('.column-checkbox');
+            
+            // Checkbox "Selecionar Todas as Colunas"
+            selectAllColumnsCheckbox.addEventListener('change', function() {
+                columnCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            // Atualizar checkbox "Selecionar Todas" quando colunas individuais mudam
+            columnCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const allChecked = Array.from(columnCheckboxes).every(cb => cb.checked);
+                    const noneChecked = Array.from(columnCheckboxes).every(cb => !cb.checked);
+                    
+                    selectAllColumnsCheckbox.checked = allChecked;
+                    selectAllColumnsCheckbox.indeterminate = !allChecked && !noneChecked;
+                });
+            });
+            
+            // Botão de confirmar impressão no modal
+            document.getElementById('btnConfirmarImpressao').addEventListener('click', function() {
+                // Capturar os filtros atuais
+                const filtros = {
+                    cliente: document.getElementById('cliente').value,
+                    prioridade: document.getElementById('prioridade').value,
+                    status: document.getElementById('status').value,
+                    situacao: document.getElementById('situacao').value,
+                    tipo_atividade: document.getElementById('tipo_atividade').value,
+                    responsavel: document.getElementById('responsavel').value,
+                    mes_termino: document.getElementById('mes_termino').value,
+                    ano_termino: document.getElementById('ano_termino').value,
+                };
+                
+                // Capturar colunas selecionadas
+                const selectedColumns = Array.from(columnCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                
+                console.log('Colunas selecionadas:', selectedColumns);
+                
+                // Verificar se pelo menos uma coluna foi selecionada
+                if (selectedColumns.length === 0) {
+                    showToast('warning', '⚠️ Por favor, selecione pelo menos uma coluna para impressão!');
+                    return;
+                }
+                
+                // Criar um formulário dinâmico para enviar os filtros e colunas
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('controle_de_tarefas.exportar_para_impressao') }}';
+                form.target = '_blank'; // Isso faz abrir em nova aba/janela
 
-            // Adicionar formulário ao corpo e submeter
-            document.body.appendChild(form);
-            form.submit();
+                // Adicionar token CSRF
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
+                form.appendChild(csrfToken);
 
-            // Remover o formulário após o envio
-            setTimeout(() => document.body.removeChild(form), 100);
-        }
+                // Adicionar filtros como campos ocultos
+                Object.keys(filtros).forEach(key => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = filtros[key];
+                    form.appendChild(input);
+                });
+                
+                // Adicionar colunas selecionadas
+                const columnsInput = document.createElement('input');
+                columnsInput.type = 'hidden';
+                columnsInput.name = 'columns';
+                columnsInput.value = selectedColumns.join(',');
+                form.appendChild(columnsInput);
+
+                // Adicionar formulário ao corpo e submeter
+                document.body.appendChild(form);
+                form.submit();
+
+                // Remover o formulário após o envio
+                setTimeout(() => document.body.removeChild(form), 100);
+                
+                // Fechar o modal
+                bootstrap.Modal.getInstance(document.getElementById('modalSelecaoColunas')).hide();
+                
+                // Mostrar toast de sucesso
+                showToast('success', `✅ Gerando impressão com ${selectedColumns.length} coluna(s)...`);
+            });
+            
+            // Função para mostrar toast notifications
+            function showToast(type, message) {
+                // Criar o elemento do toast
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                toast.style.position = 'fixed';
+                toast.style.top = '20px';
+                toast.style.right = '20px';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '300px';
+                
+                const iconMap = {
+                    'success': 'check-circle',
+                    'error': 'exclamation-circle',
+                    'warning': 'exclamation-triangle',
+                    'info': 'info-circle'
+                };
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+                
+                // Adicionar o toast ao body
+                document.body.appendChild(toast);
+                
+                // Inicializar e mostrar o toast usando Bootstrap
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remover o elemento do DOM depois que o toast for ocultado
+                toast.addEventListener('hidden.bs.toast', function() {
+                    document.body.removeChild(toast);
+                });
+            }
+        });
     </script>
 
 
