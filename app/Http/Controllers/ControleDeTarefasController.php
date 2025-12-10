@@ -71,25 +71,6 @@ class ControleDeTarefasController extends Controller
         // Aplica a paginação
         $tarefas = $query->paginate(10); // 10 itens por página
 
-        // Calculando o progresso de cada tarefa
-        foreach ($tarefas as $tarefa) {
-            $data_inicio = Carbon::parse($tarefa->data_inicio);
-            $data_termino = Carbon::parse($tarefa->data_termino);
-            $hoje = Carbon::now();
-
-            // Total de dias entre o início e o término
-            $totalDias = $data_inicio->diffInDays($data_termino);
-            // Dias passados desde o início
-            $diasPassados = $data_inicio->diffInDays($hoje);
-
-            // Garantir que o progresso não ultrapasse 100% nem seja negativo
-            $progresso = ($diasPassados / $totalDias) * 100;
-            $progresso = min(100, max(0, $progresso)); // Limitar entre 0% e 100%
-
-            // Adiciona a variável de progresso à tarefa
-            $tarefa->progresso = $progresso;
-        }
-
         // Obtém os valores possíveis para Prioridade
         $getPrioridadeValues = ControleDeTarefas::getPrioridadeValues();
 
@@ -373,7 +354,7 @@ class ControleDeTarefasController extends Controller
             $query->whereYear('data_termino', $request->ano_termino);
         }
 
-        // Buscar todas as tarefas (sem paginação para impressão)
+        // Buscar TODAS as tarefas filtradas (sem paginação para impressão)
         $tarefas = $query->get();
 
     // Processar as datas para o formato correto
