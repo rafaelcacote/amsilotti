@@ -118,6 +118,7 @@ class ControlePericia extends Model
         '1ª VFP',
         '2ª CIMA',
         '2ª VFP',
+        '4ª VFP',
         '1ª Cível',
         '2ª Cível',
         '3ª Cível',
