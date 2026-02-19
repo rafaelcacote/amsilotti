@@ -130,11 +130,13 @@
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros de Pesquisa</span>
                             </button>
-                            <div class="collapse{{ request()->hasAny(['search', 'vara', 'responsavel_tecnico_id', 'tipo_pericia', 'status_atual', 'prazo_final_inicio', 'prazo_final_fim']) ? ' show' : '' }}"
+                            <div class="collapse{{ request()->hasAny(['search', 'vara', 'responsavel_tecnico_id', 'tipo_pericia', 'status_atual', 'prazo_final_inicio', 'prazo_final_fim', 'filtro']) ? ' show' : '' }}"
                                 id="filtrosCollapse">
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('controle-pericias.index') }}" method="GET">
-                                        @csrf
+                                        @if(request('filtro'))
+                                            <input type="hidden" name="filtro" value="{{ request('filtro') }}">
+                                        @endif
                                         <div class="row align-items-end">
                                             <div class="col-md-2">
                                                 <label class="form-label" for="search">Buscar</label>
@@ -251,11 +253,33 @@
                                     </span>
                                     <span class="badge bg-success fs-5">{{ $pericias->count() }}</span>
                                 </div>
+                                @if($filtro ?? false)
+                                    @php
+                                        $filtroLabels = [
+                                            'prazos-vencidos' => 'Prazos vencidos',
+                                            'aguardando-vistoria' => 'Aguardando vistoria',
+                                            'em-redacao' => 'Em redação',
+                                            'entregues' => 'Entregues',
+                                        ];
+                                    @endphp
+                                    <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                        <span class="fw-semibold text-info" style="font-size: 1.1rem;">
+                                            <i class="fas fa-tag me-2"></i>Filtro:
+                                        </span>
+                                        <span class="badge bg-info fs-6">{{ $filtroLabels[$filtro] ?? $filtro }}</span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped align-middle">
                                     <thead>
                                         <tr>
+                                            <th class="px-4 py-3 border-bottom-0 text-center" style="width: 50px;">
+                                                <div class="form-check d-flex justify-content-center">
+                                                    <input class="form-check-input" type="checkbox" id="selectAllPrint" title="Selecionar todas para impressão">
+                                                    <label class="form-check-label visually-hidden" for="selectAllPrint">Selecionar todas</label>
+                                                </div>
+                                            </th>
                                             <th class="px-4 py-3 border-bottom-0">Nº Processo</th>
                                             <th class="px-4 py-3 border-bottom-0">Requerente</th>
                                             <th class="px-4 py-3 border-bottom-0">Requerido</th>
@@ -273,6 +297,14 @@
                                             @foreach ($pericias as $pericia)
                                                 <tr class="border-bottom border-light">
 
+                                                    <td class="px-4 text-center">
+                                                        <div class="form-check d-flex justify-content-center">
+                                                            <input class="form-check-input print-pericia-checkbox" type="checkbox" 
+                                                                value="{{ $pericia->id }}" id="print_{{ $pericia->id }}"
+                                                                data-pericia-id="{{ $pericia->id }}">
+                                                            <label class="form-check-label visually-hidden" for="print_{{ $pericia->id }}">Imprimir</label>
+                                                        </div>
+                                                    </td>
                                                     <td class="px-4">
                                                         @if ($pericia->numero_processo)
                                                             <a href="https://consultasaj.tjam.jus.br/cpopg/search.do?cbPesquisa=NUMPROC&dadosConsulta.valorConsulta={{ $pericia->numero_processo }}"
@@ -348,7 +380,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="9" class="text-center py-4">
+                                                <td colspan="10" class="text-center py-4">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
                                                         <h5 class="text-muted">Nenhum registro encontrado</h5>
@@ -421,6 +453,10 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-info mb-3 py-2" id="periciasSelecionadasInfo">
+                        <i class="fas fa-check-square me-1"></i>
+                        <strong id="countPericiasSelecionadas">0</strong> perícia(s) selecionada(s) para impressão
+                    </div>
                     <p class="text-muted mb-3">
                         <i class="fas fa-info-circle me-1"></i>
                         Selecione as colunas que deseja exibir no relatório de impressão:
@@ -512,10 +548,51 @@
             
             if (btnImprimir) {
                 btnImprimir.addEventListener('click', function() {
+                    const printCheckboxes = document.querySelectorAll('.print-pericia-checkbox');
+                    if (printCheckboxes.length === 0) {
+                        showToast('warning', '⚠️ Não há perícias na listagem para imprimir.');
+                        return;
+                    }
+                    // Atualizar contador de perícias selecionadas ao abrir o modal
+                    updatePericiasSelecionadasCount();
                     // Abrir modal de seleção de colunas
                     const modal = new bootstrap.Modal(document.getElementById('modalSelecaoColunas'));
                     modal.show();
                 });
+            }
+
+            // Checkbox "Selecionar todas" para impressão
+            const selectAllPrint = document.getElementById('selectAllPrint');
+            const printPericiaCheckboxes = document.querySelectorAll('.print-pericia-checkbox');
+            
+            if (selectAllPrint && printPericiaCheckboxes.length > 0) {
+                selectAllPrint.addEventListener('change', function() {
+                    printPericiaCheckboxes.forEach(cb => cb.checked = this.checked);
+                    updatePericiasSelecionadasCount();
+                });
+            }
+            
+            printPericiaCheckboxes.forEach(cb => {
+                cb.addEventListener('change', updatePericiasSelecionadasCount);
+            });
+
+            function updatePericiasSelecionadasCount() {
+                const count = document.querySelectorAll('.print-pericia-checkbox:checked').length;
+                const el = document.getElementById('countPericiasSelecionadas');
+                const infoBox = document.getElementById('periciasSelecionadasInfo');
+                if (el) el.textContent = count;
+                if (infoBox) {
+                    infoBox.className = count > 0 
+                        ? 'alert alert-info mb-3 py-2' 
+                        : 'alert alert-warning mb-3 py-2';
+                }
+                // Atualizar estado do "selecionar todas"
+                if (selectAllPrint && printPericiaCheckboxes.length > 0) {
+                    const allChecked = Array.from(printPericiaCheckboxes).every(cb => cb.checked);
+                    const noneChecked = Array.from(printPericiaCheckboxes).every(cb => !cb.checked);
+                    selectAllPrint.checked = allChecked;
+                    selectAllPrint.indeterminate = !allChecked && !noneChecked;
+                }
             }
 
             // Funcionalidade do modal de seleção de colunas
@@ -548,6 +625,16 @@
             const btnConfirmarImpressao = document.getElementById('btnConfirmarImpressao');
             if (btnConfirmarImpressao) {
                 btnConfirmarImpressao.addEventListener('click', function() {
+                    // Capturar perícias selecionadas para impressão
+                    const selectedPericiaIds = Array.from(document.querySelectorAll('.print-pericia-checkbox:checked'))
+                        .map(cb => cb.value);
+                    
+                    // Verificar se pelo menos uma perícia foi selecionada
+                    if (selectedPericiaIds.length === 0) {
+                        showToast('warning', '⚠️ Por favor, selecione pelo menos uma perícia para impressão!');
+                        return;
+                    }
+                    
                     // Capturar os parâmetros de filtro da URL atual
                     const urlParams = new URLSearchParams(window.location.search);
                     
@@ -556,13 +643,14 @@
                         .filter(cb => cb.checked)
                         .map(cb => cb.value);
                     
-                    console.log('Colunas selecionadas:', selectedColumns);
-                    
                     // Verificar se pelo menos uma coluna foi selecionada
                     if (selectedColumns.length === 0) {
                         showToast('warning', '⚠️ Por favor, selecione pelo menos uma coluna para impressão!');
                         return;
                     }
+                    
+                    // Adicionar IDs das perícias selecionadas
+                    urlParams.set('ids', selectedPericiaIds.join(','));
                     
                     // Adicionar colunas selecionadas aos parâmetros
                     urlParams.set('columns', selectedColumns.join(','));
@@ -573,13 +661,11 @@
                         printUrl += '?' + urlParams.toString();
                     }
                     
-                    console.log('URL de impressão:', printUrl);
-                    
                     // Fechar o modal
                     bootstrap.Modal.getInstance(document.getElementById('modalSelecaoColunas')).hide();
                     
                     // Mostrar toast de sucesso
-                    showToast('success', `✅ Gerando impressão com ${selectedColumns.length} coluna(s)...`);
+                    showToast('success', `✅ Gerando impressão com ${selectedPericiaIds.length} perícia(s)...`);
                     
                     // Abrir a impressão em uma nova aba
                     window.open(printUrl, '_blank');

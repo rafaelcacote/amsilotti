@@ -450,65 +450,73 @@
         <!-- Métricas Rápidas de Perícias -->
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
-                <div class="card border-0 shadow-sm h-100 bg-danger bg-opacity-10">
-                    <div class="card-body text-center py-3">
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <div class="bg-danger bg-opacity-20 rounded-circle p-2 me-2">
-                                <i class="fas fa-exclamation-triangle fa-lg text-danger"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 text-danger" style="font-size:1.6rem;">{{ $periciasPrazosVencidos }}</h4>
-                                <div class="pericia-metrica-legenda">Prazos vencidos</div>
+                <a href="{{ route('controle-pericias.index', ['filtro' => 'prazos-vencidos']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 bg-danger bg-opacity-10 card-hover-pericia">
+                        <div class="card-body text-center py-3">
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <div class="bg-danger bg-opacity-20 rounded-circle p-2 me-2">
+                                    <i class="fas fa-exclamation-triangle fa-lg text-danger"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-danger" style="font-size:1.6rem;">{{ $periciasPrazosVencidos }}</h4>
+                                    <div class="pericia-metrica-legenda">Prazos vencidos</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10">
-                    <div class="card-body text-center py-3">
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <div class="bg-info bg-opacity-20 rounded-circle p-2 me-2">
-                                <i class="fas fa-eye fa-lg text-info"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 text-info" style="font-size:1.6rem;">{{ $periciasPendentesVistoria }}
-                                </h4>
-                                <div class="pericia-metrica-legenda">Aguard. vistoria</div>
+                <a href="{{ route('controle-pericias.index', ['filtro' => 'aguardando-vistoria']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10 card-hover-pericia">
+                        <div class="card-body text-center py-3">
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <div class="bg-info bg-opacity-20 rounded-circle p-2 me-2">
+                                    <i class="fas fa-eye fa-lg text-info"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-info" style="font-size:1.6rem;">{{ $periciasPendentesVistoria }}
+                                    </h4>
+                                    <div class="pericia-metrica-legenda">Aguard. vistoria</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10">
-                    <div class="card-body text-center py-3">
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <div class="bg-primary bg-opacity-20 rounded-circle p-2 me-2">
-                                <i class="fas fa-edit fa-lg text-primary"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 text-primary" style="font-size:1.6rem;">{{ $periciasEmRedacao }}</h4>
-                                <div class="pericia-metrica-legenda">Em redação</div>
+                <a href="{{ route('controle-pericias.index', ['filtro' => 'em-redacao']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10 card-hover-pericia">
+                        <div class="card-body text-center py-3">
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <div class="bg-primary bg-opacity-20 rounded-circle p-2 me-2">
+                                    <i class="fas fa-edit fa-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-primary" style="font-size:1.6rem;">{{ $periciasEmRedacao }}</h4>
+                                    <div class="pericia-metrica-legenda">Em redação</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-0 shadow-sm h-100 bg-success bg-opacity-10">
-                    <div class="card-body text-center py-3">
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <div class="bg-success bg-opacity-20 rounded-circle p-2 me-2">
-                                <i class="fas fa-check-circle fa-lg text-success"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 text-success" style="font-size:1.6rem;">{{ $periciasEntregues }}</h4>
-                                <div class="pericia-metrica-legenda">Entregues</div>
+                <a href="{{ route('controle-pericias.index', ['filtro' => 'entregues']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 bg-success bg-opacity-10 card-hover-pericia">
+                        <div class="card-body text-center py-3">
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <div class="bg-success bg-opacity-20 rounded-circle p-2 me-2">
+                                    <i class="fas fa-check-circle fa-lg text-success"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-success" style="font-size:1.6rem;">{{ $periciasEntregues }}</h4>
+                                    <div class="pericia-metrica-legenda">Entregues</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         <style>
@@ -519,6 +527,15 @@
                 letter-spacing: 0.01em;
                 text-transform: none;
                 margin-top: 2px;
+            }
+
+            .card-hover-pericia {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                cursor: pointer;
+            }
+            .card-hover-pericia:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
             }
 
             /* Estilos para o modal de tarefas */

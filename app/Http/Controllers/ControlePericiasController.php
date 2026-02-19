@@ -41,9 +41,23 @@ class ControlePericiasController extends Controller
     $tipoPericia = $request->input('tipo_pericia');
     $prazoFinalMes = $request->input('prazo_final_mes');
     $prazoFinalAno = $request->input('prazo_final_ano');
+    $filtro = $request->input('filtro');
 
         $pericias = ControlePericia::query()
             ->with(['responsavelTecnico', 'requerente'])
+            ->when($filtro === 'prazos-vencidos', function ($query) {
+                return $query->where('prazo_final', '<', now())
+                    ->whereNotIn('status_atual', ['Concluído', 'Entregue', 'Cancelado']);
+            })
+            ->when($filtro === 'aguardando-vistoria', function ($query) {
+                return $query->where('status_atual', 'Aguardando Vistoria');
+            })
+            ->when($filtro === 'em-redacao', function ($query) {
+                return $query->whereIn('status_atual', ['Em Redação', 'em redacao']);
+            })
+            ->when($filtro === 'entregues', function ($query) {
+                return $query->whereIn('status_atual', ['Entregue', 'Concluído', 'concluido']);
+            })
             ->when($search, function ($query, $search) {
                 return $query->where(function($q) use ($search) {
                     $q->where('numero_processo', 'like', "%{$search}%")
@@ -61,7 +75,7 @@ class ControlePericiasController extends Controller
                 return $query->where('responsavel_tecnico_id', $responsavelId);
             })
             ->when($status, function ($query, $status) {
-                return $query->where('status_atual', $status);
+                return $query->whereRaw('LOWER(status_atual) = ?', [strtolower($status)]);
             })
             ->when($tipoPericia, function ($query, $tipoPericia) {
                 return $query->where('tipo_pericia', $tipoPericia);
@@ -88,7 +102,7 @@ class ControlePericiasController extends Controller
             'Entregue'
         ];
 
-        return view('controle-pericias.index', compact('pericias', 'responsaveis', 'search', 'responsavelId', 'status', 'tipoPericia', 'statusOptions'));
+        return view('controle-pericias.index', compact('pericias', 'responsaveis', 'search', 'responsavelId', 'status', 'tipoPericia', 'statusOptions', 'filtro'));
     }
 
     /**
@@ -346,10 +360,16 @@ class ControlePericiasController extends Controller
         $tipoPericia = $request->input('tipo_pericia');
         $prazoFinalMes = $request->input('prazo_final_mes');
         $prazoFinalAno = $request->input('prazo_final_ano');
+        $idsParam = $request->input('ids');
+
+        $ids = $idsParam ? array_filter(array_map('intval', explode(',', $idsParam))) : [];
 
         $pericias = ControlePericia::query()
             ->with(['responsavelTecnico', 'requerente'])
-            ->when($search, function ($query, $search) {
+            ->when(!empty($ids), function ($query) use ($ids) {
+                return $query->whereIn('id', $ids);
+            })
+            ->when(empty($ids) && $search, function ($query, $search) {
                 return $query->where(function($q) use ($search) {
                     $q->where('numero_processo', 'like', "%{$search}%")
                       ->orWhere('vara', 'like', "%{$search}%")
@@ -359,22 +379,22 @@ class ControlePericiasController extends Controller
                       });
                 });
             })
-            ->when($vara, function ($query, $vara) {
+            ->when(empty($ids) && $vara, function ($query, $vara) {
                 return $query->where('vara', $vara);
             })
-            ->when($responsavelId, function ($query, $responsavelId) {
+            ->when(empty($ids) && $responsavelId, function ($query, $responsavelId) {
                 return $query->where('responsavel_tecnico_id', $responsavelId);
             })
-            ->when($status, function ($query, $status) {
+            ->when(empty($ids) && $status, function ($query, $status) {
                 return $query->where('status_atual', $status);
             })
-            ->when($tipoPericia, function ($query, $tipoPericia) {
+            ->when(empty($ids) && $tipoPericia, function ($query, $tipoPericia) {
                 return $query->where('tipo_pericia', $tipoPericia);
             })
-            ->when($prazoFinalMes, function ($query) use ($prazoFinalMes) {
+            ->when(empty($ids) && $prazoFinalMes, function ($query) use ($prazoFinalMes) {
                 return $query->whereMonth('prazo_final', $prazoFinalMes);
             })
-            ->when($prazoFinalAno, function ($query) use ($prazoFinalAno) {
+            ->when(empty($ids) && $prazoFinalAno, function ($query) use ($prazoFinalAno) {
                 return $query->whereYear('prazo_final', $prazoFinalAno);
             })
             ->latest()
