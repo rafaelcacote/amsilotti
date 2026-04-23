@@ -312,46 +312,54 @@ class ControleDeTarefasController extends Controller
             })
             ->orderBy('id', 'desc');
 
-        // Filtro por Cliente
-        if ($request->has('cliente') && $request->cliente != '') {
-            $query->whereHas('cliente', function($q) use ($request) {
-                $q->where('nome', 'like', '%' . $request->cliente . '%');
-            });
-        }
+        $selectedIdsParam = $request->input('selected_ids');
+        $selectedIds = $selectedIdsParam ? array_filter(array_map('intval', explode(',', $selectedIdsParam))) : [];
+
+        if (!empty($selectedIds)) {
+            $query->whereIn('id', $selectedIds);
+        } else {
+
+            // Filtro por Cliente
+            if ($request->has('cliente') && $request->cliente != '') {
+                $query->whereHas('cliente', function($q) use ($request) {
+                    $q->where('nome', 'like', '%' . $request->cliente . '%');
+                });
+            }
         
-        // Filtro por Status
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', 'like', '%' . $request->status . '%');
-        }
+            // Filtro por Status
+            if ($request->has('status') && $request->status != '') {
+                $query->where('status', 'like', '%' . $request->status . '%');
+            }
 
-        // Filtro por Prioridade
-        if ($request->has('prioridade') && $request->prioridade != '') {
-            $query->where('prioridade', $request->prioridade);
-        }
+            // Filtro por Prioridade
+            if ($request->has('prioridade') && $request->prioridade != '') {
+                $query->where('prioridade', $request->prioridade);
+            }
 
-        // Filtro por Situação
-        if ($request->has('situacao') && $request->situacao != '') {
-            $query->where('situacao', $request->situacao);
-        }
-        
-        // Filtro por Tipo de Atividade
-        if ($request->has('tipo_atividade') && $request->tipo_atividade != '') {
-            $query->where('tipo_atividade', $request->tipo_atividade);
-        }
-        
-        // Filtro por Responsável (Membro da Equipe)
-        if ($request->has('responsavel') && $request->responsavel != '') {
-            $query->where('membro_id', $request->responsavel);
-        }
+            // Filtro por Situação
+            if ($request->has('situacao') && $request->situacao != '') {
+                $query->where('situacao', $request->situacao);
+            }
+            
+            // Filtro por Tipo de Atividade
+            if ($request->has('tipo_atividade') && $request->tipo_atividade != '') {
+                $query->where('tipo_atividade', $request->tipo_atividade);
+            }
+            
+            // Filtro por Responsável (Membro da Equipe)
+            if ($request->has('responsavel') && $request->responsavel != '') {
+                $query->where('membro_id', $request->responsavel);
+            }
 
-        // Filtro por Mês da Data de Término
-        if ($request->has('mes_termino') && $request->mes_termino != '') {
-            $query->whereMonth('data_termino', $request->mes_termino);
-        }
+            // Filtro por Mês da Data de Término
+            if ($request->has('mes_termino') && $request->mes_termino != '') {
+                $query->whereMonth('data_termino', $request->mes_termino);
+            }
 
-        // Filtro por Ano da Data de Término
-        if ($request->has('ano_termino') && $request->ano_termino != '') {
-            $query->whereYear('data_termino', $request->ano_termino);
+            // Filtro por Ano da Data de Término
+            if ($request->has('ano_termino') && $request->ano_termino != '') {
+                $query->whereYear('data_termino', $request->ano_termino);
+            }
         }
 
         // Buscar TODAS as tarefas filtradas (sem paginação para impressão)

@@ -240,35 +240,47 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <!-- Contadores de Perícias -->
-                            <div class="mb-3 d-flex gap-3 align-items-center flex-wrap">
-                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
-                                    <span class="fw-semibold text-primary" style="font-size: 1.1rem;">
-                                        <i class="fas fa-database me-2"></i>Total cadastradas:
-                                    </span>
-                                    <span class="badge bg-primary fs-5">{{ $totalPericias ?? $pericias->total() }}</span>
-                                </div>
-                                <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
-                                    <span class="fw-semibold text-success" style="font-size: 1.1rem;">
-                                        <i class="fas fa-filter me-2"></i>Exibindo:
-                                    </span>
-                                    <span class="badge bg-success fs-5">{{ $pericias->count() }}</span>
-                                </div>
-                                @if($filtro ?? false)
-                                    @php
-                                        $filtroLabels = [
-                                            'prazos-vencidos' => 'Prazos vencidos',
-                                            'aguardando-vistoria' => 'Aguardando vistoria',
-                                            'em-redacao' => 'Em redação',
-                                            'entregues' => 'Entregues',
-                                        ];
-                                    @endphp
+                            <div class="mb-3 d-flex gap-3 align-items-center flex-wrap justify-content-between">
+                                <div class="d-flex gap-3 align-items-center flex-wrap">
                                     <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
-                                        <span class="fw-semibold text-info" style="font-size: 1.1rem;">
-                                            <i class="fas fa-tag me-2"></i>Filtro:
+                                        <span class="fw-semibold text-primary" style="font-size: 1.1rem;">
+                                            <i class="fas fa-database me-2"></i>Total cadastradas:
                                         </span>
-                                        <span class="badge bg-info fs-6">{{ $filtroLabels[$filtro] ?? $filtro }}</span>
+                                        <span class="badge bg-primary fs-5">{{ $totalPericias ?? $pericias->total() }}</span>
                                     </div>
-                                @endif
+                                    <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                        <span class="fw-semibold text-success" style="font-size: 1.1rem;">
+                                            <i class="fas fa-filter me-2"></i>Exibindo:
+                                        </span>
+                                        <span class="badge bg-success fs-5">{{ $pericias->count() }}</span>
+                                    </div>
+                                    @if($filtro ?? false)
+                                        @php
+                                            $filtroLabels = [
+                                                'prazos-vencidos' => 'Prazos vencidos',
+                                                'aguardando-vistoria' => 'Aguardando vistoria',
+                                                'em-redacao' => 'Em redação',
+                                                'entregues' => 'Entregues',
+                                            ];
+                                        @endphp
+                                        <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
+                                            <span class="fw-semibold text-info" style="font-size: 1.1rem;">
+                                                <i class="fas fa-tag me-2"></i>Filtro:
+                                            </span>
+                                            <span class="badge bg-info fs-6">{{ $filtroLabels[$filtro] ?? $filtro }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <span class="text-muted small">Seleção:</span>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllRecords">
+                                        <i class="fas fa-check-square me-1"></i>Selecionar Todos
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllRecords">
+                                        <i class="fas fa-square me-1"></i>Desmarcar Todos
+                                    </button>
+                                    <span class="badge bg-primary" id="selectedCount">0 selecionados</span>
+                                </div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped align-middle">
@@ -571,6 +583,22 @@
                     updatePericiasSelecionadasCount();
                 });
             }
+
+            const selectAllRecordsButton = document.getElementById('selectAllRecords');
+            if (selectAllRecordsButton) {
+                selectAllRecordsButton.addEventListener('click', function() {
+                    printPericiaCheckboxes.forEach(cb => cb.checked = true);
+                    updatePericiasSelecionadasCount();
+                });
+            }
+
+            const deselectAllRecordsButton = document.getElementById('deselectAllRecords');
+            if (deselectAllRecordsButton) {
+                deselectAllRecordsButton.addEventListener('click', function() {
+                    printPericiaCheckboxes.forEach(cb => cb.checked = false);
+                    updatePericiasSelecionadasCount();
+                });
+            }
             
             printPericiaCheckboxes.forEach(cb => {
                 cb.addEventListener('change', updatePericiasSelecionadasCount);
@@ -579,8 +607,12 @@
             function updatePericiasSelecionadasCount() {
                 const count = document.querySelectorAll('.print-pericia-checkbox:checked').length;
                 const el = document.getElementById('countPericiasSelecionadas');
+                const selectedCountTop = document.getElementById('selectedCount');
                 const infoBox = document.getElementById('periciasSelecionadasInfo');
                 if (el) el.textContent = count;
+                if (selectedCountTop) {
+                    selectedCountTop.textContent = `${count} selecionados`;
+                }
                 if (infoBox) {
                     infoBox.className = count > 0 
                         ? 'alert alert-info mb-3 py-2' 

@@ -171,20 +171,33 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body p-0">
                             <!-- Contadores de Tarefas -->
-                            <div class="mb-3 mx-4 mt-4 d-flex gap-3 align-items-center flex-wrap">
-                                
+                            <div class="mb-3 mx-4 mt-4 d-flex gap-3 align-items-center flex-wrap justify-content-between">
+                                <div class="d-flex gap-3 align-items-center flex-wrap">
                                 <div class="bg-white shadow-sm rounded px-4 py-3 d-flex align-items-center gap-2">
                                     <span class="fw-semibold text-success" style="font-size: 1.1rem;">
                                         <i class="fas fa-filter me-2"></i>Exibindo:
                                     </span>
                                     <span class="badge bg-success fs-5">{{ $tarefas->count() }}</span>
                                 </div>
+                                </div>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <span class="text-muted small">Seleção:</span>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllRecords">
+                                        <i class="fas fa-check-square me-1"></i>Selecionar Todos
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllRecords">
+                                        <i class="fas fa-square me-1"></i>Desmarcar Todos
+                                    </button>
+                                    <span class="badge bg-primary" id="selectedCount">0 selecionados</span>
+                                </div>
                             </div>
                             <div class="table-responsive" style="overflow-x: auto;">
                                 <table class="table table-hover table-striped align-middle" style="min-width: 1200px;">
                                     <thead class="bg-light">
                                         <tr>
-                                            <!-- <th class="px-4 py-3 border-bottom-0">#</th> -->
+                                            <th class="px-4 py-3 border-bottom-0 text-center" style="width: 50px;">
+                                                <input type="checkbox" id="selectAllCheckbox" class="form-check-input">
+                                            </th>
                                             <th class="px-4 py-3 border-bottom-0">Processo</th>
                                             <th class="px-4 py-3 border-bottom-0">Cliente</th>
                                             <th class="px-4 py-3 border-bottom-0">Tipo de Atividade</th>
@@ -202,6 +215,9 @@
                                         @if ($tarefas->count() > 0)
                                             @foreach ($tarefas as $tarefa)
                                                 <tr class="border-bottom border-light">
+                                                    <td class="px-4 text-center">
+                                                        <input type="checkbox" class="form-check-input record-checkbox" value="{{ $tarefa->id }}">
+                                                    </td>
                                                     <!-- <td class="px-4 fw-medium text-muted">
                                                                                                                 <strong>#{{ $tarefa->id }}</strong>
                                                                                                             </td> -->
@@ -408,7 +424,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="11" class="text-center py-4">
+                                                <td colspan="10" class="text-center py-4">
                                                     <p class="mb-0 text-muted">Nenhuma tarefa encontrada.</p>
                                                 </td>
                                             </tr>
@@ -749,9 +765,73 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const recordCheckboxes = document.querySelectorAll('.record-checkbox');
+            const selectedCountElement = document.getElementById('selectedCount');
+
+            function updateSelectedCount() {
+                const selectedCount = document.querySelectorAll('.record-checkbox:checked').length;
+                if (selectedCountElement) {
+                    selectedCountElement.textContent = `${selectedCount} selecionados`;
+                }
+                if (!selectAllCheckbox || recordCheckboxes.length === 0) {
+                    return;
+                }
+                if (selectedCount === 0) {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = false;
+                } else if (selectedCount === recordCheckboxes.length) {
+                    selectAllCheckbox.checked = true;
+                    selectAllCheckbox.indeterminate = false;
+                } else {
+                    selectAllCheckbox.indeterminate = true;
+                }
+            }
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    recordCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            recordCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            const selectAllRecordsButton = document.getElementById('selectAllRecords');
+            if (selectAllRecordsButton) {
+                selectAllRecordsButton.addEventListener('click', function() {
+                    recordCheckboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            const deselectAllRecordsButton = document.getElementById('deselectAllRecords');
+            if (deselectAllRecordsButton) {
+                deselectAllRecordsButton.addEventListener('click', function() {
+                    recordCheckboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            updateSelectedCount();
+
             // Botão de impressão - Abrir modal de seleção de colunas
             document.getElementById('btnImprimir').addEventListener('click', function() {
                 console.log('Botão imprimir clicado');
+                const selectedTaskIds = Array.from(document.querySelectorAll('.record-checkbox:checked'))
+                    .map(cb => cb.value);
+                if (selectedTaskIds.length === 0) {
+                    showToast('warning', '⚠️ Selecione pelo menos uma tarefa para imprimir.');
+                    return;
+                }
                 
                 // Abrir modal de seleção de colunas
                 const modal = new bootstrap.Modal(document.getElementById('modalSelecaoColunas'));
@@ -782,6 +862,13 @@
             
             // Botão de confirmar impressão no modal
             document.getElementById('btnConfirmarImpressao').addEventListener('click', function() {
+                const selectedTaskIds = Array.from(document.querySelectorAll('.record-checkbox:checked'))
+                    .map(cb => cb.value);
+                if (selectedTaskIds.length === 0) {
+                    showToast('warning', '⚠️ Selecione pelo menos uma tarefa para imprimir.');
+                    return;
+                }
+
                 // Capturar os filtros atuais
                 const filtros = {
                     cliente: document.getElementById('cliente').value,
@@ -836,6 +923,12 @@
                 columnsInput.value = selectedColumns.join(',');
                 form.appendChild(columnsInput);
 
+                const selectedIdsInput = document.createElement('input');
+                selectedIdsInput.type = 'hidden';
+                selectedIdsInput.name = 'selected_ids';
+                selectedIdsInput.value = selectedTaskIds.join(',');
+                form.appendChild(selectedIdsInput);
+
                 // Adicionar formulário ao corpo e submeter
                 document.body.appendChild(form);
                 form.submit();
@@ -847,7 +940,7 @@
                 bootstrap.Modal.getInstance(document.getElementById('modalSelecaoColunas')).hide();
                 
                 // Mostrar toast de sucesso
-                showToast('success', `✅ Gerando impressão com ${selectedColumns.length} coluna(s)...`);
+                showToast('success', `✅ Gerando impressão de ${selectedTaskIds.length} tarefa(s) com ${selectedColumns.length} coluna(s)...`);
             });
             
             // Função para mostrar toast notifications
