@@ -10,7 +10,7 @@
                             <h3 class="mb-0 text-primary"><i class="fas fa-edit me-2"></i>Editar Perícia</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('controle-pericias.update', $controlePericia->id) }}" method="POST"
+                            <form action="{{ route('controle-pericias.update', $controlePericia->id) }}" method="POST" enctype="multipart/form-data"
                                 class="row g-3 needs-validation" novalidate>
                                 @csrf
                                 @method('PUT')
@@ -249,6 +249,125 @@
                                     @enderror
                                 </div>
 
+                                @php
+                                    $documentosPorItem = $controlePericia->checklistDocumentos->keyBy('item_nome');
+                                    $checklistTotal = count($checklistItems);
+                                    $checklistConcluidos = $checklistItems
+                                        ? collect($checklistItems)->filter(function ($item) use ($documentosPorItem) {
+                                            $doc = $documentosPorItem->get($item);
+                                            return $doc && ($doc->nao_necessario || !empty($doc->arquivo_caminho));
+                                        })->count()
+                                        : 0;
+                                    $progresso = $checklistTotal > 0 ? round(($checklistConcluidos / $checklistTotal) * 100) : 0;
+                                @endphp
+
+                                <div class="col-md-12 mb-2">
+                                    <div class="card border-0 shadow-sm bg-light">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="mb-0 text-primary">
+                                                    <i class="fas fa-list-check me-2"></i>Checklist de Documentos
+                                                </h5>
+                                                <span class="badge bg-primary-subtle text-primary">
+                                                    {{ $checklistConcluidos }}/{{ $checklistTotal }} itens com arquivo
+                                                </span>
+                                            </div>
+
+                                            <div class="progress mb-3" style="height: 10px;">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $progresso }}%;"
+                                                    aria-valuenow="{{ $progresso }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+
+                                            @if (empty($checklistItems))
+                                                <div class="alert alert-warning mb-0">
+                                                    O tipo de perícia selecionado não possui checklist configurado.
+                                                </div>
+                                            @else
+                                                <div class="row g-3">
+                                                    @foreach ($checklistItems as $item)
+                                                        @php
+                                                            $itemKey = \Illuminate\Support\Str::slug($item, '_');
+                                                            $documento = $documentosPorItem->get($item);
+                                                            $isNaoNecessario = $documento && $documento->nao_necessario;
+                                                        @endphp
+                                                        <div class="col-md-6">
+                                                            <div class="border rounded p-3 h-100 bg-white">
+                                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {{ $documento ? 'checked' : '' }} disabled>
+                                                                        <label class="form-check-label fw-semibold">
+                                                                            {{ $item }}
+                                                                        </label>
+                                                                    </div>
+                                                                    @if ($isNaoNecessario)
+                                                                        <span class="badge bg-warning text-dark">Nao necessario</span>
+                                                                    @elseif ($documento && $documento->arquivo_caminho)
+                                                                        <span class="badge bg-success">Enviado</span>
+                                                                    @else
+                                                                        <span class="badge bg-secondary">Pendente</span>
+                                                                    @endif
+                                                                </div>
+
+                                                                @if ($documento && $documento->arquivo_caminho)
+                                                                    <div class="small text-muted mb-2">
+                                                                        Arquivo atual: <strong>{{ $documento->arquivo_nome }}</strong>
+                                                                    </div>
+                                                                    <div class="d-flex gap-2 mb-2">
+                                                                        <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                            class="btn btn-sm btn-outline-primary">
+                                                                            <i class="fas fa-download me-1"></i>Baixar
+                                                                        </a>
+                                                                        <form action="{{ route('controle-pericias.checklist.destroy', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                            method="POST" onsubmit="return confirm('Remover este documento do checklist?')">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                                <i class="fas fa-trash me-1"></i>Remover
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                @endif
+
+                                                                <div class="d-flex gap-2 align-items-center">
+                                                                    <input class="form-control form-control-sm checklist-file-input"
+                                                                        type="file"
+                                                                        id="checklist_arquivo_{{ $itemKey }}"
+                                                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-primary checklist-save-btn"
+                                                                        data-item-nome="{{ $item }}"
+                                                                        data-item-key="{{ $itemKey }}"
+                                                                        data-upload-url="{{ route('controle-pericias.checklist.upload', $controlePericia->id) }}">
+                                                                        <i class="fas fa-upload me-1"></i>Salvar
+                                                                    </button>
+                                                                </div>
+                                                                <div class="d-flex gap-2 mt-2">
+                                                                    <form action="{{ route('controle-pericias.checklist.nao-necessario', $controlePericia->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                        <input type="hidden" name="item_nome" value="{{ $item }}">
+                                                                        <input type="hidden" name="acao" value="{{ $isNaoNecessario ? 'desmarcar' : 'marcar' }}">
+                                                                        <button type="submit" class="btn btn-sm {{ $isNaoNecessario ? 'btn-outline-secondary' : 'btn-outline-warning' }}">
+                                                                            <i class="fas {{ $isNaoNecessario ? 'fa-rotate-left' : 'fa-ban' }} me-1"></i>
+                                                                            {{ $isNaoNecessario ? 'Reativar documento' : 'Marcar nao necessario' }}
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                                <small class="text-danger d-none mt-1 checklist-error"
+                                                                    id="checklist_error_{{ $itemKey }}"></small>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <small class="text-muted d-block mt-2">
+                                                    Uploads aceitos: PDF, imagem, Word e Excel (ate 15MB por arquivo).
+                                                </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Botões -->
                                 <div class="col-12">
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -333,6 +452,89 @@
                         $("#requerente_id").val("");
                     }
                 },
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            function showChecklistToast(message, type = 'success') {
+                const toastId = 'toast_' + Date.now();
+                const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
+                const html = `
+                    <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                `;
+
+                let container = $('#checklistToastContainer');
+                if (!container.length) {
+                    $('body').append('<div id="checklistToastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>');
+                    container = $('#checklistToastContainer');
+                }
+
+                container.append(html);
+                const toastEl = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastEl, {
+                    delay: 2800
+                });
+                toast.show();
+                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+            }
+
+            $('.checklist-save-btn').on('click', function() {
+                const btn = $(this);
+                const itemNome = btn.data('item-nome');
+                const itemKey = btn.data('item-key');
+                const uploadUrl = btn.data('upload-url');
+                const fileInput = $('#checklist_arquivo_' + itemKey);
+                const errorEl = $('#checklist_error_' + itemKey);
+                const file = fileInput[0].files[0];
+
+                errorEl.addClass('d-none').text('');
+
+                if (!file) {
+                    errorEl.removeClass('d-none').text('Selecione um arquivo antes de salvar.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('item_nome', itemNome);
+                formData.append('arquivo', file);
+
+                const originalHtml = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Salvando...');
+
+                $.ajax({
+                    url: uploadUrl,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        showChecklistToast(response.message || 'Documento salvo com sucesso.', 'success');
+                        window.location.reload();
+                    },
+                    error: function(xhr) {
+                        let message = 'Não foi possível salvar o documento.';
+                        if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON?.errors?.arquivo?.[0]) {
+                            message = xhr.responseJSON.errors.arquivo[0];
+                        }
+                        errorEl.removeClass('d-none').text(message);
+                        showChecklistToast(message, 'error');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
             });
         });
     </script>

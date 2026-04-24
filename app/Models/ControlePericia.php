@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ControlePericia extends Model
 {
@@ -74,6 +75,11 @@ class ControlePericia extends Model
     public function entregaLaudoFinanceiro()
     {
         return $this->hasOne(EntregaLaudoFinanceiro::class, 'controle_pericias_id');
+    }
+
+    public function checklistDocumentos()
+    {
+        return $this->hasMany(ChecklistDocumentoPericia::class, 'controle_pericia_id');
     }
 
     /**
@@ -203,4 +209,136 @@ class ControlePericia extends Model
                 '⁠Particular'
             ];
         }
+
+    public static function checklistTemplates(): array
+    {
+        return [
+            'justica_gratuita' => [
+                'Aceite Pericial',
+                'Contato com as Partes',
+                'Reunião com as Partes',
+                'Diligência Pericial',
+                'Coleta de Documentos',
+                'Relatório Fotográfico',
+                'Formulário de Vistoria',
+                'Planta Georreferenciada',
+                'Memorial Descritivo',
+                'Laudo Pericial',
+                'Documentos dos Confrontantes',
+                'Localização do Imóvel',
+                'Resposta aos Quesitos',
+                'Emissão RRT',
+                'Protocolo do Laudo Pericial',
+                'Expedição do Alvará de Pagamento dos Honorários',
+                'Nota de Empenho',
+                'Solicitação da Nota Fiscal',
+                'Envio da Nota Fiscal',
+                'Esclarecimento',
+                'Manifestação',
+            ],
+            'justica_comum' => [
+                'Aceite Pericial',
+                'Proposta de Honorários',
+                'Contato com as Partes',
+                'Reunião com as Partes',
+                'Diligência Pericial',
+                'Coleta de Documentos',
+                'Relatório Fotográfico',
+                'Formulário de Vistoria',
+                'Solicitação de Sobrevoo de Drone',
+                'Sobrevoo de Drone',
+                'Solicitação Cartório',
+                'Solicitação Externa',
+                'Pesquisa de Mercado',
+                'Cadeia Dominial',
+                'Planta Georreferenciada',
+                'Memorial Descritivo',
+                'Laudo Pericial',
+                'Laudo de Avaliação',
+                'Documentos dos Confrontantes',
+                'Localização do Imóvel',
+                'Resposta aos Quesitos',
+                'Emissão RRT',
+                'Protocolo do Laudo',
+                'Expedição do Alvará de Pagamento dos Honorários',
+                'Nota de Empenho',
+                'Solicitação da Nota Fiscal',
+                'Envio da Nota Fiscal',
+                'Esclarecimento',
+                'Manifestação',
+            ],
+            'assistencia_tecnica' => [
+                'Proposta de Honorários',
+                'Reunião com as Partes',
+                'Elaboração de Quesitos',
+                'Diligência Pericial',
+                'Coleta de Documentos',
+                'Relatório Fotográfico',
+                'Solicitação Cartório',
+                'Solicitação Externa',
+                'Pesquisa de Mercado',
+                'Cadeia Dominial',
+                'Laudo Pericial',
+                'Laudo de Avaliação',
+                'Esclarecimento',
+                'Manifestação',
+            ],
+            'particular' => [
+                'Proposta de Honorários',
+                'Reunião com o Solicitante',
+                'Diligência Pericial',
+                'Coleta de Documentos',
+                'Relatório Fotográfico',
+                'Planta de Arquitetura',
+                'Projeto Executivo',
+                'Projetos Complementares',
+                'Planta Georreferenciada',
+                'Memorial Descritivo',
+                'Pesquisa de Mercado',
+                'Cadeia Dominial',
+                'Laudo Pericial',
+                'Laudo de Avaliação',
+                'Solicitação de Sobrevoo de Drone',
+                'Sobrevoo de Drone',
+                'Solicitação Cartório',
+                'Solicitação Externa',
+                'Documentos dos Confrontantes',
+                'Localização do Imóvel',
+                'Emissão RRT',
+                'Solicitação da Nota Fiscal',
+            ],
+        ];
+    }
+
+    public static function checklistItemsByTipo(?string $tipoPericia): array
+    {
+        if (!$tipoPericia) {
+            return [];
+        }
+
+        $normalized = Str::of($tipoPericia)
+            ->ascii()
+            ->lower()
+            ->replaceMatches('/[^a-z0-9]+/', '_')
+            ->trim('_')
+            ->toString();
+
+        if (str_contains($normalized, 'gratuita')) {
+            return self::checklistTemplates()['justica_gratuita'];
+        }
+
+        if (str_contains($normalized, 'comum')) {
+            return self::checklistTemplates()['justica_comum'];
+        }
+
+        if (str_contains($normalized, 'assistencia')) {
+            return self::checklistTemplates()['assistencia_tecnica'];
+        }
+
+        if (str_contains($normalized, 'particular')) {
+            return self::checklistTemplates()['particular'];
+        }
+
+        return [];
+    }
 }

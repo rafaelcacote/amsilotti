@@ -140,6 +140,60 @@
                                     </div>
                                 </div>
 
+                                @php
+                                    $documentosPorItem = $controlePericia->checklistDocumentos->keyBy('item_nome');
+                                    $checklistTotal = count($checklistItems);
+                                    $checklistConcluidos = $checklistItems
+                                        ? collect($checklistItems)->filter(function ($item) use ($documentosPorItem) {
+                                            $doc = $documentosPorItem->get($item);
+                                            return $doc && ($doc->nao_necessario || !empty($doc->arquivo_caminho));
+                                        })->count()
+                                        : 0;
+                                    $progresso = $checklistTotal > 0 ? round(($checklistConcluidos / $checklistTotal) * 100) : 0;
+                                @endphp
+
+                                <div class="col-md-12 mb-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                                            <h5 class="mb-0">Checklist de Documentos</h5>
+                                            <span class="badge bg-primary-subtle text-primary">{{ $checklistConcluidos }}/{{ $checklistTotal }}</span>
+                                        </div>
+                                        <div class="progress mb-3" style="height: 10px;">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ $progresso }}%;"></div>
+                                        </div>
+
+                                        @if (empty($checklistItems))
+                                            <p class="text-muted mb-0">Sem checklist configurado para este tipo de perícia.</p>
+                                        @else
+                                            <div class="row g-2">
+                                                @foreach ($checklistItems as $item)
+                                                    @php
+                                                        $documento = $documentosPorItem->get($item);
+                                                        $isNaoNecessario = $documento && $documento->nao_necessario;
+                                                    @endphp
+                                                    <div class="col-md-6">
+                                                        <div class="border rounded p-2 bg-white d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <i class="fas {{ ($documento && ($isNaoNecessario || $documento->arquivo_caminho)) ? 'fa-check-circle text-success' : 'fa-circle text-muted' }} me-2"></i>
+                                                                {{ $item }}
+                                                                @if ($isNaoNecessario)
+                                                                    <span class="badge bg-warning text-dark ms-2">Nao necessario</span>
+                                                                @endif
+                                                            </div>
+                                                            @if ($documento && $documento->arquivo_caminho)
+                                                                <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                    class="btn btn-sm btn-outline-primary">
+                                                                    <i class="fas fa-download me-1"></i>Arquivo
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12 mb-3">
                                     <div class="bg-light p-3 rounded">
                                         <h5 class="border-bottom pb-2">Informações do Sistema</h5>

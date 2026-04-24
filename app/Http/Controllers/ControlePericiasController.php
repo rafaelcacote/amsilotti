@@ -6,9 +6,13 @@ use App\Models\ControlePericia;
 use App\Models\MembrosEquipeTecnica;
 use App\Models\Cliente;
 use App\Models\Agenda;
+use App\Models\ChecklistDocumentoPericia;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mpdf\Mpdf;
 use Carbon\Carbon;
 
@@ -205,7 +209,10 @@ class ControlePericiasController extends Controller
             abort(403, 'Você não tem permissão para visualizar perícias.');
         }
 
-        return view('controle-pericias.show', compact('controlePericia'));
+        $controlePericia->load('checklistDocumentos');
+        $checklistItems = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
+        return view('controle-pericias.show', compact('controlePericia', 'checklistItems'));
     }
 
     /**
@@ -229,7 +236,10 @@ class ControlePericiasController extends Controller
             'Entregue'
         ];
 
-        return view('controle-pericias.edit', compact('controlePericia', 'responsaveis', 'statusOptions'));
+        $controlePericia->load('checklistDocumentos');
+        $checklistItems = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
+        return view('controle-pericias.edit', compact('controlePericia', 'responsaveis', 'statusOptions', 'checklistItems'));
     }
 
     /**
@@ -260,6 +270,9 @@ class ControlePericiasController extends Controller
             'protocolo' => 'nullable|string|max:255',
             'data_protocolo' => 'nullable|date',
             'observacoes' => 'nullable|string',
+            'checklist_arquivos' => 'nullable|array',
+            'checklist_arquivos.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:15360',
+            'checklist_nomes' => 'nullable|array',
         ]);
 
         // Conversão do valor se fornecido
@@ -273,7 +286,10 @@ class ControlePericiasController extends Controller
             $validated['decurso_prazo'] = Carbon::parse($validated['data_vistoria'])->addDays(30)->toDateString();
         }
 
+        unset($validated['checklist_arquivos'], $validated['checklist_nomes']);
+
         $controlePericia->update($validated);
+        $this->handleChecklistUploads($request, $controlePericia);
 
         return redirect()->route('controle-pericias.index')
             ->with('success', 'Perícia atualizada com sucesso!');
@@ -307,6 +323,12 @@ class ControlePericiasController extends Controller
     {
         if (!auth()->user()->can('delete pericias')) {
             abort(403, 'Você não tem permissão para excluir perícias.');
+        }
+
+        foreach ($controlePericia->checklistDocumentos as $documento) {
+            if ($documento->arquivo_caminho) {
+                Storage::disk('local')->delete($documento->arquivo_caminho);
+            }
         }
 
         $controlePericia->delete();
@@ -456,5 +478,192 @@ class ControlePericiasController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
+    }
+
+    public function downloadChecklistDocumento(ControlePericia $controlePericia, ChecklistDocumentoPericia $documento)
+    {
+        if (!auth()->user()->can('view pericias')) {
+            abort(403, 'Você não tem permissão para visualizar perícias.');
+        }
+
+        if ((int) $documento->controle_pericia_id !== (int) $controlePericia->id) {
+            abort(404);
+        }
+
+        if (!Storage::disk('local')->exists($documento->arquivo_caminho)) {
+            return redirect()->back()->with('error', 'Arquivo não encontrado no armazenamento.');
+        }
+
+        return response()->download(storage_path('app/' . $documento->arquivo_caminho), $documento->arquivo_nome);
+    }
+
+    public function destroyChecklistDocumento(ControlePericia $controlePericia, ChecklistDocumentoPericia $documento): RedirectResponse
+    {
+        if (!auth()->user()->can('edit pericias')) {
+            abort(403, 'Você não tem permissão para editar perícias.');
+        }
+
+        if ((int) $documento->controle_pericia_id !== (int) $controlePericia->id) {
+            abort(404);
+        }
+
+        if ($documento->arquivo_caminho) {
+            Storage::disk('local')->delete($documento->arquivo_caminho);
+        }
+
+        $documento->delete();
+
+        return redirect()->back()->with('success', 'Documento do checklist removido com sucesso.');
+    }
+
+    public function uploadChecklistDocumento(Request $request, ControlePericia $controlePericia)
+    {
+        if (!auth()->user()->can('edit pericias')) {
+            return response()->json(['success' => false, 'message' => 'Você não tem permissão para editar perícias.'], 403);
+        }
+
+        $validated = $request->validate([
+            'item_nome' => 'required|string|max:255',
+            'arquivo' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:15360',
+        ]);
+
+        $itemNome = trim($validated['item_nome']);
+        $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
+        if (!in_array($itemNome, $itensPermitidos, true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item de checklist inválido para este tipo de perícia.',
+            ], 422);
+        }
+
+        $arquivo = $request->file('arquivo');
+        $existente = $controlePericia->checklistDocumentos()->where('item_nome', $itemNome)->first();
+
+        if ($existente) {
+            Storage::disk('local')->delete($existente->arquivo_caminho);
+            $existente->delete();
+        }
+
+        $arquivoLimpo = Str::slug(pathinfo($arquivo->getClientOriginalName(), PATHINFO_FILENAME));
+        $arquivoExtensao = $arquivo->getClientOriginalExtension();
+        $nomeArquivo = ($arquivoLimpo ?: 'documento') . '-' . now()->format('YmdHis') . '.' . $arquivoExtensao;
+        $caminho = $arquivo->storeAs('pericias/checklist/' . $controlePericia->id, $nomeArquivo, 'local');
+
+        $documento = $controlePericia->checklistDocumentos()->create([
+            'item_nome' => $itemNome,
+            'arquivo_nome' => $arquivo->getClientOriginalName(),
+            'arquivo_caminho' => $caminho,
+            'arquivo_mime' => $arquivo->getMimeType(),
+            'arquivo_tamanho' => $arquivo->getSize(),
+            'nao_necessario' => false,
+            'enviado_por' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Documento salvo com sucesso.',
+            'documento' => [
+                'id' => $documento->id,
+                'arquivo_nome' => $documento->arquivo_nome,
+            ],
+        ]);
+    }
+
+    public function toggleChecklistNaoNecessario(Request $request, ControlePericia $controlePericia): RedirectResponse
+    {
+        if (!auth()->user()->can('edit pericias')) {
+            abort(403, 'Você não tem permissão para editar perícias.');
+        }
+
+        $validated = $request->validate([
+            'item_nome' => 'required|string|max:255',
+            'acao' => 'required|string|in:marcar,desmarcar',
+        ]);
+
+        $itemNome = trim($validated['item_nome']);
+        $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
+        if (!in_array($itemNome, $itensPermitidos, true)) {
+            return redirect()->back()->with('error', 'Item de checklist inválido para este tipo de perícia.');
+        }
+
+        $documento = $controlePericia->checklistDocumentos()->where('item_nome', $itemNome)->first();
+
+        if ($validated['acao'] === 'marcar') {
+            if ($documento && $documento->arquivo_caminho) {
+                Storage::disk('local')->delete($documento->arquivo_caminho);
+            }
+
+            if ($documento) {
+                $documento->update([
+                    'arquivo_nome' => null,
+                    'arquivo_caminho' => null,
+                    'arquivo_mime' => null,
+                    'arquivo_tamanho' => null,
+                    'nao_necessario' => true,
+                    'enviado_por' => Auth::id(),
+                ]);
+            } else {
+                $controlePericia->checklistDocumentos()->create([
+                    'item_nome' => $itemNome,
+                    'nao_necessario' => true,
+                    'enviado_por' => Auth::id(),
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Item marcado como não necessário.');
+        }
+
+        if ($documento && $documento->nao_necessario) {
+            $documento->delete();
+        }
+
+        return redirect()->back()->with('success', 'Item reativado para envio de documento.');
+    }
+
+    private function handleChecklistUploads(Request $request, ControlePericia $controlePericia): void
+    {
+        $checklistNomes = $request->input('checklist_nomes', []);
+        $arquivos = $request->file('checklist_arquivos', []);
+
+        if (empty($checklistNomes) || empty($arquivos)) {
+            return;
+        }
+
+        foreach ($arquivos as $itemKey => $arquivo) {
+            if (!$arquivo || !isset($checklistNomes[$itemKey])) {
+                continue;
+            }
+
+            $itemNome = trim((string) $checklistNomes[$itemKey]);
+
+            if ($itemNome === '') {
+                continue;
+            }
+
+            $existente = $controlePericia->checklistDocumentos()
+                ->where('item_nome', $itemNome)
+                ->first();
+
+            if ($existente) {
+                Storage::disk('local')->delete($existente->arquivo_caminho);
+                $existente->delete();
+            }
+
+            $arquivoLimpo = Str::slug(pathinfo($arquivo->getClientOriginalName(), PATHINFO_FILENAME));
+            $arquivoExtensao = $arquivo->getClientOriginalExtension();
+            $nomeArquivo = ($arquivoLimpo ?: 'documento') . '-' . now()->format('YmdHis') . '.' . $arquivoExtensao;
+            $caminho = $arquivo->storeAs('pericias/checklist/' . $controlePericia->id, $nomeArquivo, 'local');
+
+            $controlePericia->checklistDocumentos()->create([
+                'item_nome' => $itemNome,
+                'arquivo_nome' => $arquivo->getClientOriginalName(),
+                'arquivo_caminho' => $caminho,
+                'arquivo_mime' => $arquivo->getMimeType(),
+                'arquivo_tamanho' => $arquivo->getSize(),
+                'enviado_por' => Auth::id(),
+            ]);
+        }
     }
 }
