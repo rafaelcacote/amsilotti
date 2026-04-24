@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Mpdf\Mpdf;
+use Carbon\Carbon;
 
 class ControlePericiasController extends Controller
 {
@@ -169,6 +170,11 @@ class ControlePericiasController extends Controller
             $validated['valor'] = floatval($valor);
         }
 
+        // Se o decurso não for informado manualmente, calcula automaticamente (+30 dias da vistoria)
+        if (empty($validated['decurso_prazo']) && !empty($validated['data_vistoria'])) {
+            $validated['decurso_prazo'] = Carbon::parse($validated['data_vistoria'])->addDays(30)->toDateString();
+        }
+
         $pericia = ControlePericia::create($validated);
 
         // Criar agendamento automático se especificado
@@ -260,6 +266,11 @@ class ControlePericiasController extends Controller
         if (!empty($validated['valor'])) {
             $valor = str_replace(['R$', '.', ','], ['', '', '.'], $validated['valor']);
             $validated['valor'] = floatval($valor);
+        }
+
+        // Se o decurso não for informado manualmente, calcula automaticamente (+30 dias da vistoria)
+        if (empty($validated['decurso_prazo']) && !empty($validated['data_vistoria'])) {
+            $validated['decurso_prazo'] = Carbon::parse($validated['data_vistoria'])->addDays(30)->toDateString();
         }
 
         $controlePericia->update($validated);

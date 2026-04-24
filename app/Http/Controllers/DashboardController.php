@@ -99,11 +99,12 @@ class DashboardController extends Controller
         $periciasEmRedacao = \App\Models\ControlePericia::whereIn('status_atual', ['Em Redação', 'em redacao'])->count();
         $periciasEntregues = \App\Models\ControlePericia::whereIn('status_atual', ['Entregue', 'Concluído', 'concluido'])->count();
 
-        // Buscar perícias próximas do decurso de prazo (1 dia de antecedência)
-        $amanha = now()->addDay()->format('Y-m-d');
-        
+        // Buscar perícias com decurso exatamente no dia de alerta (N dias antes)
+        $diasAntesDecurso = (int) config('prazos.decurso_alerta_dias_antes', 3);
+        $dataAlertaDecurso = now()->addDays($diasAntesDecurso)->toDateString();
+
         $periciasProximasDecurso = \App\Models\ControlePericia::with(['requerente', 'responsavelTecnico'])
-            ->whereDate('decurso_prazo', $amanha)
+            ->whereDate('decurso_prazo', $dataAlertaDecurso)
             ->whereNotIn('status_atual', ['Entregue', 'Concluído', 'concluido', 'Cancelado', 'cancelado', 'extinto'])
             ->orderBy('decurso_prazo', 'asc')
             ->get();
@@ -209,7 +210,8 @@ class DashboardController extends Controller
             'periciasPendentesVistoria',
             'periciasEmRedacao',
             'periciasEntregues',
-            'periciasProximasDecurso'
+            'periciasProximasDecurso',
+            'diasAntesDecurso'
         ));
     }
     /**

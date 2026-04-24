@@ -22,7 +22,7 @@
                             <div class="bg-light p-3 border-bottom">
                                 <div class="d-flex align-items-center text-muted">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    <small>As perícias listadas abaixo têm decurso de prazo previsto para <strong>amanhã ({{ now()->addDay()->format('d/m/Y') }})</strong>. Verifique se todas as ações necessárias foram tomadas.</small>
+                                    <small>As perícias listadas abaixo têm decurso de prazo previsto para <strong>{{ now()->addDays($diasAntesDecurso)->format('d/m/Y') }}</strong> (alerta de {{ $diasAntesDecurso }} dias antes). Verifique se todas as ações necessárias foram tomadas.</small>
                                 </div>
                             </div>
                             
@@ -59,7 +59,7 @@
                                                             <div style="font-size: 0.85rem;">Decurso de Prazo</div>
                                                             <div class="fw-bold">{{ \Carbon\Carbon::parse($pericia->decurso_prazo)->format('d/m/Y') }}</div>
                                                             <small class="text-muted">
-                                                                ({{ \Carbon\Carbon::parse($pericia->decurso_prazo)->diffForHumans() }})
+                                                                ({{ \Carbon\Carbon::parse($pericia->decurso_prazo)->locale('pt_BR')->diffForHumans() }})
                                                             </small>
                                                         </div>
                                                     </div>

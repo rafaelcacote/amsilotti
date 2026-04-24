@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\Bairro;
 use App\Models\TipoDeEvento;
 use App\Models\Vistoria;
+use App\Models\ControlePericia;
 use Illuminate\Http\Request;
 
 class AgendaController extends Controller
@@ -244,8 +245,12 @@ class AgendaController extends Controller
     public function getEventos(Request $request)
     {
         $agendas = Agenda::with(['requerente', 'tipoDeEvento'])->get();
+        $decursoPericias = ControlePericia::with(['requerente'])
+            ->whereNotNull('decurso_prazo')
+            ->whereNotIn('status_atual', ['Entregue', 'Concluído', 'concluido', 'Cancelado', 'cancelado', 'extinto'])
+            ->get();
 
-        $eventos = $agendas->map(function ($agenda) {
+        $eventosAgenda = $agendas->map(function ($agenda) {
             return [
                 'id' => $agenda->id,
                 'title' => $agenda->tipo_nome,
@@ -270,6 +275,36 @@ class AgendaController extends Controller
                 ]
             ];
         });
+
+        $eventosDecurso = $decursoPericias->map(function ($pericia) {
+            return [
+                'id' => 'decurso-' . $pericia->id,
+                'title' => 'Decurso de Prazo',
+                'start' => $pericia->decurso_prazo ? $pericia->decurso_prazo->format('Y-m-d') : null,
+                'allDay' => true,
+                'backgroundColor' => '#dc3545',
+                'borderColor' => '#dc3545',
+                'textColor' => '#ffffff',
+                'extendedProps' => [
+                    'tipo' => 'decurso_prazo',
+                    'tipo_nome' => 'Decurso de Prazo',
+                    'status' => 'Prazo',
+                    'local' => null,
+                    'endereco' => null,
+                    'num' => null,
+                    'bairro' => null,
+                    'cidade' => null,
+                    'estado' => null,
+                    'cep' => null,
+                    'requerido' => $pericia->requerido,
+                    'requerente_nome' => $pericia->requerente->nome ?? null,
+                    'nota' => 'Processo: ' . $pericia->numero_processo,
+                    'num_processo' => $pericia->numero_processo
+                ]
+            ];
+        });
+
+        $eventos = $eventosAgenda->concat($eventosDecurso)->values();
 
         return response()->json($eventos);
     }
