@@ -490,20 +490,43 @@ class ControlePericiasController extends Controller
             abort(404);
         }
 
-        if (!Storage::disk('local')->exists($documento->arquivo_caminho)) {
-            return redirect()->back()->with('error', 'Arquivo não encontrado no armazenamento.');
+        if (empty($documento->arquivo_caminho)) {
+            return redirect()->back()->with('error', 'Este documento não possui arquivo para visualização.');
         }
 
-        return response()->download(storage_path('app/' . $documento->arquivo_caminho), $documento->arquivo_nome);
+        $arquivoCaminho = (string) $documento->arquivo_caminho;
+        $caminhoAbsoluto = Str::startsWith($arquivoCaminho, storage_path('app'))
+            ? $arquivoCaminho
+            : Storage::disk('local')->path($arquivoCaminho);
+
+        if (!is_file($caminhoAbsoluto)) {
+            // Evita novos erros para documentos com caminho quebrado.
+            $documento->update([
+                'arquivo_nome' => null,
+                'arquivo_caminho' => null,
+                'arquivo_mime' => null,
+                'arquivo_tamanho' => null,
+            ]);
+
+            return redirect()->back()->with('error', 'Arquivo não encontrado. O item foi reativado para novo envio.');
+        }
+
+        return response()->file($caminhoAbsoluto);
     }
 
-    public function destroyChecklistDocumento(ControlePericia $controlePericia, ChecklistDocumentoPericia $documento): RedirectResponse
+    public function destroyChecklistDocumento(ControlePericia $controlePericia, ChecklistDocumentoPericia $documento)
     {
         if (!auth()->user()->can('edit pericias')) {
+            if (request()->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Você não tem permissão para editar perícias.'], 403);
+            }
             abort(403, 'Você não tem permissão para editar perícias.');
         }
 
         if ((int) $documento->controle_pericia_id !== (int) $controlePericia->id) {
+            if (request()->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Documento não encontrado para esta perícia.'], 404);
+            }
             abort(404);
         }
 
@@ -512,6 +535,13 @@ class ControlePericiasController extends Controller
         }
 
         $documento->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento do checklist removido com sucesso.',
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Documento do checklist removido com sucesso.');
     }
@@ -540,9 +570,8 @@ class ControlePericiasController extends Controller
         $arquivo = $request->file('arquivo');
         $existente = $controlePericia->checklistDocumentos()->where('item_nome', $itemNome)->first();
 
-        if ($existente) {
+        if ($existente && $existente->arquivo_caminho) {
             Storage::disk('local')->delete($existente->arquivo_caminho);
-            $existente->delete();
         }
 
         $arquivoLimpo = Str::slug(pathinfo($arquivo->getClientOriginalName(), PATHINFO_FILENAME));
@@ -550,15 +579,27 @@ class ControlePericiasController extends Controller
         $nomeArquivo = ($arquivoLimpo ?: 'documento') . '-' . now()->format('YmdHis') . '.' . $arquivoExtensao;
         $caminho = $arquivo->storeAs('pericias/checklist/' . $controlePericia->id, $nomeArquivo, 'local');
 
-        $documento = $controlePericia->checklistDocumentos()->create([
-            'item_nome' => $itemNome,
-            'arquivo_nome' => $arquivo->getClientOriginalName(),
-            'arquivo_caminho' => $caminho,
-            'arquivo_mime' => $arquivo->getMimeType(),
-            'arquivo_tamanho' => $arquivo->getSize(),
-            'nao_necessario' => false,
-            'enviado_por' => Auth::id(),
-        ]);
+        if ($existente) {
+            $existente->update([
+                'arquivo_nome' => $arquivo->getClientOriginalName(),
+                'arquivo_caminho' => $caminho,
+                'arquivo_mime' => $arquivo->getMimeType(),
+                'arquivo_tamanho' => $arquivo->getSize(),
+                'nao_necessario' => false,
+                'enviado_por' => Auth::id(),
+            ]);
+            $documento = $existente;
+        } else {
+            $documento = $controlePericia->checklistDocumentos()->create([
+                'item_nome' => $itemNome,
+                'arquivo_nome' => $arquivo->getClientOriginalName(),
+                'arquivo_caminho' => $caminho,
+                'arquivo_mime' => $arquivo->getMimeType(),
+                'arquivo_tamanho' => $arquivo->getSize(),
+                'nao_necessario' => false,
+                'enviado_por' => Auth::id(),
+            ]);
+        }
 
         return response()->json([
             'success' => true,
@@ -570,9 +611,12 @@ class ControlePericiasController extends Controller
         ]);
     }
 
-    public function toggleChecklistNaoNecessario(Request $request, ControlePericia $controlePericia): RedirectResponse
+    public function toggleChecklistNaoNecessario(Request $request, ControlePericia $controlePericia)
     {
         if (!auth()->user()->can('edit pericias')) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Você não tem permissão para editar perícias.'], 403);
+            }
             abort(403, 'Você não tem permissão para editar perícias.');
         }
 
@@ -585,6 +629,9 @@ class ControlePericiasController extends Controller
         $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
 
         if (!in_array($itemNome, $itensPermitidos, true)) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Item de checklist inválido para este tipo de perícia.'], 422);
+            }
             return redirect()->back()->with('error', 'Item de checklist inválido para este tipo de perícia.');
         }
 
@@ -612,6 +659,14 @@ class ControlePericiasController extends Controller
                 ]);
             }
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Item marcado como não necessário.',
+                    'acao_aplicada' => 'marcar',
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Item marcado como não necessário.');
         }
 
@@ -619,7 +674,50 @@ class ControlePericiasController extends Controller
             $documento->delete();
         }
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Item reativado para envio de documento.',
+                'acao_aplicada' => 'desmarcar',
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Item reativado para envio de documento.');
+    }
+
+    public function updateChecklistObservacoes(
+        Request $request,
+        ControlePericia $controlePericia,
+        ChecklistDocumentoPericia $documento
+    ) {
+        if (!auth()->user()->can('edit pericias')) {
+            return response()->json(['success' => false, 'message' => 'Você não tem permissão para editar perícias.'], 403);
+        }
+
+        if ((int) $documento->controle_pericia_id !== (int) $controlePericia->id) {
+            abort(404);
+        }
+
+        if (empty($documento->arquivo_caminho)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Observações só podem ser adicionadas após o envio do documento.',
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'observacoes' => 'nullable|string|max:5000',
+        ]);
+
+        $documento->update([
+            'observacoes' => $validated['observacoes'] ?? null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Observações salvas com sucesso.',
+            'observacoes' => $documento->observacoes,
+        ]);
     }
 
     private function handleChecklistUploads(Request $request, ControlePericia $controlePericia): void

@@ -104,6 +104,7 @@ Route::patch('controle-pericias/{pericia}/status', [\App\Http\Controllers\Contro
 Route::get('controle-pericias/{controlePericia}/checklist/{documento}/download', [\App\Http\Controllers\ControlePericiasController::class, 'downloadChecklistDocumento'])->name('controle-pericias.checklist.download')->middleware('auth');
 Route::delete('controle-pericias/{controlePericia}/checklist/{documento}', [\App\Http\Controllers\ControlePericiasController::class, 'destroyChecklistDocumento'])->name('controle-pericias.checklist.destroy')->middleware('auth');
 Route::post('controle-pericias/{controlePericia}/checklist/upload', [\App\Http\Controllers\ControlePericiasController::class, 'uploadChecklistDocumento'])->name('controle-pericias.checklist.upload')->middleware('auth');
+Route::patch('controle-pericias/{controlePericia}/checklist/{documento}/observacoes', [\App\Http\Controllers\ControlePericiasController::class, 'updateChecklistObservacoes'])->name('controle-pericias.checklist.observacoes')->middleware('auth');
 Route::patch('controle-pericias/{controlePericia}/checklist/nao-necessario', [\App\Http\Controllers\ControlePericiasController::class, 'toggleChecklistNaoNecessario'])->name('controle-pericias.checklist.nao-necessario')->middleware('auth');
 
 // Checagem AJAX de número de processo duplicado

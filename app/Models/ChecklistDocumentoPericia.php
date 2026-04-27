@@ -19,6 +19,7 @@ class ChecklistDocumentoPericia extends Model
         'arquivo_mime',
         'arquivo_tamanho',
         'nao_necessario',
+        'observacoes',
         'enviado_por',
     ];
 
