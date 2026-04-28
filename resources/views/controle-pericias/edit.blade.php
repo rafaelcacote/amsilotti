@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    $openChecklistAba = request()->boolean('open_checklist');
+@endphp
+
 @section('content')
     <style>
         .checklist-file-selected {
@@ -57,7 +61,7 @@
                                                 <strong>{{ $controlePericia->tipo_pericia ?: 'Não informado' }}</strong>
                                             </div>
                                             <div class="col-lg-4">
-                                                <small class="text-muted d-block">Status Atual</small>
+                                                <small class="text-muted d-block">Fase da Perícia</small>
                                                 <strong>{{ $controlePericia->status_atual ?: 'Não informado' }}</strong>
                                             </div>
                                         </div>
@@ -67,16 +71,16 @@
                                 <div class="col-12">
                                     <ul class="nav nav-tabs" id="editPericiaTabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="dados-pericia-tab" data-bs-toggle="tab"
+                                            <button class="nav-link {{ $openChecklistAba ? '' : 'active' }}" id="dados-pericia-tab" data-bs-toggle="tab"
                                                 data-bs-target="#dados-pericia-pane" type="button" role="tab"
-                                                aria-controls="dados-pericia-pane" aria-selected="true">
+                                                aria-controls="dados-pericia-pane" aria-selected="{{ $openChecklistAba ? 'false' : 'true' }}">
                                                 Dados da Perícia
                                             </button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="checklist-tab" data-bs-toggle="tab"
+                                            <button class="nav-link {{ $openChecklistAba ? 'active' : '' }}" id="checklist-tab" data-bs-toggle="tab"
                                                 data-bs-target="#checklist-pane" type="button" role="tab"
-                                                aria-controls="checklist-pane" aria-selected="false">
+                                                aria-controls="checklist-pane" aria-selected="{{ $openChecklistAba ? 'true' : 'false' }}">
                                                 Checklist de Documentos
                                             </button>
                                         </li>
@@ -86,7 +90,7 @@
                                 <div class="col-12">
                                     <div class="tab-content border border-top-0 rounded-bottom p-3 bg-white"
                                         id="editPericiaTabsContent">
-                                        <div class="tab-pane fade show active" id="dados-pericia-pane" role="tabpanel"
+                                        <div class="tab-pane fade {{ $openChecklistAba ? '' : 'show active' }}" id="dados-pericia-pane" role="tabpanel"
                                             aria-labelledby="dados-pericia-tab">
                                             <div class="row g-3">
                                 <!-- Linha 1 - Processo, Requerente, Requerido -->
@@ -126,7 +130,7 @@
                                 </div>
                                 <!-- Fim da linha 1 -->
 
-                                <!-- Linha 2 - Vara, Datas e Status -->
+                                <!-- Linha 2 - Vara, Datas e fase da perícia -->
                                 <div class="col-md-3 mb-3">
                                     <label for="vara" class="form-label">Vara <span class="text-danger">*</span></label>
                                     <select class="form-select @error('vara') is-invalid @enderror" id="vara"
@@ -144,7 +148,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Linha 2 - Datas e Status -->
+                                <!-- Linha 2 - Datas e fase da perícia -->
                                 <div class="col-md-2 mb-2">
                                     <label for="data_nomeacao" class="form-label">Data de Nomeação</label>
                                     <input type="date" class="form-control @error('data_nomeacao') is-invalid @enderror"
@@ -184,7 +188,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>                                <div class="col-md-3 mb-3">
-                                    <label for="status_atual" class="form-label">Status Atual <span
+                                    <label for="status_atual" class="form-label">Fase da Perícia <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select @error('status_atual') is-invalid @enderror"
                                         id="status_atual" name="status_atual" required>
@@ -198,7 +202,7 @@
                                     </select>
                                     <small class="form-text text-muted mt-1" style="font-size: 0.92em;">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        O status <strong>Entregue</strong> só pode ser definido na listagem geral.
+                                        A fase <strong>Entregue</strong> só pode ser definida na listagem geral.
                                     </small>
                                     @error('status_atual')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -233,10 +237,28 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-7 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label for="tipo_pericia" class="form-label">Tipo de Perícia <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select @error('tipo_pericia') is-invalid @enderror"
+                                        id="tipo_pericia" name="tipo_pericia" required>
+                                        <option value="">Selecione</option>
+                                        @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
+                                            <option value="{{ $tipopericiaOption }}"
+                                                {{ old('tipo_pericia', $controlePericia->tipo_pericia) == $tipopericiaOption ? 'selected' : '' }}>
+                                                {{ $tipopericiaOption }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('tipo_pericia')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3 mb-3">
                                     <label class="form-label">Protocolo</label>
                                     <div class="d-flex align-items-center">
-                                        <div class="me-4">
+                                        <div class="me-2">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="protocolo"
                                                     id="protocolo_sim" value="sim"
@@ -275,45 +297,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Linha 4 - Cadeia Dominial e Observações -->
-                                <div class="col-md-3 mb-3">
-                                    <label for="cadeia_dominial" class="form-label">Cadeia Dominial</label>
-                                    <select class="form-select @error('cadeia_dominial') is-invalid @enderror"
-                                        id="cadeia_dominial" name="cadeia_dominial">
-                                        <option value="">Selecione</option>
-                                        <option value="em andamento"
-                                            {{ old('cadeia_dominial', $controlePericia->cadeia_dominial) == 'em andamento' ? 'selected' : '' }}>
-                                            Em andamento</option>
-                                        <option value="concluída"
-                                            {{ old('cadeia_dominial', $controlePericia->cadeia_dominial) == 'concluída' ? 'selected' : '' }}>
-                                            Concluída</option>
-                                        <option value="não se aplica"
-                                            {{ old('cadeia_dominial', $controlePericia->cadeia_dominial) == 'não se aplica' ? 'selected' : '' }}>
-                                            Não se aplica</option>
-                                    </select>
-                                    @error('cadeia_dominial')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="tipo_pericia" class="form-label">Tipo de Perícia <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select @error('tipo_pericia') is-invalid @enderror"
-                                        id="tipo_pericia" name="tipo_pericia" required>
-                                        <option value="">Selecione</option>
-                                        @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
-                                            <option value="{{ $tipopericiaOption }}"
-                                                {{ old('tipo_pericia', $controlePericia->tipo_pericia) == $tipopericiaOption ? 'selected' : '' }}>
-                                                {{ $tipopericiaOption }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('tipo_pericia')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Linha 4 - Observações -->
+                                <!-- Observações -->
                                 <div class="col-md-12 mb-3">
                                     <label for="observacoes" class="form-label">Observações</label>
                                     <textarea class="form-control @error('observacoes') is-invalid @enderror" id="observacoes" name="observacoes"
@@ -325,16 +309,24 @@
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane fade" id="checklist-pane" role="tabpanel"
+                                        <div class="tab-pane fade {{ $openChecklistAba ? 'show active' : '' }}" id="checklist-pane" role="tabpanel"
                                             aria-labelledby="checklist-tab">
                                 @php
-                                    $documentosPorItem = $controlePericia->checklistDocumentos->keyBy('item_nome');
+                                    $documentosPorItem = $controlePericia->checklistDocumentos->groupBy('item_nome');
+                                    $checklistItemConcluido = function (string $item) use ($documentosPorItem) {
+                                        $docs = $documentosPorItem->get($item, collect());
+                                        if ($docs->isEmpty()) {
+                                            return false;
+                                        }
+                                        if ($docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false))) {
+                                            return true;
+                                        }
+
+                                        return $docs->contains(fn ($d) => ! empty($d->arquivo_caminho));
+                                    };
                                     $checklistTotal = count($checklistItems);
                                     $checklistConcluidos = $checklistItems
-                                        ? collect($checklistItems)->filter(function ($item) use ($documentosPorItem) {
-                                            $doc = $documentosPorItem->get($item);
-                                            return $doc && ($doc->nao_necessario || !empty($doc->arquivo_caminho));
-                                        })->count()
+                                        ? collect($checklistItems)->filter(fn ($item) => $checklistItemConcluido($item))->count()
                                         : 0;
                                     $progresso = $checklistTotal > 0 ? round(($checklistConcluidos / $checklistTotal) * 100) : 0;
 
@@ -354,8 +346,10 @@
                                             'Formulário de Vistoria',
                                             'Coleta de Documentos',
                                             'Solicitação Cartório',
+                                            'Solicitação IMPLURB',
                                             'Solicitação SECT',
                                             'Solicitação Externa',
+                                            'Solicitação Juiz',
                                             'Solicitação de Sobrevoo de Drone',
                                             'Sobrevoo de Drone',
                                         ],
@@ -434,10 +428,7 @@
                                                         @php
                                                             $faseKey = \Illuminate\Support\Str::slug($faseNome, '_');
                                                             $totalFase = $faseItens->count();
-                                                            $concluidosFase = $faseItens->filter(function ($item) use ($documentosPorItem) {
-                                                                $doc = $documentosPorItem->get($item);
-                                                                return $doc && ($doc->nao_necessario || !empty($doc->arquivo_caminho));
-                                                            })->count();
+                                                            $concluidosFase = $faseItens->filter(fn ($item) => $checklistItemConcluido($item))->count();
                                                             $progressoFase = $totalFase > 0 ? round(($concluidosFase / $totalFase) * 100) : 0;
                                                         @endphp
 
@@ -464,71 +455,85 @@
                                                     @foreach ($faseItens as $item)
                                                         @php
                                                             $itemKey = \Illuminate\Support\Str::slug($item, '_');
-                                                            $documento = $documentosPorItem->get($item);
-                                                            $isNaoNecessario = $documento && $documento->nao_necessario;
+                                                            $docs = $documentosPorItem->get($item, collect());
+                                                            $isNaoNecessario = $docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false));
+                                                            $arquivos = $docs->filter(fn ($d) => ! empty($d->arquivo_caminho))->values();
+                                                            $temArquivo = $arquivos->isNotEmpty();
                                                         @endphp
                                                         <div class="col-md-6">
                                                             <div class="border rounded p-3 h-100 bg-white">
                                                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            {{ $documento ? 'checked' : '' }} disabled>
+                                                                            {{ $docs->isNotEmpty() ? 'checked' : '' }} disabled>
                                                                         <label class="form-check-label fw-semibold">
                                                                             {{ $item }}
                                                                         </label>
                                                                     </div>
                                                                     <span
                                                                         id="checklist_status_badge_{{ $itemKey }}"
-                                                                        class="badge {{ $isNaoNecessario ? 'bg-warning text-dark' : (($documento && $documento->arquivo_caminho) ? 'bg-success' : 'bg-secondary') }}">
-                                                                        {{ $isNaoNecessario ? 'Nao necessario' : (($documento && $documento->arquivo_caminho) ? 'Enviado' : 'Pendente') }}
+                                                                        class="badge {{ $isNaoNecessario ? 'bg-warning text-dark' : ($temArquivo ? 'bg-success' : 'bg-secondary') }}">
+                                                                        @if ($isNaoNecessario)
+                                                                            Nao necessario
+                                                                        @elseif ($temArquivo)
+                                                                            {{ $arquivos->count() }} arquivo(s)
+                                                                        @else
+                                                                            Pendente
+                                                                        @endif
                                                                     </span>
                                                                 </div>
 
-                                                                @if ($documento && $documento->arquivo_caminho)
-                                                                    <div class="small text-muted mb-2" id="checklist_arquivo_info_{{ $itemKey }}">
-                                                                        Arquivo atual: <strong>{{ $documento->arquivo_nome }}</strong>
-                                                                    </div>
-                                                                    <div class="d-flex gap-2 mb-2" id="checklist_document_actions_{{ $itemKey }}">
-                                                                        <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
-                                                                            class="btn btn-sm btn-outline-primary"
-                                                                            title="Visualizar documento"
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer">
-                                                                            <i class="fas fa-eye"></i>
-                                                                        </a>
-                                                                        <button
-                                                                            type="button"
-                                                                            class="btn btn-sm btn-outline-info checklist-observacoes-btn"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#checklistObservacoesModal"
-                                                                            data-documento-id="{{ $documento->id }}"
-                                                                            data-item-key="{{ $itemKey }}"
-                                                                            data-documento-item="{{ $item }}"
-                                                                            data-observacoes="{{ $documento->observacoes ?? '' }}"
-                                                                            data-save-url="{{ route('controle-pericias.checklist.observacoes', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
-                                                                            title="{{ $documento->observacoes ? 'Editar observações' : 'Adicionar observações' }}">
-                                                                            <i class="fas fa-comment-dots"></i>
-                                                                            <span
-                                                                                id="checklist_observacoes_indicator_{{ $itemKey }}"
-                                                                                class="checklist-observacoes-indicator {{ empty($documento->observacoes) ? 'd-none' : '' }}"></span>
-                                                                        </button>
-                                                                        <button
-                                                                            type="button"
-                                                                            class="btn btn-sm btn-outline-danger checklist-remove-btn"
-                                                                            data-item-key="{{ $itemKey }}"
-                                                                            data-item-nome="{{ $item }}"
-                                                                            data-delete-url="{{ route('controle-pericias.checklist.destroy', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
-                                                                            title="Remover documento">
-                                                                            <i class="fas fa-trash"></i>
-                                                                        </button>
-                                                                    </div>
+                                                                @if ($temArquivo)
+                                                                    <ul class="list-group list-group-flush small mb-2 border rounded" id="checklist_arquivos_list_{{ $itemKey }}">
+                                                                        @foreach ($arquivos as $documento)
+                                                                            <li class="list-group-item px-2 py-2 d-flex justify-content-between align-items-center gap-2"
+                                                                                id="checklist_doc_row_{{ $documento->id }}">
+                                                                                <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
+                                                                                <div class="d-flex gap-1 flex-shrink-0">
+                                                                                    <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                        class="btn btn-sm btn-outline-primary"
+                                                                                        title="Visualizar documento"
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer">
+                                                                                        <i class="fas fa-eye"></i>
+                                                                                    </a>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-sm btn-outline-info checklist-observacoes-btn"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#checklistObservacoesModal"
+                                                                                        data-documento-id="{{ $documento->id }}"
+                                                                                        data-item-key="{{ $itemKey }}"
+                                                                                        data-documento-item="{{ $item }}"
+                                                                                        data-observacoes="{{ $documento->observacoes ?? '' }}"
+                                                                                        data-save-url="{{ route('controle-pericias.checklist.observacoes', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                        title="{{ $documento->observacoes ? 'Editar observações' : 'Adicionar observações' }}">
+                                                                                        <i class="fas fa-comment-dots"></i>
+                                                                                        <span
+                                                                                            id="checklist_obs_ind_{{ $documento->id }}"
+                                                                                            class="checklist-observacoes-indicator {{ empty($documento->observacoes) ? 'd-none' : '' }}"></span>
+                                                                                    </button>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-sm btn-outline-danger checklist-remove-btn"
+                                                                                        data-item-key="{{ $itemKey }}"
+                                                                                        data-doc-row-id="checklist_doc_row_{{ $documento->id }}"
+                                                                                        data-delete-url="{{ route('controle-pericias.checklist.destroy', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                        title="Remover documento">
+                                                                                        <i class="fas fa-trash"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
                                                                 @endif
 
-                                                                <div class="d-flex gap-2 align-items-center checklist-upload-row {{ ($isNaoNecessario || ($documento && $documento->arquivo_caminho)) ? 'd-none' : '' }}"
+                                                                <div class="d-flex gap-2 align-items-center checklist-upload-row {{ $isNaoNecessario ? 'd-none' : '' }}"
                                                                     id="checklist_upload_row_{{ $itemKey }}">
                                                                     <input class="form-control form-control-sm checklist-file-input"
                                                                         type="file"
                                                                         id="checklist_arquivo_{{ $itemKey }}"
+                                                                        multiple
                                                                         accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-primary checklist-save-btn"
@@ -539,7 +544,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <div
-                                                                    class="d-flex gap-2 mt-2 {{ ($documento && $documento->arquivo_caminho && !$isNaoNecessario) ? 'd-none' : '' }}"
+                                                                    class="d-flex gap-2 mt-2 {{ ($temArquivo && ! $isNaoNecessario) ? 'd-none' : '' }}"
                                                                     id="checklist_nao_necessario_wrapper_{{ $itemKey }}">
                                                                         <button
                                                                             type="button"
@@ -565,7 +570,7 @@
                                                     @endforeach
                                                 </div>
                                                 <small class="text-muted d-block mt-2">
-                                                    Uploads aceitos: PDF, imagem, Word e Excel (ate 15MB por arquivo).
+                                                    Você pode enviar vários arquivos por item (selecione vários no campo ou envie em etapas). Formatos: PDF, imagem, Word e Excel (até 15MB por arquivo).
                                                 </small>
                                             @endif
                                         </div>
@@ -709,51 +714,68 @@
                 const uploadUrl = btn.data('upload-url');
                 const fileInput = $('#checklist_arquivo_' + itemKey);
                 const errorEl = $('#checklist_error_' + itemKey);
-                const file = fileInput[0].files[0];
+                const files = fileInput[0].files;
 
                 errorEl.addClass('d-none').text('');
 
-                if (!file) {
-                    errorEl.removeClass('d-none').text('Selecione um arquivo antes de salvar.');
+                if (!files || !files.length) {
+                    errorEl.removeClass('d-none').text('Selecione um ou mais arquivos antes de salvar.');
                     return;
                 }
 
-                const formData = new FormData();
-                formData.append('item_nome', itemNome);
-                formData.append('arquivo', file);
-
                 const originalHtml = btn.html();
-                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Salvando...');
+                let index = 0;
+                const total = files.length;
 
-                $.ajax({
-                    url: uploadUrl,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        showChecklistToast(response.message || 'Documento salvo com sucesso.', 'success');
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1200);
-                    },
-                    error: function(xhr) {
-                        let message = 'Não foi possível salvar o documento.';
-                        if (xhr.responseJSON?.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON?.errors?.arquivo?.[0]) {
-                            message = xhr.responseJSON.errors.arquivo[0];
-                        }
-                        errorEl.removeClass('d-none').text(message);
-                        showChecklistToast(message, 'error');
-                    },
-                    complete: function() {
+                function uploadNext() {
+                    if (index >= total) {
+                        showChecklistToast(total > 1 ? total + ' documentos salvos com sucesso.' : 'Documento salvo com sucesso.', 'success');
+                        fileInput.val('');
+                        fileInput.removeClass('checklist-file-selected');
+                        fileInput.closest('.checklist-upload-row').removeClass('checklist-upload-selected');
                         btn.prop('disabled', false).html(originalHtml);
+                        setTimeout(function() {
+                            const u = new URL(window.location.href);
+                            u.searchParams.set('open_checklist', '1');
+                            window.location.assign(u.toString());
+                        }, 900);
+                        return;
                     }
-                });
+
+                    btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Salvando ' + (index + 1) + '/' + total + '...');
+
+                    const formData = new FormData();
+                    formData.append('item_nome', itemNome);
+                    formData.append('arquivo', files[index]);
+                    index += 1;
+
+                    $.ajax({
+                        url: uploadUrl,
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function() {
+                            uploadNext();
+                        },
+                        error: function(xhr) {
+                            let message = 'Não foi possível salvar o documento.';
+                            if (xhr.responseJSON?.message) {
+                                message = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON?.errors?.arquivo?.[0]) {
+                                message = xhr.responseJSON.errors.arquivo[0];
+                            }
+                            errorEl.removeClass('d-none').text(message);
+                            showChecklistToast(message, 'error');
+                            btn.prop('disabled', false).html(originalHtml);
+                        }
+                    });
+                }
+
+                uploadNext();
             });
 
             $('.checklist-remove-btn').on('click', function() {
@@ -761,7 +783,8 @@
                 pendingRemove = {
                     btn: btn,
                     itemKey: btn.data('item-key'),
-                    deleteUrl: btn.data('delete-url')
+                    deleteUrl: btn.data('delete-url'),
+                    docRowId: btn.attr('data-doc-row-id') || null
                 };
                 const modal = new bootstrap.Modal(document.getElementById('checklistRemoveConfirmModal'));
                 modal.show();
@@ -776,12 +799,12 @@
                 const btn = pendingRemove.btn;
                 const itemKey = pendingRemove.itemKey;
                 const deleteUrl = pendingRemove.deleteUrl;
-                const actionBox = $('#checklist_document_actions_' + itemKey);
-                const fileInfo = $('#checklist_arquivo_info_' + itemKey);
+                const docRowId = pendingRemove.docRowId;
                 const uploadRow = $('#checklist_upload_row_' + itemKey);
                 const statusBadge = $('#checklist_status_badge_' + itemKey);
                 const errorEl = $('#checklist_error_' + itemKey);
                 const naoNecessarioWrapper = $('#checklist_nao_necessario_wrapper_' + itemKey);
+                const listEl = $('#checklist_arquivos_list_' + itemKey);
                 const removeModalEl = document.getElementById('checklistRemoveConfirmModal');
                 const removeModal = bootstrap.Modal.getInstance(removeModalEl);
 
@@ -798,12 +821,20 @@
                         'Accept': 'application/json'
                     },
                     success: function(response) {
-                        fileInfo.remove();
-                        actionBox.remove();
-
-                        statusBadge.removeClass('bg-success bg-warning text-dark').addClass('bg-secondary').text('Pendente');
-                        uploadRow.removeClass('d-none');
-                        naoNecessarioWrapper.removeClass('d-none');
+                        if (docRowId) {
+                            $('#' + docRowId).remove();
+                        }
+                        if (listEl.length) {
+                            const remaining = listEl.find('li').length;
+                            if (remaining === 0) {
+                                listEl.remove();
+                                statusBadge.removeClass('bg-success bg-warning text-dark').addClass('bg-secondary').text('Pendente');
+                                uploadRow.removeClass('d-none');
+                                naoNecessarioWrapper.removeClass('d-none');
+                            } else {
+                                statusBadge.removeClass('bg-secondary bg-warning text-dark').addClass('bg-success').text(remaining + ' arquivo(s)');
+                            }
+                        }
 
                         showChecklistToast(response.message || 'Documento removido com sucesso.', 'success');
                         if (removeModal) {
@@ -869,6 +900,9 @@
                         }
 
                         showChecklistToast(response.message || 'Documento atualizado com sucesso.', 'success');
+                        const u = new URL(window.location.href);
+                        u.searchParams.set('open_checklist', '1');
+                        window.location.assign(u.toString());
                     },
                     error: function(xhr) {
                         let message = 'Não foi possível atualizar o documento.';
@@ -900,6 +934,7 @@
                 observacoesTextarea.val(btn.data('observacoes') || '');
                 observacoesSaveUrl.val(btn.data('save-url'));
                 observacoesItemKey.val(btn.data('item-key') || '');
+                $('#checklist_observacoes_doc_id').val(btn.data('documento-id') || '');
                 observacoesError.addClass('d-none').text('');
             });
 
@@ -909,6 +944,7 @@
                 const saveUrl = observacoesSaveUrl.val();
                 const observacoes = observacoesTextarea.val();
                 const itemKey = observacoesItemKey.val();
+                const docId = $('#checklist_observacoes_doc_id').val();
 
                 if (!saveUrl) {
                     observacoesError.removeClass('d-none').text('Não foi possível identificar o documento para salvar.');
@@ -929,17 +965,17 @@
                     },
                     success: function(response) {
                         const hasObservacoes = !!(observacoes && observacoes.trim().length);
-                        const indicator = $('#checklist_observacoes_indicator_' + itemKey);
-                        const observacoesBtn = $('.checklist-observacoes-btn[data-item-key="' + itemKey + '"]');
+                        const indicator = docId ? $('#checklist_obs_ind_' + docId) : $();
 
                         if (indicator.length) {
                             indicator.toggleClass('d-none', !hasObservacoes);
                         }
 
-                        if (observacoesBtn.length) {
-                            observacoesBtn.attr('title', hasObservacoes ? 'Editar observações' : 'Adicionar observações');
-                            observacoesBtn.data('observacoes', observacoes);
-                        }
+                        const observacoesBtn = docId
+                            ? $('.checklist-observacoes-btn[data-documento-id="' + docId + '"]')
+                            : $('.checklist-observacoes-btn[data-item-key="' + itemKey + '"]');
+                        observacoesBtn.attr('title', hasObservacoes ? 'Editar observações' : 'Adicionar observações');
+                        observacoesBtn.data('observacoes', observacoes);
 
                         showChecklistToast(response.message || 'Observações salvas com sucesso.', 'success');
                         const modalEl = document.getElementById('checklistObservacoesModal');
@@ -977,6 +1013,7 @@
                     <div class="modal-body">
                         <input type="hidden" id="checklist_observacoes_save_url">
                         <input type="hidden" id="checklist_observacoes_item_key">
+                        <input type="hidden" id="checklist_observacoes_doc_id">
                         <label for="checklist_observacoes_texto" class="form-label">Observações</label>
                         <textarea
                             id="checklist_observacoes_texto"

@@ -52,7 +52,7 @@
                                 </div>
                                 <!-- Fim da linha 1 -->
 
-                                <!-- Linha 2 - Vara, Datas e Status -->
+                                <!-- Linha 2 - Vara, Datas e fase da perícia -->
                                 <div class="col-md-3 mb-3">
                                     <label for="vara" class="form-label">Vara <span class="text-danger">*</span></label>
                                     <select class="form-select @error('vara') is-invalid @enderror" id="vara"
@@ -106,7 +106,7 @@
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                    <label for="status_atual" class="form-label">Status Atual <span
+                                    <label for="status_atual" class="form-label">Fase da Perícia <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select @error('status_atual') is-invalid @enderror"
                                         id="status_atual" name="status_atual" required>
@@ -120,7 +120,7 @@
                                     </select>
                                     <small class="form-text text-muted mt-1" style="font-size: 0.92em;">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        O status <strong>Entregue</strong> só pode ser definido na listagem geral.
+                                        A fase <strong>Entregue</strong> só pode ser definida na listagem geral.
                                     </small>
                                     @error('status_atual')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -153,10 +153,29 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-7 mb-3">
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="tipo_pericia" class="form-label">Tipo de Perícia <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select @error('tipo_pericia') is-invalid @enderror"
+                                        id="tipo_pericia" name="tipo_pericia" required>
+                                        <option value="">Selecione</option>
+                                        @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
+                                            <option value="{{ $tipopericiaOption }}"
+                                                {{ old('tipo_pericia') == $tipopericiaOption ? 'selected' : '' }}>
+                                                {{ $tipopericiaOption }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('tipo_pericia')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3 mb-3">
                                     <label class="form-label">Protocolo</label>
                                     <div class="d-flex align-items-center">
-                                        <div class="me-4">
+                                        <div class="me-2">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="protocolo"
                                                     id="protocolo_sim" value="sim"
@@ -192,42 +211,6 @@
                                     @enderror
                                     @error('protocolo_responsavel_id')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div> <!-- Linha 4 - Cadeia Dominial e Observações -->
-                                <div class="col-md-3 mb-3">
-                                    <label for="cadeia_dominial" class="form-label">Cadeia Dominial</label>
-                                    <select class="form-select @error('cadeia_dominial') is-invalid @enderror"
-                                        id="cadeia_dominial" name="cadeia_dominial">
-                                        <option value="">Selecione</option>
-                                        <option value="em andamento"
-                                            {{ old('cadeia_dominial') == 'em andamento' ? 'selected' : '' }}>Em andamento
-                                        </option>
-                                        <option value="concluída"
-                                            {{ old('cadeia_dominial') == 'concluída' ? 'selected' : '' }}>Concluída
-                                        </option>
-                                        <option value="não se aplica"
-                                            {{ old('cadeia_dominial') == 'não se aplica' ? 'selected' : '' }}>Não se aplica
-                                        </option>
-                                    </select>
-                                    @error('cadeia_dominial')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="tipo_pericia" class="form-label">Tipo de Perícia <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select @error('tipo_pericia') is-invalid @enderror"
-                                        id="tipo_pericia" name="tipo_pericia" required>
-                                        <option value="">Selecione</option>
-                                        @foreach (App\Models\ControlePericia::tipopericiaOptions() as $tipopericiaOption)
-                                            <option value="{{ $tipopericiaOption }}"
-                                                {{ old('tipo_pericia') == $tipopericiaOption ? 'selected' : '' }}>
-                                                {{ $tipopericiaOption }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('status_atual')
-                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -347,7 +330,7 @@
                     bsModal.show();
                     // Exibir mensagem para o usuário (se função existir)
                     if (typeof showToast === 'function') {
-                        showToast('info', 'Preencha os dados financeiros para salvar com status entregue.');
+                        showToast('info', 'Preencha os dados financeiros para salvar com a fase Entregue.');
                     }
                 }
             });
@@ -365,7 +348,7 @@
             modalFinanceiro.on('hidden.bs.modal', function() {
                 if (!shouldSubmitAfterFinanceiro) {
                     if (typeof showToast === 'function') {
-                        showToast('warning', 'Só é possível salvar com status entregue após preencher os dados financeiros.');
+                        showToast('warning', 'Só é possível salvar com a fase Entregue após preencher os dados financeiros.');
                     }
                 }
                 shouldSubmitAfterFinanceiro = false;

@@ -182,7 +182,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
-                                                <label class="form-label" for="status_atual">Status</label>
+                                                <label class="form-label" for="status_atual">Fase da Perícia</label>
                                                 <select class="form-select" name="status_atual" id="status_atual">
                                                     <option value="">Todos</option>
                                                     @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
@@ -298,7 +298,7 @@
                                             <th class="px-4 py-3 border-bottom-0">Vara</th>
                                             <th class="px-4 py-3 border-bottom-0">Responsável</th>
                                             <th class="px-4 py-3 border-bottom-0">Tipo de Perícia</th>
-                                            <th class="px-4 py-3 border-bottom-0">Status</th>
+                                            <th class="px-4 py-3 border-bottom-0">Fase da Perícia</th>
                                             <th class="px-4 py-3 border-bottom-0">Laudo Entregue</th>
                                             <th class="px-4 py-3 border-bottom-0 text-center" style="width: 160px;">Ações
                                             </th>
@@ -530,7 +530,7 @@
                         <div class="col-md-6">
                             <div class="form-check">
                                 <input class="form-check-input column-checkbox" type="checkbox" value="status" id="col_status" checked>
-                                <label class="form-check-label" for="col_status">Status</label>
+                                <label class="form-check-label" for="col_status">Fase da Perícia</label>
                             </div>
                         </div>
                         
@@ -727,7 +727,7 @@
                     // REGRA 1: Se o status original já é "entregue", não permitir alteração
                     if (originalStatus.toLowerCase() === 'entregue') {
                         this.value = originalStatus; // Reverter imediatamente
-                        showToast('warning', 'Não é possível alterar o status de uma perícia que já foi entregue.');
+                        showToast('warning', 'Não é possível alterar a fase de uma perícia que já foi entregue.');
                         return;
                     }
                     
@@ -771,18 +771,18 @@
                             // Esta parte não será mais executada pois "entregue" é tratado antes
                             
                             // Mostrar toast de sucesso
-                            showToast('success', data.message || 'Status atualizado com sucesso!');
+                            showToast('success', data.message || 'Fase da perícia atualizada com sucesso!');
                         } else {
                             // Reverter para o status original em caso de erro
                             this.value = originalStatus;
-                            showToast('error', data.message || 'Erro ao atualizar status');
+                            showToast('error', data.message || 'Erro ao atualizar a fase da perícia');
                         }
                     })
                     .catch(error => {
                         console.error('Erro:', error);
                         // Reverter para o status original em caso de erro
                         this.value = originalStatus;
-                        showToast('error', 'Erro de conexão ao atualizar status');
+                        showToast('error', 'Erro de conexão ao atualizar a fase da perícia');
                     })
                     .finally(() => {
                         // Reabilitar o select
@@ -853,7 +853,7 @@
                     if (data && data.length > 0) {
                         // Já existe registro, atualizar status diretamente
                         updateStatusDirectly(periciaId, originalStatus, newStatus, selectElement);
-                        showToast('info', 'Status atualizado. Registro financeiro já existe para esta perícia.');
+                        showToast('info', 'Fase da perícia atualizada. Registro financeiro já existe para esta perícia.');
                     } else {
                         // Não existe registro, abrir modal obrigatório
                         openFinanceiroModal(periciaId, originalStatus, newStatus, selectElement);
@@ -905,7 +905,7 @@
                     if (window.pendingStatusUpdate) {
                         selectElement.value = originalStatus; // Manter status original
                         window.pendingStatusUpdate = null;
-                        showToast('info', 'Alteração de status cancelada. É obrigatório preencher os dados financeiros.');
+                        showToast('info', 'Alteração de fase cancelada. É obrigatório preencher os dados financeiros.');
                     }
                     // Limpar as informações do modal
                     if (window.clearModalPericia) {
@@ -942,16 +942,16 @@
                         // Atualizar a bolinha colorida
                         updateSelectDot(selectElement);
                         
-                        showToast('success', data.message || 'Status atualizado com sucesso!');
+                        showToast('success', data.message || 'Fase da perícia atualizada com sucesso!');
                     } else {
                         selectElement.value = originalStatus;
-                        showToast('error', data.message || 'Erro ao atualizar status');
+                        showToast('error', data.message || 'Erro ao atualizar a fase da perícia');
                     }
                 })
                 .catch(error => {
                     console.error('Erro:', error);
                     selectElement.value = originalStatus;
-                    showToast('error', 'Erro de conexão ao atualizar status');
+                    showToast('error', 'Erro de conexão ao atualizar a fase da perícia');
                 })
                 .finally(() => {
                     selectElement.disabled = false;
@@ -1012,7 +1012,7 @@
                         modal.hide();
                         
                         // Mostrar toast de sucesso
-                        showToast('success', 'Registro financeiro criado e status atualizado para "entregue" com sucesso!');
+                        showToast('success', 'Registro financeiro criado e fase da perícia atualizada para "entregue" com sucesso!');
                         
                         // Opcional: redirecionar para a página de financeiro
                         setTimeout(() => {

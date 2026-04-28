@@ -240,7 +240,7 @@
             <div class="filtro-item"><strong>Responsável:</strong> {{ $filtrosAplicados['responsavel'] }}</div>
         @endif
         @if($filtrosAplicados['status'])
-            <div class="filtro-item"><strong>Status:</strong> {{ $filtrosAplicados['status'] }}</div>
+            <div class="filtro-item"><strong>Fase da Perícia:</strong> {{ $filtrosAplicados['status'] }}</div>
         @endif
         @if($filtrosAplicados['tipo_pericia'])
             <div class="filtro-item"><strong>Tipo:</strong> {{ $filtrosAplicados['tipo_pericia'] }}</div>
@@ -278,7 +278,7 @@
                             <th class="col-tipo">Tipo de Perícia</th>
                         @endif
                         @if(in_array('status', $columns))
-                            <th class="col-status">Status</th>
+                            <th class="col-status">Fase da Perícia</th>
                         @endif
                         @if(in_array('laudo_entregue', $columns))
                             <th class="col-entrega">Laudo Entregue</th>

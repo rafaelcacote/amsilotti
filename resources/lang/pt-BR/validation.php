@@ -46,7 +46,7 @@ return [
             'required' => 'Por favor, selecione o tipo de perícia.',
         ],
         'status_atual' => [
-            'required' => 'Por favor, selecione o status atual.',
+            'required' => 'Por favor, selecione a fase da perícia.',
         ],
     ],
 
@@ -60,7 +60,7 @@ return [
         'vara' => 'vara',
         'tipo_pericia' => 'tipo de perícia',
         'data_nomeacao' => 'data de nomeação',
-        'status_atual' => 'status',
+        'status_atual' => 'fase da perícia',
         'data_vistoria' => 'data da vistoria',
         'prazo_final' => 'prazo final',
         'decurso_prazo' => 'decurso de prazo',

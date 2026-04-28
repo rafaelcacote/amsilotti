@@ -112,7 +112,7 @@
                     {{ $pericia->responsavelTecnico ? $pericia->responsavelTecnico->nome : 'Não atribuído' }}</td>
             </tr>
             <tr>
-                <th class="label">Status</th>
+                <th class="label">Fase da Perícia</th>
                 <td class="value">
                     <span
                         style="display: inline-block; padding: 4px 14px; border-radius: 16px; background: #e9ecef; color: #0d6efd; font-weight: 600; font-size: 1.10rem;">

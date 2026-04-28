@@ -31,13 +31,21 @@
                                     default => 'bg-light text-dark',
                                 };
 
-                                $documentosPorItem = $controlePericia->checklistDocumentos->keyBy('item_nome');
+                                $documentosPorItem = $controlePericia->checklistDocumentos->groupBy('item_nome');
+                                $checklistItemConcluido = function (string $item) use ($documentosPorItem) {
+                                    $docs = $documentosPorItem->get($item, collect());
+                                    if ($docs->isEmpty()) {
+                                        return false;
+                                    }
+                                    if ($docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false))) {
+                                        return true;
+                                    }
+
+                                    return $docs->contains(fn ($d) => ! empty($d->arquivo_caminho));
+                                };
                                 $checklistTotal = count($checklistItems);
                                 $checklistConcluidos = $checklistItems
-                                    ? collect($checklistItems)->filter(function ($item) use ($documentosPorItem) {
-                                        $doc = $documentosPorItem->get($item);
-                                        return $doc && ($doc->nao_necessario || !empty($doc->arquivo_caminho));
-                                    })->count()
+                                    ? collect($checklistItems)->filter(fn ($item) => $checklistItemConcluido($item))->count()
                                     : 0;
                                 $progresso = $checklistTotal > 0 ? round(($checklistConcluidos / $checklistTotal) * 100) : 0;
                             @endphp
@@ -49,7 +57,7 @@
                                         <strong class="fs-6">{{ $controlePericia->numero_processo }}</strong>
                                     </div>
                                     <div class="col-lg-4">
-                                        <small class="text-muted d-block">Status</small>
+                                        <small class="text-muted d-block">Fase da Perícia</small>
                                         <span class="badge {{ $statusClass }}">{{ $controlePericia->status_atual }}</span>
                                     </div>
                                     <div class="col-lg-4">
@@ -126,12 +134,6 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="border rounded p-3">
-                                                <h6 class="mb-2 text-primary">Cadeia Dominial</h6>
-                                                <p class="mb-0">{!! nl2br(e($controlePericia->cadeia_dominial)) ?: 'Não informada' !!}</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="border rounded p-3">
                                                 <h6 class="mb-2 text-primary">Observações Gerais</h6>
                                                 <p class="mb-0">{!! nl2br(e($controlePericia->observacoes)) ?: 'Não informadas' !!}</p>
                                             </div>
@@ -146,53 +148,66 @@
                                         <div class="row g-2">
                                             @foreach ($checklistItems as $item)
                                                 @php
-                                                    $documento = $documentosPorItem->get($item);
-                                                    $isNaoNecessario = $documento && $documento->nao_necessario;
+                                                    $docs = $documentosPorItem->get($item, collect());
+                                                    $isNaoNecessario = $docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false));
+                                                    $arquivos = $docs->filter(fn ($d) => ! empty($d->arquivo_caminho))->values();
+                                                    $temArquivo = $arquivos->isNotEmpty();
                                                 @endphp
                                                 <div class="col-md-6">
-                                                    <div class="border rounded p-2 bg-white d-flex justify-content-between align-items-center">
-                                                        <div class="pe-2">
-                                                            <i class="fas {{ ($documento && ($isNaoNecessario || $documento->arquivo_caminho)) ? 'fa-check-circle text-success' : 'fa-circle text-muted' }} me-2"></i>
-                                                            {{ $item }}
-                                                            @if ($isNaoNecessario)
-                                                                <span class="badge bg-warning text-dark ms-2">Nao necessario</span>
-                                                            @endif
-                                                        </div>
-                                                        @if ($documento && $documento->arquivo_caminho)
-                                                            <div class="d-flex gap-2">
-                                                                <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
-                                                                    class="btn btn-sm btn-outline-primary"
-                                                                    title="Visualizar documento"
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
-                                                                @if (!empty($documento->observacoes))
-                                                                    <button
-                                                                        type="button"
-                                                                        class="btn btn-sm btn-outline-info checklist-show-observacoes-btn"
-                                                                        title="Visualizar observações"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#checklistShowObservacoesModal"
-                                                                        data-item-nome="{{ $item }}"
-                                                                        data-observacoes="{{ $documento->observacoes ?? '' }}">
-                                                                        <i class="fas fa-comment-dots"></i>
-                                                                    </button>
-                                                                @else
-                                                                    <span
-                                                                        class="d-inline-block"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top"
-                                                                        title="Não há nenhuma observação cadastrada.">
-                                                                        <button
-                                                                            type="button"
-                                                                            class="btn btn-sm btn-outline-info checklist-show-observacoes-btn"
-                                                                            disabled>
-                                                                            <i class="fas fa-comment-dots"></i>
-                                                                        </button>
-                                                                    </span>
+                                                    <div class="border rounded p-2 bg-white">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <div class="pe-2">
+                                                                <i class="fas {{ ($temArquivo || $isNaoNecessario) ? 'fa-check-circle text-success' : 'fa-circle text-muted' }} me-2"></i>
+                                                                {{ $item }}
+                                                                @if ($isNaoNecessario)
+                                                                    <span class="badge bg-warning text-dark ms-2">Nao necessario</span>
+                                                                @elseif ($temArquivo)
+                                                                    <span class="badge bg-primary-subtle text-primary ms-2">{{ $arquivos->count() }} arquivo(s)</span>
                                                                 @endif
                                                             </div>
+                                                        </div>
+                                                        @if ($temArquivo)
+                                                            <ul class="list-group list-group-flush small mb-0">
+                                                                @foreach ($arquivos as $documento)
+                                                                    <li class="list-group-item px-2 py-1 d-flex justify-content-between align-items-center gap-2">
+                                                                        <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
+                                                                        <div class="d-flex gap-1 flex-shrink-0">
+                                                                            <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                class="btn btn-sm btn-outline-primary py-0 px-2"
+                                                                                title="Visualizar documento"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer">
+                                                                                <i class="fas fa-eye"></i>
+                                                                            </a>
+                                                                            @if (!empty($documento->observacoes))
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                                    title="Visualizar observações"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#checklistShowObservacoesModal"
+                                                                                    data-item-nome="{{ $item }}"
+                                                                                    data-observacoes="{{ $documento->observacoes ?? '' }}">
+                                                                                    <i class="fas fa-comment-dots"></i>
+                                                                                </button>
+                                                                            @else
+                                                                                <span
+                                                                                    class="d-inline-block"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-bs-placement="top"
+                                                                                    title="Não há nenhuma observação cadastrada.">
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                                        disabled>
+                                                                                        <i class="fas fa-comment-dots"></i>
+                                                                                    </button>
+                                                                                </span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
                                                         @endif
                                                     </div>
                                                 </div>
