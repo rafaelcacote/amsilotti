@@ -43,11 +43,85 @@
 
                                     return $docs->contains(fn ($d) => ! empty($d->arquivo_caminho));
                                 };
-                                $checklistTotal = count($checklistItems);
-                                $checklistConcluidos = $checklistItems
-                                    ? collect($checklistItems)->filter(fn ($item) => $checklistItemConcluido($item))->count()
+                                $checklistItensVisiveis = collect($checklistItems)->filter(function ($item) use ($documentosPorItem) {
+                                    $docs = $documentosPorItem->get($item, collect());
+                                    return ! $docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false));
+                                })->values();
+                                $checklistTotal = $checklistItensVisiveis->count();
+                                $checklistConcluidos = $checklistItensVisiveis
+                                    ? $checklistItensVisiveis->filter(fn ($item) => $checklistItemConcluido($item))->count()
                                     : 0;
                                 $progresso = $checklistTotal > 0 ? round(($checklistConcluidos / $checklistTotal) * 100) : 0;
+
+                                $fasesChecklist = [
+                                    'Aceite Pericial' => [
+                                        'Aceite Pericial',
+                                        'Proposta de Honorários',
+                                        'Marcação de Vistoria',
+                                        'Contato com as Partes',
+                                        'Reunião com as Partes',
+                                        'Reunião com o Solicitante',
+                                    ],
+                                    'Vistoria Pericial' => [
+                                        'Roteiro Pericial',
+                                        'Diligência Pericial',
+                                        'Relatório Fotográfico',
+                                        'Formulário de Vistoria',
+                                        'Coleta de Documentos',
+                                        'Solicitação Cartório',
+                                        'Solicitação IMPLURB',
+                                        'Solicitação SECT',
+                                        'Solicitação Externa',
+                                        'Solicitação Juiz',
+                                        'Solicitação de Sobrevoo de Drone',
+                                        'Sobrevoo de Drone',
+                                    ],
+                                    'Análise Laboratorial' => [
+                                        'Planta Georreferenciada',
+                                        'Memorial Descritivo',
+                                        'Cadeia Dominial',
+                                        'Título Definitivo',
+                                        'Parecer Técnico',
+                                        'Documentos dos Confrontantes',
+                                        'Mapa de Localização',
+                                        'Localização do Imóvel',
+                                        'Laudo Pericial',
+                                        'Laudo de Avaliação',
+                                        'Pesquisa de Mercado',
+                                        'Planta de Arquitetura',
+                                        'Projeto Executivo',
+                                        'Projetos Complementares',
+                                    ],
+                                    'Fase Final' => [
+                                        'Resposta aos Quesitos',
+                                        'Elaboração de Quesitos',
+                                        'Emissão RRT',
+                                        'Protocolo do Laudo',
+                                        'Protocolo do Laudo Pericial',
+                                        'Expedição de Alvará',
+                                        'Expedição do Alvará de Pagamento dos Honorários',
+                                        'Nota de Empenho',
+                                        'Solicitação da Nota Fiscal',
+                                        'Envio da Nota Fiscal',
+                                        'Esclarecimento',
+                                        'Manifestação',
+                                    ],
+                                ];
+
+                                $itensRestantes = $checklistItensVisiveis;
+                                $checklistAgrupadoPorFase = [];
+
+                                foreach ($fasesChecklist as $faseNome => $faseItens) {
+                                    $itensDaFase = collect($faseItens)->filter(fn ($item) => $checklistItensVisiveis->contains($item))->values();
+                                    if ($itensDaFase->isNotEmpty()) {
+                                        $checklistAgrupadoPorFase[$faseNome] = $itensDaFase;
+                                        $itensRestantes = $itensRestantes->reject(fn ($item) => $itensDaFase->contains($item))->values();
+                                    }
+                                }
+
+                                if ($itensRestantes->isNotEmpty()) {
+                                    $checklistAgrupadoPorFase['Outros Itens'] = $itensRestantes->values();
+                                }
                             @endphp
 
                             <div class="border rounded p-3 bg-light mb-3">
@@ -145,70 +219,99 @@
                                     @if (empty($checklistItems))
                                         <p class="text-muted mb-0">Sem checklist configurado para este tipo de perícia.</p>
                                     @else
-                                        <div class="row g-2">
-                                            @foreach ($checklistItems as $item)
+                                        <div class="accordion" id="checklistFasesAccordionShow">
+                                            @foreach ($checklistAgrupadoPorFase as $faseNome => $faseItens)
                                                 @php
-                                                    $docs = $documentosPorItem->get($item, collect());
-                                                    $isNaoNecessario = $docs->contains(fn ($d) => (bool) ($d->nao_necessario ?? false));
-                                                    $arquivos = $docs->filter(fn ($d) => ! empty($d->arquivo_caminho))->values();
-                                                    $temArquivo = $arquivos->isNotEmpty();
+                                                    $faseKey = \Illuminate\Support\Str::slug($faseNome, '_');
+                                                    $totalFase = $faseItens->count();
+                                                    $concluidosFase = $faseItens->filter(fn ($item) => $checklistItemConcluido($item))->count();
+                                                    $progressoFase = $totalFase > 0 ? round(($concluidosFase / $totalFase) * 100) : 0;
                                                 @endphp
-                                                <div class="col-md-6">
-                                                    <div class="border rounded p-2 bg-white">
-                                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                                            <div class="pe-2">
-                                                                <i class="fas {{ ($temArquivo || $isNaoNecessario) ? 'fa-check-circle text-success' : 'fa-circle text-muted' }} me-2"></i>
-                                                                {{ $item }}
-                                                                @if ($isNaoNecessario)
-                                                                    <span class="badge bg-warning text-dark ms-2">Nao necessario</span>
-                                                                @elseif ($temArquivo)
-                                                                    <span class="badge bg-primary-subtle text-primary ms-2">{{ $arquivos->count() }} arquivo(s)</span>
-                                                                @endif
+                                                <div class="accordion-item mb-2 border rounded">
+                                                    <h2 class="accordion-header" id="show_heading_{{ $faseKey }}">
+                                                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#show_collapse_{{ $faseKey }}"
+                                                            aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="show_collapse_{{ $faseKey }}">
+                                                            <div class="w-100 pe-3">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <strong>{{ $faseNome }}</strong>
+                                                                    <span class="badge bg-primary-subtle text-primary">{{ $concluidosFase }}/{{ $totalFase }}</span>
+                                                                </div>
+                                                                <div class="progress mt-2" style="height: 7px;">
+                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ $progressoFase }}%;"></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        @if ($temArquivo)
-                                                            <ul class="list-group list-group-flush small mb-0">
-                                                                @foreach ($arquivos as $documento)
-                                                                    <li class="list-group-item px-2 py-1 d-flex justify-content-between align-items-center gap-2">
-                                                                        <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
-                                                                        <div class="d-flex gap-1 flex-shrink-0">
-                                                                            <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
-                                                                                class="btn btn-sm btn-outline-primary py-0 px-2"
-                                                                                title="Visualizar documento"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <i class="fas fa-eye"></i>
-                                                                            </a>
-                                                                            @if (!empty($documento->observacoes))
-                                                                                <button
-                                                                                    type="button"
-                                                                                    class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
-                                                                                    title="Visualizar observações"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#checklistShowObservacoesModal"
-                                                                                    data-item-nome="{{ $item }}"
-                                                                                    data-observacoes="{{ $documento->observacoes ?? '' }}">
-                                                                                    <i class="fas fa-comment-dots"></i>
-                                                                                </button>
-                                                                            @else
-                                                                                <span
-                                                                                    class="d-inline-block"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Não há nenhuma observação cadastrada.">
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
-                                                                                        disabled>
-                                                                                        <i class="fas fa-comment-dots"></i>
-                                                                                    </button>
-                                                                                </span>
+                                                        </button>
+                                                    </h2>
+                                                    <div id="show_collapse_{{ $faseKey }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                                                        aria-labelledby="show_heading_{{ $faseKey }}" data-bs-parent="#checklistFasesAccordionShow">
+                                                        <div class="accordion-body pt-3">
+                                                            <div class="row g-2">
+                                                                @foreach ($faseItens as $item)
+                                                                    @php
+                                                                        $docs = $documentosPorItem->get($item, collect());
+                                                                        $arquivos = $docs->filter(fn ($d) => ! empty($d->arquivo_caminho))->values();
+                                                                        $temArquivo = $arquivos->isNotEmpty();
+                                                                    @endphp
+                                                                    <div class="col-md-6">
+                                                                        <div class="border rounded p-2 bg-white h-100">
+                                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                                <div class="pe-2">
+                                                                                    <i class="fas {{ $temArquivo ? 'fa-check-circle text-success' : 'fa-circle text-muted' }} me-2"></i>
+                                                                                    {{ $item }}
+                                                                                    @if ($temArquivo)
+                                                                                        <span class="badge bg-primary-subtle text-primary ms-2">{{ $arquivos->count() }} arquivo(s)</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                            @if ($temArquivo)
+                                                                                <ul class="list-group list-group-flush small mb-0">
+                                                                                    @foreach ($arquivos as $documento)
+                                                                                        <li class="list-group-item px-2 py-1 d-flex justify-content-between align-items-center gap-2">
+                                                                                            <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
+                                                                                            <div class="d-flex gap-1 flex-shrink-0">
+                                                                                                <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                                    class="btn btn-sm btn-outline-primary py-0 px-2"
+                                                                                                    title="Visualizar documento"
+                                                                                                    target="_blank"
+                                                                                                    rel="noopener noreferrer">
+                                                                                                    <i class="fas fa-eye"></i>
+                                                                                                </a>
+                                                                                                @if (!empty($documento->observacoes))
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                                                        title="Visualizar informações"
+                                                                                                        data-bs-toggle="modal"
+                                                                                                        data-bs-target="#checklistShowObservacoesModal"
+                                                                                                        data-item-nome="{{ $item }}"
+                                                                                                        data-observacoes="{{ $documento->observacoes ?? '' }}">
+                                                                                                        <i class="fas fa-comment-dots"></i>
+                                                                                                    </button>
+                                                                                                @else
+                                                                                                    <span
+                                                                                                        class="d-inline-block"
+                                                                                                        data-bs-toggle="tooltip"
+                                                                                                        data-bs-placement="top"
+                                                                                                        title="Não há informações cadastradas.">
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                                                            disabled>
+                                                                                                            <i class="fas fa-comment-dots"></i>
+                                                                                                        </button>
+                                                                                                    </span>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    @endforeach
+                                                                                </ul>
                                                                             @endif
                                                                         </div>
-                                                                    </li>
+                                                                    </div>
                                                                 @endforeach
-                                                            </ul>
-                                                        @endif
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endforeach
