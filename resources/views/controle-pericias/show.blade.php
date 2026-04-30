@@ -310,30 +310,28 @@
                                                                                 </ul>
                                                                             @endif
                                                                             @can('create agenda')
-                                                                                @if (! $temArquivo)
-                                                                                    <div class="d-flex flex-wrap gap-2 mt-2">
-                                                                                        @if ($temAgendamento)
-                                                                                            <span id="show_checklist_agenda_status_{{ \Illuminate\Support\Str::slug($item, '_') }}" class="btn btn-sm btn-outline-success disabled">
-                                                                                                <i class="fas fa-check-circle me-1"></i>Agendado
-                                                                                            </span>
-                                                                                            <a href="{{ $agendaVinculada['edit_url'] }}" class="btn btn-sm btn-outline-primary">
-                                                                                                <i class="fas fa-pen me-1"></i>Visualizar/Editar
-                                                                                            </a>
-                                                                                        @else
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                id="show_checklist_agenda_btn_{{ \Illuminate\Support\Str::slug($item, '_') }}"
-                                                                                                class="btn btn-sm btn-outline-primary checklist-show-agendar-btn"
-                                                                                                data-bs-toggle="modal"
-                                                                                                data-bs-target="#checklistShowAgendaModal"
-                                                                                                data-item-key="{{ \Illuminate\Support\Str::slug($item, '_') }}"
-                                                                                                data-item-nome="{{ $item }}"
-                                                                                                data-agendar-url="{{ route('controle-pericias.checklist.agendar-recebimento', $controlePericia->id) }}">
-                                                                                                <i class="fas fa-calendar-plus me-1"></i>Agendar recebimento
-                                                                                            </button>
-                                                                                        @endif
-                                                                                    </div>
-                                                                                @endif
+                                                                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                                                                    @if ($temAgendamento)
+                                                                                        <span id="show_checklist_agenda_status_{{ \Illuminate\Support\Str::slug($item, '_') }}" class="btn btn-sm btn-outline-success disabled">
+                                                                                            <i class="fas fa-check-circle me-1"></i>Agendado
+                                                                                        </span>
+                                                                                        <a href="{{ $agendaVinculada['edit_url'] }}" class="btn btn-sm btn-outline-primary">
+                                                                                            <i class="fas fa-pen me-1"></i>Visualizar/Editar
+                                                                                        </a>
+                                                                                    @else
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            id="show_checklist_agenda_btn_{{ \Illuminate\Support\Str::slug($item, '_') }}"
+                                                                                            class="btn btn-sm btn-outline-primary checklist-show-agendar-btn"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#checklistShowAgendaModal"
+                                                                                            data-item-key="{{ \Illuminate\Support\Str::slug($item, '_') }}"
+                                                                                            data-item-nome="{{ $item }}"
+                                                                                            data-agendar-url="{{ route('controle-pericias.checklist.agendar-recebimento', $controlePericia->id) }}">
+                                                                                            <i class="fas fa-calendar-plus me-1"></i>Agendar recebimento
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </div>
                                                                             @endcan
                                                                         </div>
                                                                     </div>

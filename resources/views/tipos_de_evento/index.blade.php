@@ -79,7 +79,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-3">{{ $tipos->links() }}</div>
+                            <div class="mt-3">{{ $tipos->links('vendor.pagination.simple-coreui') }}</div>
                         </div>
                     </div>
                 </div>

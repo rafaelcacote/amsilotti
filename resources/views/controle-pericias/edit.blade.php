@@ -560,7 +560,7 @@
                                                                             <span class="checklist-nao-necessario-label">{{ $isNaoNecessario ? 'Reativar documento' : 'Documento Não necessário' }}</span>
                                                                         </button>
                                                                 </div>
-                                                                @if (! $temArquivo && ! $isNaoNecessario)
+                                                                @if (! $isNaoNecessario)
                                                                     <div class="d-flex flex-wrap gap-2 mt-2">
                                                                         @if ($temAgendamento)
                                                                             <span id="checklist_agenda_status_{{ $itemKey }}" class="btn btn-sm btn-outline-success disabled">

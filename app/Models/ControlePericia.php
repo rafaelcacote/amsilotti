@@ -155,18 +155,18 @@ class ControlePericia extends Model
     public static function statusOptions()
         {
             return [
-                'aguardando despacho',
-                'aguardando vistoria',
-                'aguardando pagamento',
-                'aguardando laudo do perito',
-                'aguardando quesitos',
+                'Aguardando despacho',
+                'Aguardando vistoria',
+                'Aguardando pagamento',
+                'Aguardando laudo do perito',
+                'Aguardando quesitos',
                 'Aguardando nomeação',
-                'em redação',
-                'entregue',
-                'extinto',
-                'transferido projudi',
-                'transitado em julgado',
-                'suspenso'
+                'Em redação',
+                'Entregue',
+                'Extinto',
+                'Transferido projudi',
+                'Transitado em julgado',
+                'Suspenso'
             ];
         }
 
@@ -182,7 +182,7 @@ class ControlePericia extends Model
             'aguardando pagamento' => ['class' => 'bg-warning text-dark', 'color' => '#ffc107'],
             'aguardando laudo do perito' => ['class' => 'bg-secondary text-white', 'color' => '#6c757d'],
             'aguardando quesitos' => ['class' => 'bg-secondary text-white', 'color' => '#6c757d'],
-            'Aguardando nomeação' => ['class' => 'bg-primary text-white', 'color' => '#0d6efd'],
+            'aguardando nomeação' => ['class' => 'bg-primary text-white', 'color' => '#0d6efd'],
             'em redação' => ['class' => 'bg-primary text-white', 'color' => '#0d6efd'],
             'entregue' => ['class' => 'bg-success text-white', 'color' => '#198754'],
             'extinto' => ['class' => 'bg-danger text-white', 'color' => '#dc3545'],
