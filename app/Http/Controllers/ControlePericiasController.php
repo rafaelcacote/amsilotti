@@ -211,8 +211,9 @@ class ControlePericiasController extends Controller
 
         $controlePericia->load('checklistDocumentos');
         $checklistItems = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+        $checklistAgendaMap = $this->buildChecklistAgendaMap($controlePericia, $checklistItems);
 
-        return view('controle-pericias.show', compact('controlePericia', 'checklistItems'));
+        return view('controle-pericias.show', compact('controlePericia', 'checklistItems', 'checklistAgendaMap'));
     }
 
     /**
@@ -238,8 +239,108 @@ class ControlePericiasController extends Controller
 
         $controlePericia->load('checklistDocumentos');
         $checklistItems = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+        $checklistAgendaMap = $this->buildChecklistAgendaMap($controlePericia, $checklistItems);
 
-        return view('controle-pericias.edit', compact('controlePericia', 'responsaveis', 'statusOptions', 'checklistItems'));
+        return view('controle-pericias.edit', compact('controlePericia', 'responsaveis', 'statusOptions', 'checklistItems', 'checklistAgendaMap'));
+    }
+
+    public function agendarRecebimentoChecklistDocumento(Request $request, ControlePericia $controlePericia)
+    {
+        if (!auth()->user()->can('create agenda')) {
+            return response()->json(['success' => false, 'message' => 'Você não tem permissão para criar compromissos na agenda.'], 403);
+        }
+
+        if (!auth()->user()->can('view pericias')) {
+            return response()->json(['success' => false, 'message' => 'Você não tem permissão para acessar esta perícia.'], 403);
+        }
+
+        $validated = $request->validate([
+            'item_nome' => 'required|string|max:255',
+            'orgao_responsavel' => 'required|string|max:255',
+            'data_prevista_entrega' => 'required|date|after_or_equal:today',
+            'observacoes' => 'nullable|string|max:5000',
+        ], [
+            'orgao_responsavel.required' => 'O órgão responsável é obrigatório.',
+            'data_prevista_entrega.required' => 'A data prevista de entrega é obrigatória.',
+            'data_prevista_entrega.after_or_equal' => 'A data prevista de entrega não pode ser anterior à data atual.',
+        ]);
+
+        $itemNome = trim($validated['item_nome']);
+        $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
+        if (!in_array($itemNome, $itensPermitidos, true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item de checklist inválido para este tipo de perícia.',
+            ], 422);
+        }
+
+        $tipoAguardandoDocumento = \App\Models\TipoDeEvento::query()
+            ->whereRaw('LOWER(nome) = ?', ['aguardando documento'])
+            ->orWhereRaw('LOWER(codigo) = ?', ['aguardando_documento'])
+            ->first();
+
+        if (!$tipoAguardandoDocumento) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi possível criar o compromisso porque o tipo "Aguardando Documento" não está cadastrado.',
+            ], 422);
+        }
+
+        $compromissoExistente = Agenda::query()
+            ->where('controle_pericia_id', $controlePericia->id)
+            ->where('checklist_item_nome', $itemNome)
+            ->where('tipo', $tipoAguardandoDocumento->codigo)
+            ->first();
+
+        if ($compromissoExistente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Este documento já possui um compromisso agendado.',
+                'agenda' => [
+                    'id' => $compromissoExistente->id,
+                    'edit_url' => route('agenda.edit', $compromissoExistente->id),
+                    'show_url' => route('agenda.show', $compromissoExistente->id),
+                ],
+            ], 409);
+        }
+
+        $observacoes = trim((string) ($validated['observacoes'] ?? ''));
+        $descricaoLinhas = [
+            'Documento: ' . $itemNome,
+            'Órgão responsável: ' . $validated['orgao_responsavel'],
+            'Processo: ' . ($controlePericia->numero_processo ?: 'Não informado'),
+            'Referência da perícia: #' . $controlePericia->id,
+        ];
+
+        if ($observacoes !== '') {
+            $descricaoLinhas[] = 'Observações: ' . $observacoes;
+        }
+
+        $agenda = Agenda::create([
+            'titulo' => 'Receber documento: ' . $itemNome,
+            'tipo' => $tipoAguardandoDocumento->codigo,
+            'data' => Carbon::parse($validated['data_prevista_entrega'])->toDateString(),
+            'hora' => '00:00:00',
+            'status' => 'Agendada',
+            'nota' => implode("\n", $descricaoLinhas),
+            'num_processo' => $controlePericia->numero_processo,
+            'requerente_id' => $controlePericia->requerente_id,
+            'requerido' => $controlePericia->requerido,
+            'controle_pericia_id' => $controlePericia->id,
+            'checklist_item_nome' => $itemNome,
+            'orgao_responsavel' => $validated['orgao_responsavel'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Compromisso criado na agenda com sucesso.',
+            'agenda' => [
+                'id' => $agenda->id,
+                'edit_url' => route('agenda.edit', $agenda->id),
+                'show_url' => route('agenda.show', $agenda->id),
+            ],
+        ]);
     }
 
     /**
@@ -731,5 +832,33 @@ class ControlePericiasController extends Controller
                 'enviado_por' => Auth::id(),
             ]);
         }
+    }
+
+    private function buildChecklistAgendaMap(ControlePericia $controlePericia, array $checklistItems): array
+    {
+        if (empty($checklistItems)) {
+            return [];
+        }
+
+        $agendas = Agenda::query()
+            ->where('controle_pericia_id', $controlePericia->id)
+            ->whereIn('checklist_item_nome', $checklistItems)
+            ->get(['id', 'checklist_item_nome', 'data', 'tipo']);
+
+        $map = [];
+        foreach ($agendas as $agenda) {
+            if (!$agenda->checklist_item_nome || isset($map[$agenda->checklist_item_nome])) {
+                continue;
+            }
+
+            $map[$agenda->checklist_item_nome] = [
+                'id' => $agenda->id,
+                'data' => $agenda->data,
+                'show_url' => route('agenda.show', $agenda->id),
+                'edit_url' => route('agenda.edit', $agenda->id),
+            ];
+        }
+
+        return $map;
     }
 }

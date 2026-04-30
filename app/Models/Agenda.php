@@ -17,6 +17,9 @@ class Agenda extends Model
         'requerido',
         'requerido_id',
         'requerente_id',
+        'controle_pericia_id',
+        'checklist_item_nome',
+        'orgao_responsavel',
         'data',
         'hora',
         'local',
@@ -41,6 +44,11 @@ class Agenda extends Model
     public function requeridoCliente()
     {
         return $this->belongsTo(Cliente::class, 'requerido_id');
+    }
+
+    public function controlePericia()
+    {
+        return $this->belongsTo(ControlePericia::class, 'controle_pericia_id');
     }
     
     // Relacionamento com o tipo de evento

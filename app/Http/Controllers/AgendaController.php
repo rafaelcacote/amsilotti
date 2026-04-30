@@ -9,6 +9,7 @@ use App\Models\TipoDeEvento;
 use App\Models\Vistoria;
 use App\Models\ControlePericia;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AgendaController extends Controller
 {
@@ -307,6 +308,78 @@ class AgendaController extends Controller
         $eventos = $eventosAgenda->concat($eventosDecurso)->values();
 
         return response()->json($eventos);
+    }
+
+    public function alertasCabecalho(Request $request)
+    {
+        $user = auth()->user();
+        $alertas = collect();
+
+        if ($user && $user->can('view agenda')) {
+            $tipoAguardandoDocumento = TipoDeEvento::query()
+                ->where(function ($query) {
+                    $query->whereRaw('LOWER(nome) = ?', ['aguardando documento'])
+                        ->orWhereRaw('LOWER(codigo) = ?', ['aguardando_documento']);
+                })
+                ->first();
+
+            if ($tipoAguardandoDocumento) {
+                $compromissosHoje = Agenda::query()
+                    ->where('tipo', $tipoAguardandoDocumento->codigo)
+                    ->whereDate('data', now()->toDateString())
+                    ->whereNotIn('status', ['Cancelada', 'Realizada'])
+                    ->orderBy('hora')
+                    ->get();
+
+                foreach ($compromissosHoje as $compromisso) {
+                    $alertas->push([
+                        'tipo' => 'agenda_documento',
+                        'titulo' => $compromisso->titulo ?: 'Aguardando Documento',
+                        'descricao' => 'Recebimento previsto para hoje',
+                        'data' => $compromisso->data,
+                        'hora' => $compromisso->hora,
+                        'url' => route('agenda.edit', $compromisso->id),
+                        'icone' => 'fa-regular fa-calendar-check',
+                    ]);
+                }
+            }
+        }
+
+        if ($user && $user->can('view pericias')) {
+            $diasAntesDecurso = (int) config('prazos.decurso_alerta_dias_antes', 3);
+            $dataAlertaDecurso = now()->addDays($diasAntesDecurso)->toDateString();
+
+            $periciasProximasDecurso = ControlePericia::query()
+                ->whereDate('decurso_prazo', $dataAlertaDecurso)
+                ->whereNotIn('status_atual', ['Entregue', 'Concluído', 'concluido', 'Cancelado', 'cancelado', 'extinto'])
+                ->orderBy('decurso_prazo', 'asc')
+                ->limit(10)
+                ->get();
+
+            foreach ($periciasProximasDecurso as $pericia) {
+                $alertas->push([
+                    'tipo' => 'decurso_prazo',
+                    'titulo' => 'Decurso de prazo próximo',
+                    'descricao' => 'Processo: ' . ($pericia->numero_processo ?: '#'.$pericia->id),
+                    'data' => optional($pericia->decurso_prazo)->format('Y-m-d'),
+                    'hora' => null,
+                    'url' => route('controle-pericias.show', $pericia->id),
+                    'icone' => 'fa-solid fa-hourglass-half',
+                ]);
+            }
+        }
+
+        $alertasOrdenados = $alertas
+            ->sortBy(function ($item) {
+                return ($item['data'] ?? now()->toDateString()) . ' ' . ($item['hora'] ?? '23:59:59');
+            })
+            ->values()
+            ->all();
+
+        return response()->json([
+            'total' => count($alertasOrdenados),
+            'items' => $alertasOrdenados,
+        ]);
     }
 
     public function imprimir($id)

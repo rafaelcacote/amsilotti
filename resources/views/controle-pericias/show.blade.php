@@ -252,6 +252,8 @@
                                                                         $docs = $documentosPorItem->get($item, collect());
                                                                         $arquivos = $docs->filter(fn ($d) => ! empty($d->arquivo_caminho))->values();
                                                                         $temArquivo = $arquivos->isNotEmpty();
+                                                                        $agendaVinculada = $checklistAgendaMap[$item] ?? null;
+                                                                        $temAgendamento = ! empty($agendaVinculada);
                                                                     @endphp
                                                                     <div class="col-md-6">
                                                                         <div class="border rounded p-2 bg-white h-100">
@@ -307,6 +309,32 @@
                                                                                     @endforeach
                                                                                 </ul>
                                                                             @endif
+                                                                            @can('create agenda')
+                                                                                @if (! $temArquivo)
+                                                                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                                                                        @if ($temAgendamento)
+                                                                                            <span id="show_checklist_agenda_status_{{ \Illuminate\Support\Str::slug($item, '_') }}" class="btn btn-sm btn-outline-success disabled">
+                                                                                                <i class="fas fa-check-circle me-1"></i>Agendado
+                                                                                            </span>
+                                                                                            <a href="{{ $agendaVinculada['edit_url'] }}" class="btn btn-sm btn-outline-primary">
+                                                                                                <i class="fas fa-pen me-1"></i>Visualizar/Editar
+                                                                                            </a>
+                                                                                        @else
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                id="show_checklist_agenda_btn_{{ \Illuminate\Support\Str::slug($item, '_') }}"
+                                                                                                class="btn btn-sm btn-outline-primary checklist-show-agendar-btn"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#checklistShowAgendaModal"
+                                                                                                data-item-key="{{ \Illuminate\Support\Str::slug($item, '_') }}"
+                                                                                                data-item-nome="{{ $item }}"
+                                                                                                data-agendar-url="{{ route('controle-pericias.checklist.agendar-recebimento', $controlePericia->id) }}">
+                                                                                                <i class="fas fa-calendar-plus me-1"></i>Agendar recebimento
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                @endif
+                                                                            @endcan
                                                                         </div>
                                                                     </div>
                                                                 @endforeach
@@ -369,6 +397,38 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
+            function showChecklistToast(message, type) {
+                const toastId = 'toast_' + Date.now();
+                const bgClass = type === 'error' ? 'text-bg-danger' : 'text-bg-success';
+                const html = `
+                    <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                `;
+
+                let container = document.getElementById('checklistShowToastContainer');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'checklistShowToastContainer';
+                    container.className = 'toast-container position-fixed top-0 end-0 p-3';
+                    container.style.zIndex = '1080';
+                    document.body.appendChild(container);
+                }
+
+                container.insertAdjacentHTML('beforeend', html);
+                const toastEl = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastEl, {
+                    delay: 2800
+                });
+                toast.show();
+                toastEl.addEventListener('hidden.bs.toast', function() {
+                    toastEl.remove();
+                });
+            }
+
             document.querySelectorAll('.checklist-show-observacoes-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     const itemNome = btn.getAttribute('data-item-nome') || '';
@@ -377,6 +437,158 @@
                     observacoesEl.textContent = observacoes.trim() !== '' ? observacoes : 'Sem observações cadastradas.';
                 });
             });
+
+            const agendaForm = document.getElementById('checklistShowAgendaForm');
+            const agendaError = document.getElementById('checklist_show_agenda_erro');
+            const agendaItemNome = document.getElementById('checklist_show_agenda_item_nome');
+            const agendaItemNomeReadonly = document.getElementById('checklist_show_agenda_item_nome_readonly');
+            const agendaItemKey = document.getElementById('checklist_show_agenda_item_key');
+            const agendaSaveUrl = document.getElementById('checklist_show_agenda_save_url');
+            const agendaOrgao = document.getElementById('checklist_show_agenda_orgao_responsavel');
+            const agendaData = document.getElementById('checklist_show_agenda_data_prevista_entrega');
+            const agendaObs = document.getElementById('checklist_show_agenda_observacoes');
+            const agendaSaveBtn = document.getElementById('checklist_show_agenda_salvar');
+            const agendaModalEl = document.getElementById('checklistShowAgendaModal');
+            const agendaModal = agendaModalEl ? new bootstrap.Modal(agendaModalEl) : null;
+
+            if (agendaData) {
+                agendaData.min = new Date().toISOString().split('T')[0];
+            }
+
+            document.querySelectorAll('.checklist-show-agendar-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    if (agendaError) {
+                        agendaError.classList.add('d-none');
+                        agendaError.textContent = '';
+                    }
+                    agendaItemNome.value = btn.getAttribute('data-item-nome') || '';
+                    agendaItemNomeReadonly.value = btn.getAttribute('data-item-nome') || '';
+                    agendaItemKey.value = btn.getAttribute('data-item-key') || '';
+                    agendaSaveUrl.value = btn.getAttribute('data-agendar-url') || '';
+                    agendaOrgao.value = '';
+                    agendaData.value = '';
+                    agendaObs.value = '';
+                });
+            });
+
+            if (agendaForm) {
+                agendaForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const payload = {
+                        item_nome: agendaItemNome.value,
+                        orgao_responsavel: (agendaOrgao.value || '').trim(),
+                        data_prevista_entrega: agendaData.value,
+                        observacoes: agendaObs.value || '',
+                    };
+
+                    if (!payload.orgao_responsavel || !payload.data_prevista_entrega) {
+                        agendaError.classList.remove('d-none');
+                        agendaError.textContent = 'Preencha os campos obrigatórios.';
+                        return;
+                    }
+
+                    agendaSaveBtn.disabled = true;
+                    agendaSaveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Salvando...';
+                    agendaError.classList.add('d-none');
+                    agendaError.textContent = '';
+
+                    fetch(agendaSaveUrl.value, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    })
+                    .then(async function(response) {
+                        const data = await response.json();
+                        if (!response.ok) {
+                            throw {
+                                status: response.status,
+                                data: data
+                            };
+                        }
+                        return data;
+                    })
+                    .then(function(data) {
+                        if (agendaModal) {
+                            agendaModal.hide();
+                        }
+
+                        const key = agendaItemKey.value;
+                        const btn = document.getElementById('show_checklist_agenda_btn_' + key);
+                        if (btn) {
+                            btn.outerHTML =
+                                '<span id="show_checklist_agenda_status_' + key + '" class="btn btn-sm btn-outline-success disabled"><i class="fas fa-check-circle me-1"></i>Agendado</span>' +
+                                '<a href="' + (data.agenda?.edit_url || '#') + '" class="btn btn-sm btn-outline-primary"><i class="fas fa-pen me-1"></i>Visualizar/Editar</a>';
+                        }
+                        showChecklistToast(data.message || 'Compromisso criado na agenda com sucesso.');
+                    })
+                    .catch(function(error) {
+                        let message = 'Não foi possível criar o compromisso.';
+                        if (error?.status === 409 && error?.data?.agenda?.edit_url) {
+                            message = error.data.message + ' Acesse: ' + error.data.agenda.edit_url;
+                        } else if (error?.data?.message) {
+                            message = error.data.message;
+                        } else if (error?.data?.errors) {
+                            const firstKey = Object.keys(error.data.errors)[0];
+                            message = error.data.errors[firstKey]?.[0] || message;
+                        }
+                        agendaError.classList.remove('d-none');
+                        agendaError.textContent = message;
+                        showChecklistToast(message, 'error');
+                    })
+                    .finally(function() {
+                        agendaSaveBtn.disabled = false;
+                        agendaSaveBtn.innerHTML = '<i class="fas fa-save me-1"></i>Salvar agendamento';
+                    });
+                });
+            }
         });
     </script>
+
+    <div class="modal fade" id="checklistShowAgendaModal" tabindex="-1" aria-labelledby="checklistShowAgendaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checklistShowAgendaModalLabel">Agendar recebimento do documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <form id="checklistShowAgendaForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="checklist_show_agenda_save_url">
+                        <input type="hidden" id="checklist_show_agenda_item_key">
+                        <input type="hidden" id="checklist_show_agenda_item_nome">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="checklist_show_agenda_item_nome_readonly" class="form-label">Documento</label>
+                                <input type="text" id="checklist_show_agenda_item_nome_readonly" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="checklist_show_agenda_orgao_responsavel" class="form-label">Órgão responsável <span class="text-danger">*</span></label>
+                                <input type="text" id="checklist_show_agenda_orgao_responsavel" class="form-control" maxlength="255" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="checklist_show_agenda_data_prevista_entrega" class="form-label">Data prevista de entrega <span class="text-danger">*</span></label>
+                                <input type="date" id="checklist_show_agenda_data_prevista_entrega" class="form-control" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="checklist_show_agenda_observacoes" class="form-label">Observações</label>
+                                <textarea id="checklist_show_agenda_observacoes" class="form-control" rows="4" maxlength="5000" placeholder="Opcional"></textarea>
+                            </div>
+                        </div>
+                        <small class="text-danger d-none mt-2" id="checklist_show_agenda_erro"></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="checklist_show_agenda_salvar">
+                            <i class="fas fa-save me-1"></i>Salvar agendamento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

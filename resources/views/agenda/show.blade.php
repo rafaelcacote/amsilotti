@@ -39,7 +39,7 @@
                                 <dt class="col-sm-3">Status</dt>
                                 <dd class="col-sm-9">{{ $agenda->status_nome }}</dd>
                                 <dt class="col-sm-3">Notas</dt>
-                                <dd class="col-sm-9">{{ $agenda->nota }}</dd>
+                                <dd class="col-sm-9">{!! nl2br(e($agenda->nota ?? '-')) !!}</dd>
                             </dl>
                             <a href="{{ route('agenda.index') }}" class="btn btn-secondary mt-3">Voltar</a>
                         </div>

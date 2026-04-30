@@ -106,6 +106,7 @@ Route::delete('controle-pericias/{controlePericia}/checklist/{documento}', [\App
 Route::post('controle-pericias/{controlePericia}/checklist/upload', [\App\Http\Controllers\ControlePericiasController::class, 'uploadChecklistDocumento'])->name('controle-pericias.checklist.upload')->middleware('auth');
 Route::patch('controle-pericias/{controlePericia}/checklist/{documento}/observacoes', [\App\Http\Controllers\ControlePericiasController::class, 'updateChecklistObservacoes'])->name('controle-pericias.checklist.observacoes')->middleware('auth');
 Route::patch('controle-pericias/{controlePericia}/checklist/nao-necessario', [\App\Http\Controllers\ControlePericiasController::class, 'toggleChecklistNaoNecessario'])->name('controle-pericias.checklist.nao-necessario')->middleware('auth');
+Route::post('controle-pericias/{controlePericia}/checklist/agendar-recebimento', [\App\Http\Controllers\ControlePericiasController::class, 'agendarRecebimentoChecklistDocumento'])->name('controle-pericias.checklist.agendar-recebimento')->middleware('auth');
 
 // Checagem AJAX de número de processo duplicado
 Route::get('/controle-pericias/check-numero-processo', [ControlePericiasController::class, 'checkNumeroProcesso'])->name('controle-pericias.check-numero-processo');
@@ -143,6 +144,7 @@ Route::resource('agenda', \App\Http\Controllers\AgendaController::class)->middle
 Route::get('agenda/{agenda}/imprimir', [\App\Http\Controllers\AgendaController::class, 'imprimir'])->name('agenda.imprimir')->middleware('auth');
 Route::get('agenda/search-cliente', [\App\Http\Controllers\AgendaController::class, 'searchCliente'])->name('agenda.searchCliente')->middleware('auth');
 Route::get('agenda-eventos', [\App\Http\Controllers\AgendaController::class, 'getEventos'])->name('agenda.eventos')->middleware('auth');
+Route::get('notificacoes/alertas', [\App\Http\Controllers\AgendaController::class, 'alertasCabecalho'])->name('notificacoes.alertas')->middleware('auth');
 
 // Rotas para Tipos de Evento
 Route::resource('tipos-de-evento', \App\Http\Controllers\TipoDeEventoController::class)->middleware('auth');

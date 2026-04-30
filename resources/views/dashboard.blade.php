@@ -607,6 +607,33 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                function escapeHtml(text) {
+                    return String(text ?? '')
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+                }
+
+                function formatarNotaCompromisso(texto) {
+                    const base = String(texto || '').trim();
+                    if (!base) {
+                        return '-';
+                    }
+
+                    // Garante quebra de linha mesmo quando o texto veio "achatado"
+                    const organizado = base
+                        .replace(/\s*(Documento:)/gi, '\n$1')
+                        .replace(/\s*(Órgão responsável:)/gi, '\n$1')
+                        .replace(/\s*(Processo:)/gi, '\n$1')
+                        .replace(/\s*(Referência da perícia:)/gi, '\n$1')
+                        .replace(/\s*(Observações:)/gi, '\n$1')
+                        .trim();
+
+                    return escapeHtml(organizado).replace(/\n/g, '<br>');
+                }
+
                 // Modal de detalhes do compromisso
                 document.querySelectorAll('.compromisso-item').forEach(function(item) {
                     item.addEventListener('click', function() {
@@ -659,7 +686,7 @@
                             notaInfo.style.display = 'none';
                         } else {
                             // Mostra nota para outros tipos
-                            document.getElementById('modalCompromissoNota').textContent = nota || '-';
+                            document.getElementById('modalCompromissoNota').innerHTML = formatarNotaCompromisso(nota);
                             vistoriaInfo.style.display = 'none';
                             notaInfo.style.display = 'block';
                         }

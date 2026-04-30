@@ -145,6 +145,19 @@
     @include('components.toast_exclusao')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            function escapeHtml(text) {
+                return String(text ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function nl2brSafe(text) {
+                return escapeHtml(text).replace(/\n/g, '<br>');
+            }
+
             // Função para gerenciar as abas e paginação
             function initTabManagement() {
                 // Verifica se há um parâmetro de aba na URL
@@ -344,7 +357,7 @@
                         $('#detalhe-hora-simples').text(info.event.start ? moment(info.event.start)
                             .format(
                                 'HH:mm') : '-');
-                        $('#detalhe-nota').text(agenda.nota || '-');
+                        $('#detalhe-nota').html(nl2brSafe(agenda.nota || '-'));
                         $('#detalhe-tipo').text(agenda.tipo_nome || agenda.tipo || '-');
                         $('#detalhe-id').text(info.event.id);
                         $('.modal-vistoria').hide();
