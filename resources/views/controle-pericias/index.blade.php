@@ -368,7 +368,7 @@
                                                                         data-color="{{ $optionColor['color'] }}"
                                                                         data-class="{{ $optionColor['class'] }}"
                                                                         style="background-color: white !important; color: black !important;"
-                                                                        {{ $pericia->status_atual == $statusOption ? 'selected' : '' }}>
+                                                                        {{ strcasecmp((string) $pericia->status_atual, $statusOption) === 0 ? 'selected' : '' }}>
                                                                         {{ $statusOption }}
                                                                     </option>
                                                                 @endforeach
@@ -719,8 +719,8 @@
                     const originalStatus = this.dataset.originalStatus;
                     const newStatus = this.value;
                     
-                    // Se não mudou, não fazer nada
-                    if (originalStatus === newStatus) {
+                    // Se não mudou, não fazer nada (comparação case-insensitive)
+                    if (originalStatus.toLowerCase() === newStatus.toLowerCase()) {
                         return;
                     }
                     

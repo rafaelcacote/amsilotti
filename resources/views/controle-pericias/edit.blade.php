@@ -195,7 +195,7 @@
                                         <option value="">Selecione</option>
                                         @foreach (App\Models\ControlePericia::statusOptions() as $statusOption)
                                             <option value="{{ $statusOption }}"
-                                                {{ old('status_atual', $controlePericia->status_atual) == $statusOption ? 'selected' : '' }}>
+                                                {{ strcasecmp((string) old('status_atual', $controlePericia->status_atual), $statusOption) === 0 ? 'selected' : '' }}>
                                                 {{ $statusOption }}
                                             </option>
                                         @endforeach
