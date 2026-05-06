@@ -122,6 +122,11 @@
                                 if ($itensRestantes->isNotEmpty()) {
                                     $checklistAgrupadoPorFase['Outros Itens'] = $itensRestantes->values();
                                 }
+
+                                $ultimaDecisaoDocs = $controlePericia->checklistDocumentos
+                                    ->filter(fn ($d) => \App\Models\ChecklistDocumentoPericia::isUltimaDecisaoItem($d->item_nome))
+                                    ->filter(fn ($d) => ! empty($d->arquivo_caminho))
+                                    ->values();
                             @endphp
 
                             <div class="border rounded p-3 bg-light mb-3">
@@ -157,6 +162,12 @@
                                     <button class="nav-link" id="checklist-tab" data-bs-toggle="tab" data-bs-target="#checklist-pane"
                                         type="button" role="tab" aria-controls="checklist-pane" aria-selected="false">
                                         Checklist de Documentos
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="ultima-decisao-tab" data-bs-toggle="tab" data-bs-target="#ultima-decisao-pane"
+                                        type="button" role="tab" aria-controls="ultima-decisao-pane" aria-selected="false">
+                                        Última Decisão
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -343,6 +354,63 @@
                                             @endforeach
                                         </div>
                                     @endif
+                                </div>
+
+                                <div class="tab-pane fade" id="ultima-decisao-pane" role="tabpanel" aria-labelledby="ultima-decisao-tab">
+                                    <div class="border rounded p-3 bg-light">
+                                        <h6 class="mb-3 text-primary">
+                                            <i class="fas fa-gavel me-2"></i>Última Decisão
+                                        </h6>
+                                        @if ($ultimaDecisaoDocs->isEmpty())
+                                            <p class="text-muted mb-0">Nenhum documento anexado.</p>
+                                        @else
+                                            <p class="small text-muted mb-3 mb-md-4">
+                                                Documentos enviados na aba correspondente ao editar a perícia.
+                                                {{ $ultimaDecisaoDocs->count() }} arquivo(s).
+                                            </p>
+                                            <ul class="list-group list-group-flush border rounded bg-white">
+                                                @foreach ($ultimaDecisaoDocs as $documento)
+                                                    <li class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center gap-2">
+                                                        <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
+                                                        <div class="d-flex gap-1 flex-shrink-0">
+                                                            <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                class="btn btn-sm btn-outline-primary py-0 px-2"
+                                                                title="Visualizar documento"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            @if (! empty($documento->observacoes))
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                    title="Visualizar informações"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#checklistShowObservacoesModal"
+                                                                    data-item-nome="{{ $documento->arquivo_nome }}"
+                                                                    data-observacoes="{{ $documento->observacoes ?? '' }}">
+                                                                    <i class="fas fa-comment-dots"></i>
+                                                                </button>
+                                                            @else
+                                                                <span
+                                                                    class="d-inline-block"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    title="Não há informações cadastradas.">
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-sm btn-outline-info py-0 px-2 checklist-show-observacoes-btn"
+                                                                        disabled>
+                                                                        <i class="fas fa-comment-dots"></i>
+                                                                    </button>
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <div class="tab-pane fade" id="sistema-pane" role="tabpanel" aria-labelledby="sistema-tab">

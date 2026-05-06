@@ -660,8 +660,9 @@ class ControlePericiasController extends Controller
 
         $itemNome = trim($validated['item_nome']);
         $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+        $isUltimaDecisao = ChecklistDocumentoPericia::isUltimaDecisaoItem($itemNome);
 
-        if (!in_array($itemNome, $itensPermitidos, true)) {
+        if (!$isUltimaDecisao && !in_array($itemNome, $itensPermitidos, true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Item de checklist inválido para este tipo de perícia.',
@@ -710,6 +711,14 @@ class ControlePericiasController extends Controller
         ]);
 
         $itemNome = trim($validated['item_nome']);
+
+        if (ChecklistDocumentoPericia::isUltimaDecisaoItem($itemNome)) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Esta área não suporta documento marcado como «não necessário».'], 422);
+            }
+            return redirect()->back()->with('error', 'Esta área não suporta documento marcado como «não necessário».');
+        }
+
         $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
 
         if (!in_array($itemNome, $itensPermitidos, true)) {
@@ -807,6 +816,8 @@ class ControlePericiasController extends Controller
             return;
         }
 
+        $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+
         foreach ($arquivos as $itemKey => $arquivo) {
             if (!$arquivo || !isset($checklistNomes[$itemKey])) {
                 continue;
@@ -815,6 +826,10 @@ class ControlePericiasController extends Controller
             $itemNome = trim((string) $checklistNomes[$itemKey]);
 
             if ($itemNome === '') {
+                continue;
+            }
+
+            if (! in_array($itemNome, $itensPermitidos, true)) {
                 continue;
             }
 

@@ -38,9 +38,10 @@
                                 </li>
                             </ul>
                             <div class="tab-content" id="agendaTabsContent">
-                                <div class="tab-pane fade show active" id="calendario" role="tabpanel"
+                                <div class="tab-pane fade show active overflow-visible" id="calendario" role="tabpanel"
                                     aria-labelledby="calendario-tab">
-                                    <div id="calendar" style="min-height: 700px;"></div>
+                                    <div id="calendar"
+                                        class="agenda-calendar-wrap agenda-calendar-no-inner-scroll"></div>
                                 </div>
                                 <div class="tab-pane fade" id="lista" role="tabpanel" aria-labelledby="lista-tab">
                                     <div class="table-responsive mt-3">
@@ -245,7 +246,18 @@
                     day: 'Dia',
                     list: 'Lista'
                 },
-                height: 700,
+                height: 'auto',
+                views: {
+                    timeGridWeek: {
+                        height: 700,
+                    },
+                    timeGridDay: {
+                        height: 700,
+                    },
+                    listWeek: {
+                        height: 580,
+                    },
+                },
                 events: {
                     url: '{{ route('agenda.eventos') }}',
                     method: 'GET',
@@ -273,12 +285,6 @@
                 titleFormat: {
                     year: 'numeric',
                     month: 'long'
-                },
-                viewDidMount: function(view) {
-                    // Ajusta o espaçamento das células de dia no mês
-                    if (view.type === 'dayGridMonth') {
-                        $('.fc-daygrid-day').css('height', '120px');
-                    }
                 },
                 eventDidMount: function(info) {
                     // Adiciona informações ao evento para melhorar a exibição
@@ -373,7 +379,39 @@
                 dayMaxEvents: true,
             });
 
+            function reflowAgendaCalendar() {
+                requestAnimationFrame(function() {
+                    calendar.updateSize();
+                });
+                setTimeout(function() {
+                    calendar.updateSize();
+                }, 100);
+            }
+
+            calendar.on('viewDidMount', function(arg) {
+                var el = document.getElementById('calendar');
+                if (el) {
+                    el.classList.toggle('agenda-calendar-no-inner-scroll', arg.view.type ===
+                        'dayGridMonth');
+                }
+                $('.fc-daygrid-more-link').each(function() {
+                    var text = $(this).text();
+                    if (text.indexOf('more') >= 0) {
+                        $(this).text(text.replace('more', 'mais'));
+                    }
+                });
+                $('.fc-list-empty').text('Não há eventos para exibir');
+                reflowAgendaCalendar();
+            });
+
             calendar.render();
+
+            calendar.on('eventsSet', reflowAgendaCalendar);
+
+            var calTabBtn = document.getElementById('calendario-tab');
+            if (calTabBtn) {
+                calTabBtn.addEventListener('shown.bs.tab', reflowAgendaCalendar);
+            }
 
             // Exclusão customizada
             $(document).on('click', '.btn-excluir-agenda', function(e) {
@@ -469,38 +507,6 @@
                 }
             });
 
-            // Garante que a altura das células é consistente
-            function adjustCalendarHeight() {
-                var containerHeight = $('#calendar').height();
-                var numWeeks = $('.fc-scrollgrid-sync-table tbody tr').length;
-                var minRowHeight = Math.floor((containerHeight - 100) / numWeeks);
-
-                $('.fc-daygrid-day-frame').css('min-height', minRowHeight + 'px');
-            }
-
-            // Ajusta o tamanho quando o calendário é renderizado
-            calendar.on('viewDidMount', function() {
-                setTimeout(adjustCalendarHeight, 100);
-            });
-
-            // Ajusta o tamanho quando a janela é redimensionada
-            $(window).resize(function() {
-                setTimeout(adjustCalendarHeight, 100);
-            });
-
-            // Tradução adicional após a renderização
-            calendar.on('viewDidMount', function() {
-                // Garante que qualquer texto "more" seja traduzido
-                $('.fc-daygrid-more-link').each(function() {
-                    var text = $(this).text();
-                    if (text.indexOf('more') >= 0) {
-                        $(this).text(text.replace('more', 'mais'));
-                    }
-                });
-
-                // Ajusta outros elementos que possam permanecer em inglês
-                $('.fc-list-empty').text('Não há eventos para exibir');
-            });
         });
 
         @if (session('success') || old('_method') === 'DELETE')
@@ -515,11 +521,53 @@
     </script>
 
     <style>
+        /* Vista mês: sem rolagem interna (altura natural da grade) */
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scrollgrid,
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll table.fc-scrollgrid-sync-table {
+            height: auto !important;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scrollgrid-section-body td {
+            overflow: visible !important;
+            max-height: none !important;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller,
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller-harness,
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller-harness-liquid {
+            overflow: visible !important;
+            max-height: none !important;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-scroller-liquid-absolute {
+            position: relative !important;
+            overflow: visible !important;
+            max-height: none !important;
+        }
+
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-view-harness,
+        .agenda-calendar-wrap.agenda-calendar-no-inner-scroll .fc-view-harness-active {
+            height: auto !important;
+            max-height: none !important;
+        }
+
         #calendar {
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
             padding: 20px;
+            overflow: visible;
         }
 
         .fc-toolbar-title {

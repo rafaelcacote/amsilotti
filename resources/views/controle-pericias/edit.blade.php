@@ -2,6 +2,10 @@
 
 @php
     $openChecklistAba = request()->boolean('open_checklist');
+    $openUltimaDecisaoAba = request()->boolean('open_ultima_decisao');
+    $abaDadosAtiva = ! $openChecklistAba && ! $openUltimaDecisaoAba;
+    $abaChecklistAtiva = $openChecklistAba && ! $openUltimaDecisaoAba;
+    $abaUltimaDecisaoAtiva = $openUltimaDecisaoAba;
 @endphp
 
 @section('content')
@@ -52,17 +56,21 @@
                                 <div class="col-12">
                                     <div class="border rounded p-3 bg-light">
                                         <div class="row g-2 align-items-center">
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <small class="text-muted d-block">Processo</small>
                                                 <strong>{{ $controlePericia->numero_processo }}</strong>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <small class="text-muted d-block">Tipo de Perícia</small>
                                                 <strong>{{ $controlePericia->tipo_pericia ?: 'Não informado' }}</strong>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <small class="text-muted d-block">Fase da Perícia</small>
                                                 <strong>{{ $controlePericia->status_atual ?: 'Não informado' }}</strong>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <small class="text-muted d-block">Decurso de Prazo</small>
+                                                <strong>{{ $controlePericia->decurso_prazo ? $controlePericia->decurso_prazo->format('d/m/Y') : 'Não informado' }}</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -71,17 +79,24 @@
                                 <div class="col-12">
                                     <ul class="nav nav-tabs" id="editPericiaTabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link {{ $openChecklistAba ? '' : 'active' }}" id="dados-pericia-tab" data-bs-toggle="tab"
+                                            <button class="nav-link {{ $abaDadosAtiva ? 'active' : '' }}" id="dados-pericia-tab" data-bs-toggle="tab"
                                                 data-bs-target="#dados-pericia-pane" type="button" role="tab"
-                                                aria-controls="dados-pericia-pane" aria-selected="{{ $openChecklistAba ? 'false' : 'true' }}">
+                                                aria-controls="dados-pericia-pane" aria-selected="{{ $abaDadosAtiva ? 'true' : 'false' }}">
                                                 Dados da Perícia
                                             </button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link {{ $openChecklistAba ? 'active' : '' }}" id="checklist-tab" data-bs-toggle="tab"
+                                            <button class="nav-link {{ $abaChecklistAtiva ? 'active' : '' }}" id="checklist-tab" data-bs-toggle="tab"
                                                 data-bs-target="#checklist-pane" type="button" role="tab"
-                                                aria-controls="checklist-pane" aria-selected="{{ $openChecklistAba ? 'true' : 'false' }}">
+                                                aria-controls="checklist-pane" aria-selected="{{ $abaChecklistAtiva ? 'true' : 'false' }}">
                                                 Checklist de Documentos
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link {{ $abaUltimaDecisaoAtiva ? 'active' : '' }}" id="ultima-decisao-tab" data-bs-toggle="tab"
+                                                data-bs-target="#ultima-decisao-pane" type="button" role="tab"
+                                                aria-controls="ultima-decisao-pane" aria-selected="{{ $abaUltimaDecisaoAtiva ? 'true' : 'false' }}">
+                                                Última Decisão
                                             </button>
                                         </li>
                                     </ul>
@@ -90,7 +105,7 @@
                                 <div class="col-12">
                                     <div class="tab-content border border-top-0 rounded-bottom p-3 bg-white"
                                         id="editPericiaTabsContent">
-                                        <div class="tab-pane fade {{ $openChecklistAba ? '' : 'show active' }}" id="dados-pericia-pane" role="tabpanel"
+                                        <div class="tab-pane fade {{ $abaDadosAtiva ? 'show active' : '' }}" id="dados-pericia-pane" role="tabpanel"
                                             aria-labelledby="dados-pericia-tab">
                                             <div class="row g-3">
                                 <!-- Linha 1 - Processo, Requerente, Requerido -->
@@ -309,7 +324,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane fade {{ $openChecklistAba ? 'show active' : '' }}" id="checklist-pane" role="tabpanel"
+                                        <div class="tab-pane fade {{ $abaChecklistAtiva ? 'show active' : '' }}" id="checklist-pane" role="tabpanel"
                                             aria-labelledby="checklist-tab">
                                 @php
                                     $documentosPorItem = $controlePericia->checklistDocumentos->groupBy('item_nome');
@@ -606,6 +621,94 @@
                                     </div>
                                 </div>
                                         </div>
+
+                                        <div class="tab-pane fade {{ $abaUltimaDecisaoAtiva ? 'show active' : '' }}" id="ultima-decisao-pane"
+                                            role="tabpanel" aria-labelledby="ultima-decisao-tab">
+                                            @php
+                                                $cuItemNomeUltimaDecisao = \App\Models\ChecklistDocumentoPericia::ITEM_NOME_ULTIMA_DECISAO;
+                                                $cuItemKeyUltimaDecisao = 'ultima_decisao';
+                                                $ultimaDecisaoDocs = $controlePericia->checklistDocumentos
+                                                    ->filter(fn ($d) => \App\Models\ChecklistDocumentoPericia::isUltimaDecisaoItem($d->item_nome))
+                                                    ->values();
+                                            @endphp
+                                            <div class="col-md-12 mb-2">
+                                                <div class="card border-0 shadow-sm bg-light">
+                                                    <div class="card-body">
+                                                        <h5 class="mb-3 text-primary">
+                                                            <i class="fas fa-gavel me-2"></i>Última Decisão — documentos
+                                                        </h5>
+                                                        
+
+                                                        <span id="checklist_status_badge_{{ $cuItemKeyUltimaDecisao }}"
+                                                            class="badge {{ $ultimaDecisaoDocs->isNotEmpty() ? 'bg-success' : 'bg-secondary' }} mb-2">
+                                                            {{ $ultimaDecisaoDocs->count() }} arquivo(s)
+                                                        </span>
+                                                        @if ($ultimaDecisaoDocs->isNotEmpty())
+                                                            <ul class="list-group list-group-flush small mb-3 border rounded"
+                                                                id="checklist_arquivos_list_{{ $cuItemKeyUltimaDecisao }}">
+                                                                @foreach ($ultimaDecisaoDocs as $documento)
+                                                                    <li class="list-group-item px-2 py-2 d-flex justify-content-between align-items-center gap-2"
+                                                                        id="checklist_doc_row_{{ $documento->id }}">
+                                                                        <span class="text-truncate" title="{{ $documento->arquivo_nome }}">{{ $documento->arquivo_nome }}</span>
+                                                                        <div class="d-flex gap-1 flex-shrink-0">
+                                                                            <a href="{{ route('controle-pericias.checklist.download', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                class="btn btn-sm btn-outline-primary"
+                                                                                title="Visualizar documento"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer">
+                                                                                <i class="fas fa-eye"></i>
+                                                                            </a>
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-outline-info checklist-observacoes-btn"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#checklistObservacoesModal"
+                                                                                data-documento-id="{{ $documento->id }}"
+                                                                                data-item-key="{{ $cuItemKeyUltimaDecisao }}"
+                                                                                data-documento-item="{{ $documento->arquivo_nome }}"
+                                                                                data-observacoes="{{ $documento->observacoes ?? '' }}"
+                                                                                data-save-url="{{ route('controle-pericias.checklist.observacoes', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                title="{{ $documento->observacoes ? 'Editar observações' : 'Adicionar observações' }}">
+                                                                                <i class="fas fa-comment-dots"></i>
+                                                                                <span class="checklist-observacoes-indicator {{ empty($documento->observacoes) ? 'd-none' : '' }}"></span>
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-outline-danger checklist-remove-btn"
+                                                                                data-item-key="{{ $cuItemKeyUltimaDecisao }}"
+                                                                                data-doc-row-id="checklist_doc_row_{{ $documento->id }}"
+                                                                                data-delete-url="{{ route('controle-pericias.checklist.destroy', ['controlePericia' => $controlePericia->id, 'documento' => $documento->id]) }}"
+                                                                                title="Remover documento">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <p class="small text-muted mb-3">Nenhum documento anexado ainda.</p>
+                                                        @endif
+
+                                                        <div class="d-flex gap-2 align-items-center checklist-upload-row" id="checklist_upload_row_{{ $cuItemKeyUltimaDecisao }}">
+                                                            <input class="form-control form-control-sm checklist-file-input"
+                                                                type="file"
+                                                                id="checklist_arquivo_{{ $cuItemKeyUltimaDecisao }}"
+                                                                multiple
+                                                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-primary checklist-save-btn"
+                                                                data-item-nome="{{ $cuItemNomeUltimaDecisao }}"
+                                                                data-item-key="{{ $cuItemKeyUltimaDecisao }}"
+                                                                data-upload-url="{{ route('controle-pericias.checklist.upload', $controlePericia->id) }}">
+                                                                <i class="fas fa-upload me-1"></i>Salvar
+                                                            </button>
+                                                        </div>
+                                                        <small class="text-danger d-none mt-1 checklist-error" id="checklist_error_{{ $cuItemKeyUltimaDecisao }}"></small>
+                                                        <small class="text-muted d-block mt-2">
+                                                            Formatos: PDF, imagem, Word e Excel (até 15MB por arquivo). Você pode enviar vários arquivos de uma vez ou em etapas.
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -765,7 +868,13 @@
                         btn.prop('disabled', false).html(originalHtml);
                         setTimeout(function() {
                             const u = new URL(window.location.href);
-                            u.searchParams.set('open_checklist', '1');
+                            u.searchParams.delete('open_checklist');
+                            u.searchParams.delete('open_ultima_decisao');
+                            if (itemKey === 'ultima_decisao') {
+                                u.searchParams.set('open_ultima_decisao', '1');
+                            } else {
+                                u.searchParams.set('open_checklist', '1');
+                            }
                             window.location.assign(u.toString());
                         }, 900);
                         return;
@@ -853,21 +962,30 @@
                         if (docRowId) {
                             $('#' + docRowId).remove();
                         }
-                        if (listEl.length) {
-                            const remaining = listEl.find('li').length;
-                            if (remaining === 0) {
-                                listEl.remove();
-                                statusBadge.removeClass('bg-success bg-warning text-dark').addClass('bg-secondary').text('Pendente');
-                                uploadRow.removeClass('d-none');
-                                naoNecessarioWrapper.removeClass('d-none');
-                            } else {
-                                statusBadge.removeClass('bg-secondary bg-warning text-dark').addClass('bg-success').text(remaining + ' arquivo(s)');
-                            }
-                        }
 
                         showChecklistToast(response.message || 'Documento removido com sucesso.', 'success');
                         if (removeModal) {
                             removeModal.hide();
+                        }
+
+                        if (listEl && listEl.length) {
+                            const remaining = listEl.find('li').length;
+                            if (remaining === 0) {
+                                listEl.remove();
+                                if (statusBadge.length) {
+                                    statusBadge.removeClass('bg-success bg-warning text-dark').addClass('bg-secondary').text(itemKey === 'ultima_decisao' ? '0 arquivo(s)' : 'Pendente');
+                                }
+                                if (uploadRow.length) {
+                                    uploadRow.removeClass('d-none');
+                                }
+                                if (naoNecessarioWrapper.length) {
+                                    naoNecessarioWrapper.removeClass('d-none');
+                                }
+                            } else {
+                                if (statusBadge.length) {
+                                    statusBadge.removeClass('bg-secondary bg-warning text-dark').addClass('bg-success').text(remaining + ' arquivo(s)');
+                                }
+                            }
                         }
                     },
                     error: function(xhr) {
@@ -959,6 +1077,7 @@
 
             $('.checklist-observacoes-btn').on('click', function() {
                 const btn = $(this);
+                observacoesForm.data('trigger-btn', btn);
                 observacoesTitle.text(btn.data('documento-item'));
                 observacoesTextarea.val(btn.data('observacoes') || '');
                 observacoesSaveUrl.val(btn.data('save-url'));
@@ -994,17 +1113,24 @@
                     },
                     success: function(response) {
                         const hasObservacoes = !!(observacoes && observacoes.trim().length);
-                        const indicator = docId ? $('#checklist_obs_ind_' + docId) : $();
+                        const triggerBtn = observacoesForm.data('trigger-btn');
 
-                        if (indicator.length) {
+                        if (triggerBtn && triggerBtn.length) {
+                            const indicator = triggerBtn.find('.checklist-observacoes-indicator');
                             indicator.toggleClass('d-none', !hasObservacoes);
+                            triggerBtn.attr('title', hasObservacoes ? 'Editar observações' : 'Adicionar observações');
+                            triggerBtn.data('observacoes', observacoes);
+                        } else {
+                            const indicator = docId ? $('#checklist_obs_ind_' + docId) : $();
+                            if (indicator.length) {
+                                indicator.toggleClass('d-none', !hasObservacoes);
+                            }
+                            const observacoesBtn = docId
+                                ? $('.checklist-observacoes-btn[data-documento-id="' + docId + '"]')
+                                : $('.checklist-observacoes-btn[data-item-key="' + itemKey + '"]');
+                            observacoesBtn.attr('title', hasObservacoes ? 'Editar observações' : 'Adicionar observações');
+                            observacoesBtn.data('observacoes', observacoes);
                         }
-
-                        const observacoesBtn = docId
-                            ? $('.checklist-observacoes-btn[data-documento-id="' + docId + '"]')
-                            : $('.checklist-observacoes-btn[data-item-key="' + itemKey + '"]');
-                        observacoesBtn.attr('title', hasObservacoes ? 'Editar observações' : 'Adicionar observações');
-                        observacoesBtn.data('observacoes', observacoes);
 
                         showChecklistToast(response.message || 'Observações salvas com sucesso.', 'success');
                         const modalEl = document.getElementById('checklistObservacoesModal');

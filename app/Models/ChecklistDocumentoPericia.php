@@ -9,6 +9,12 @@ class ChecklistDocumentoPericia extends Model
 {
     use HasFactory;
 
+    /**
+     * Item virtual da aba «Última Decisão» no editar perícia.
+     * Não entra nos templates por tipo — armazena só nesta linha checklist.
+     */
+    public const ITEM_NOME_ULTIMA_DECISAO = '__ultima_decisao__';
+
     protected $table = 'checklist_documentos_pericias';
 
     protected $fillable = [
@@ -31,5 +37,10 @@ class ChecklistDocumentoPericia extends Model
     public function usuarioEnvio()
     {
         return $this->belongsTo(User::class, 'enviado_por');
+    }
+
+    public static function isUltimaDecisaoItem(?string $itemNome): bool
+    {
+        return $itemNome !== null && trim($itemNome) === self::ITEM_NOME_ULTIMA_DECISAO;
     }
 }
