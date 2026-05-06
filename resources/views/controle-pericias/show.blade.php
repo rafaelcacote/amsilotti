@@ -131,22 +131,23 @@
 
                             <div class="border rounded p-3 bg-light mb-3">
                                 <div class="row g-3 align-items-center">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <small class="text-muted d-block">Processo</small>
                                         <strong class="fs-6">{{ $controlePericia->numero_processo }}</strong>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
+                                        <small class="text-muted d-block">Tipo de Perícia</small>
+                                        <strong class="fs-6">{{ $controlePericia->tipo_pericia ?: 'Não informado' }}</strong>
+                                    </div>
+                                    <div class="col-lg-3">
                                         <small class="text-muted d-block">Fase da Perícia</small>
                                         <span class="badge {{ $statusClass }}">{{ $controlePericia->status_atual }}</span>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <small class="text-muted d-block">Checklist</small>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="badge bg-primary-subtle text-primary">{{ $checklistConcluidos }}/{{ $checklistTotal }}</span>
-                                            <div class="progress flex-grow-1" style="height: 8px;">
-                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $progresso }}%;"></div>
-                                            </div>
-                                        </div>
+                                    <div class="col-lg-3">
+                                        <small class="text-muted d-block">Decurso de Prazo</small>
+                                        <strong class="fs-6">
+                                            {{ $controlePericia->decurso_prazo ? $controlePericia->decurso_prazo->format('d/m/Y') : 'Não definido' }}
+                                        </strong>
                                     </div>
                                 </div>
                             </div>
@@ -193,6 +194,8 @@
                                                     <div class="col-6 text-end">{{ $controlePericia->requerido ?: 'Não informado' }}</div>
                                                     <div class="col-6"><small class="text-muted">Tipo de Perícia</small></div>
                                                     <div class="col-6 text-end">{{ $controlePericia->tipo_pericia ?: 'Não informado' }}</div>
+                                                    <div class="col-6"><small class="text-muted">Vara</small></div>
+                                                    <div class="col-6 text-end">{{ $controlePericia->vara ?: 'Não informada' }}</div>
                                                     <div class="col-6"><small class="text-muted">Responsável Técnico</small></div>
                                                     <div class="col-6 text-end">
                                                         {{ $controlePericia->responsavelTecnico ? $controlePericia->responsavelTecnico->nome : 'Não atribuído' }}
@@ -210,10 +213,18 @@
                                                     <div class="col-6 text-end">{{ $controlePericia->data_vistoria ? $controlePericia->data_vistoria->format('d/m/Y') : 'Não definida' }}</div>
                                                     <div class="col-6"><small class="text-muted">Laudo Entregue</small></div>
                                                     <div class="col-6 text-end">{{ $controlePericia->prazo_final ? $controlePericia->prazo_final->format('d/m/Y') : 'Não definido' }}</div>
+                                                    <div class="col-6"><small class="text-muted">Decurso de Prazo</small></div>
+                                                    <div class="col-6 text-end">{{ $controlePericia->decurso_prazo ? $controlePericia->decurso_prazo->format('d/m/Y') : 'Não definido' }}</div>
                                                     <div class="col-6"><small class="text-muted">Valor</small></div>
                                                     <div class="col-6 text-end">{{ $controlePericia->valor ? 'R$ ' . number_format($controlePericia->valor, 2, ',', '.') : 'Não definido' }}</div>
                                                     <div class="col-6"><small class="text-muted">Protocolo</small></div>
-                                                    <div class="col-6 text-end">{{ $controlePericia->protocolo ?: 'Não definido' }}</div>
+                                                    <div class="col-6 text-end">
+                                                        {{ $controlePericia->protocolo === 'sim' ? 'Sim' : ($controlePericia->protocolo === 'nao' ? 'Não' : 'Não definido') }}
+                                                    </div>
+                                                    <div class="col-6"><small class="text-muted">Responsável do Protocolo</small></div>
+                                                    <div class="col-6 text-end">
+                                                        {{ $controlePericia->responsavelProtocolo ? $controlePericia->responsavelProtocolo->nome : 'Não definido' }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
