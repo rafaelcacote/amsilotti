@@ -40,8 +40,10 @@
                             <div class="tab-content" id="agendaTabsContent">
                                 <div class="tab-pane fade show active overflow-visible" id="calendario" role="tabpanel"
                                     aria-labelledby="calendario-tab">
-                                    <div id="calendar"
-                                        class="agenda-calendar-wrap agenda-calendar-no-inner-scroll"></div>
+                                    <div class="agenda-calendar-container">
+                                        <div id="calendar"
+                                            class="agenda-calendar-wrap agenda-calendar-no-inner-scroll"></div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="lista" role="tabpanel" aria-labelledby="lista-tab">
                                     <div class="table-responsive mt-3">
@@ -265,7 +267,10 @@
                         console.error('Erro ao carregar eventos');
                     }
                 },
-                dayMaxEvents: 4, // Limitar a quantidade de eventos visíveis por dia
+                dayMaxEvents: 2, // Exibe até 2 eventos por dia
+                dayMaxEventRows: 2,
+                fixedWeekCount: true,
+                expandRows: true,
                 eventDisplay: 'block',
                 eventTimeFormat: {
                     hour: '2-digit',
@@ -280,7 +285,10 @@
                 },
                 allDayText: 'Dia inteiro',
                 noEventsText: 'Não há eventos para exibir',
-                moreLinkText: 'mais',
+                moreLinkText: function(n) {
+                    return '+' + n;
+                },
+                moreLinkClick: 'popover',
                 // Formatação de título
                 titleFormat: {
                     year: 'numeric',
@@ -376,7 +384,6 @@
                 eventDisplay: 'block',
                 nowIndicator: true,
                 selectable: false,
-                dayMaxEvents: true,
             });
 
             function reflowAgendaCalendar() {
@@ -562,23 +569,33 @@
             max-height: none !important;
         }
 
+        .agenda-calendar-container {
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
         #calendar {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-            padding: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+            border: 1px solid #e9eef5;
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+            padding: 14px;
             overflow: visible;
         }
 
         .fc-toolbar-title {
-            font-size: 1.5rem;
-            color: #0d6efd;
-            font-weight: 600;
+            font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+            color: #0f172a;
+            font-weight: 700;
         }
 
         /* Ajustes para as células do calendário */
         .fc-daygrid-day-frame {
-            min-height: 110px !important;
+            min-height: clamp(72px, 7vw, 90px) !important;
+            max-height: clamp(72px, 7vw, 90px) !important;
+            overflow: visible !important;
+            padding: 2px !important;
         }
 
         .fc-daygrid-day-top {
@@ -594,48 +611,72 @@
         /* Reduzir o padding do cabeçalho dos dias da semana */
         .fc-col-header-cell {
             padding: 6px 0 !important;
+            background: #f8fafc;
+            border-color: #e2e8f0 !important;
+        }
+
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: #e2e8f0 !important;
+        }
+
+        .fc .fc-daygrid-day {
+            background: #fff;
+            transition: background-color 0.2s ease;
+        }
+
+        .fc .fc-daygrid-day:hover {
+            background: #f8fbff;
         }
 
         /* Ajuste no container de eventos para aproveitar espaço */
         .fc-daygrid-day-events {
             margin-top: 1px !important;
             padding: 0 2px !important;
+            overflow: visible;
+        }
+
+        .fc-daygrid-day-bottom {
+            margin-top: 2px;
         }
 
         /* Botões de "mais eventos" */
         .fc-daygrid-more-link {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             margin-top: 1px;
-            padding: 0px 3px;
-            background-color: #f8f9fa;
-            border-radius: 3px;
-            color: #0d6efd !important;
-            font-weight: 500;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 1px 6px;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            color: #1d4ed8 !important;
+            font-weight: 600;
+            box-shadow: none;
+            display: inline-block;
+            text-decoration: none;
         }
 
         .fc .fc-button-primary {
-            background: #0d6efd;
-            border: none;
-            border-radius: 6px;
+            background: #2563eb;
+            border: 1px solid #1d4ed8;
+            border-radius: 8px;
             font-weight: 500;
         }
 
         .fc .fc-button-primary:not(:disabled):active,
         .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background: #0b5ed7;
+            background: #1d4ed8;
         }
 
         .fc .fc-daygrid-event {
             border-radius: 4px;
-            font-size: 0.75rem;
-            padding: 3px 6px;
+            font-size: 0.72rem;
+            padding: 2px 6px;
             font-weight: 500;
             border: none !important;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
             margin-bottom: 1px;
-            line-height: 1.2;
-            max-height: 28px;
+            line-height: 1.15;
+            max-height: 22px;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -666,7 +707,7 @@
         }
 
         .fc .fc-daygrid-day.fc-day-today {
-            background: #e7f1ff;
+            background: linear-gradient(180deg, #eaf3ff 0%, #f5f9ff 100%);
         }
 
         .fc .fc-event {
@@ -729,6 +770,10 @@
             #calendar {
                 padding: 10px;
             }
+
+            .agenda-calendar-container {
+                max-width: 100%;
+            }
         }
 
         /* Legenda de cores responsiva */
@@ -765,23 +810,17 @@
             content: "Mais eventos";
         }
 
-        /* Ajuste para o botão "mais" */
-        .fc-daygrid-more-link::before {
-            content: "mais ";
-            display: inline;
-        }
-
         /* Adiciona uma cor de fundo suave aos botões para destacar */
         .fc-button-primary {
-            background-color: #0d6efd !important;
-            border-color: #0a58ca !important;
+            background-color: #2563eb !important;
+            border-color: #1d4ed8 !important;
             transition: all 0.2s ease;
         }
 
         .fc-button-primary:hover {
-            background-color: #0b5ed7 !important;
-            border-color: #0a53be !important;
-            box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.25);
+            background-color: #1d4ed8 !important;
+            border-color: #1e40af !important;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.2);
         }
     </style>
 
