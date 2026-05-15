@@ -630,6 +630,8 @@
                                                 $ultimaDecisaoDocs = $controlePericia->checklistDocumentos
                                                     ->filter(fn ($d) => \App\Models\ChecklistDocumentoPericia::isUltimaDecisaoItem($d->item_nome))
                                                     ->values();
+                                                $agendaVinculadaUltimaDecisao = $checklistAgendaMap[$cuItemNomeUltimaDecisao] ?? null;
+                                                $temAgendamentoUltimaDecisao = ! empty($agendaVinculadaUltimaDecisao);
                                             @endphp
                                             <div class="col-md-12 mb-2">
                                                 <div class="card border-0 shadow-sm bg-light">
@@ -700,6 +702,32 @@
                                                                 data-upload-url="{{ route('controle-pericias.checklist.upload', $controlePericia->id) }}">
                                                                 <i class="fas fa-upload me-1"></i>Salvar
                                                             </button>
+                                                        </div>
+                                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                                            @if ($temAgendamentoUltimaDecisao)
+                                                                <span id="checklist_agenda_status_{{ $cuItemKeyUltimaDecisao }}" class="btn btn-sm btn-outline-success disabled">
+                                                                    <i class="fas fa-check-circle me-1"></i>Agendado
+                                                                </span>
+                                                                <a
+                                                                    id="checklist_agenda_link_{{ $cuItemKeyUltimaDecisao }}"
+                                                                    href="{{ $agendaVinculadaUltimaDecisao['edit_url'] }}"
+                                                                    class="btn btn-sm btn-outline-primary">
+                                                                    <i class="fas fa-pen me-1"></i>Visualizar/Editar
+                                                                </a>
+                                                            @else
+                                                                <button
+                                                                    type="button"
+                                                                    id="checklist_agenda_btn_{{ $cuItemKeyUltimaDecisao }}"
+                                                                    class="btn btn-sm btn-outline-primary checklist-agendar-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#checklistAgendaModal"
+                                                                    data-item-key="{{ $cuItemKeyUltimaDecisao }}"
+                                                                    data-item-nome="{{ $cuItemNomeUltimaDecisao }}"
+                                                                    data-item-label="Última decisão"
+                                                                    data-agendar-url="{{ route('controle-pericias.checklist.agendar-recebimento', $controlePericia->id) }}">
+                                                                    <i class="fas fa-calendar-plus me-1"></i>Agendar recebimento
+                                                                </button>
+                                                            @endif
                                                         </div>
                                                         <small class="text-danger d-none mt-1 checklist-error" id="checklist_error_{{ $cuItemKeyUltimaDecisao }}"></small>
                                                         <small class="text-muted d-block mt-2">
@@ -1172,7 +1200,7 @@
                 const btn = $(this);
                 agendaError.addClass('d-none').text('');
                 agendaItemNome.val(btn.data('item-nome'));
-                agendaItemNomeReadonly.val(btn.data('item-nome'));
+                agendaItemNomeReadonly.val(btn.data('item-label') || btn.data('item-nome'));
                 agendaItemKey.val(btn.data('item-key'));
                 agendaUrl.val(btn.data('agendar-url'));
                 agendaData.val('');

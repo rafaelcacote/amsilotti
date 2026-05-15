@@ -368,6 +368,12 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="ultima-decisao-pane" role="tabpanel" aria-labelledby="ultima-decisao-tab">
+                                    @php
+                                        $cuUdItemNome = \App\Models\ChecklistDocumentoPericia::ITEM_NOME_ULTIMA_DECISAO;
+                                        $cuUdItemKey = 'ultima_decisao';
+                                        $agendaVinculadaUltimaDecisaoShow = $checklistAgendaMap[$cuUdItemNome] ?? null;
+                                        $temAgendamentoUltimaDecisaoShow = ! empty($agendaVinculadaUltimaDecisaoShow);
+                                    @endphp
                                     <div class="border rounded p-3 bg-light">
                                         <h6 class="mb-3 text-primary">
                                             <i class="fas fa-gavel me-2"></i>Última Decisão
@@ -421,6 +427,31 @@
                                                 @endforeach
                                             </ul>
                                         @endif
+                                        @can('create agenda')
+                                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                                @if ($temAgendamentoUltimaDecisaoShow)
+                                                    <span id="show_checklist_agenda_status_{{ $cuUdItemKey }}" class="btn btn-sm btn-outline-success disabled">
+                                                        <i class="fas fa-check-circle me-1"></i>Agendado
+                                                    </span>
+                                                    <a href="{{ $agendaVinculadaUltimaDecisaoShow['edit_url'] }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-pen me-1"></i>Visualizar/Editar
+                                                    </a>
+                                                @else
+                                                    <button
+                                                        type="button"
+                                                        id="show_checklist_agenda_btn_{{ $cuUdItemKey }}"
+                                                        class="btn btn-sm btn-outline-primary checklist-show-agendar-btn"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#checklistShowAgendaModal"
+                                                        data-item-key="{{ $cuUdItemKey }}"
+                                                        data-item-nome="{{ $cuUdItemNome }}"
+                                                        data-item-label="Última decisão"
+                                                        data-agendar-url="{{ route('controle-pericias.checklist.agendar-recebimento', $controlePericia->id) }}">
+                                                        <i class="fas fa-calendar-plus me-1"></i>Agendar recebimento
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        @endcan
                                     </div>
                                 </div>
 
@@ -539,7 +570,7 @@
                         agendaError.textContent = '';
                     }
                     agendaItemNome.value = btn.getAttribute('data-item-nome') || '';
-                    agendaItemNomeReadonly.value = btn.getAttribute('data-item-nome') || '';
+                    agendaItemNomeReadonly.value = btn.getAttribute('data-item-label') || btn.getAttribute('data-item-nome') || '';
                     agendaItemKey.value = btn.getAttribute('data-item-key') || '';
                     agendaSaveUrl.value = btn.getAttribute('data-agendar-url') || '';
                     agendaOrgao.value = '';

@@ -238,8 +238,9 @@
         @if($filtrosAplicados['search'])
             <div class="filtro-item"><strong>Busca:</strong> {{ $filtrosAplicados['search'] }}</div>
         @endif
-        @if($filtrosAplicados['status'])
-            <div class="filtro-item"><strong>Status:</strong> {{ $filtrosAplicados['status'] }}</div>
+        @if(! empty($filtrosAplicados['status']))
+            <div class="filtro-item"><strong>Status:</strong>
+                {{ is_array($filtrosAplicados['status']) ? implode(', ', $filtrosAplicados['status']) : $filtrosAplicados['status'] }}</div>
         @endif
         @if($filtrosAplicados['vara'])
             <div class="filtro-item"><strong>Vara:</strong> {{ $filtrosAplicados['vara'] }}</div>

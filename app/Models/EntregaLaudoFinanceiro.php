@@ -71,7 +71,7 @@ class EntregaLaudoFinanceiro extends Model
             'Proc. Adm/SEI',
             'SECOF',
             'SECOP/DVCOP',
-            
+            'SECOP/DVCOP/SC'
         ];
     }
 

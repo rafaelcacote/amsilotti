@@ -267,8 +267,9 @@ class ControlePericiasController extends Controller
 
         $itemNome = trim($validated['item_nome']);
         $itensPermitidos = ControlePericia::checklistItemsByTipo($controlePericia->tipo_pericia);
+        $isUltimaDecisao = ChecklistDocumentoPericia::isUltimaDecisaoItem($itemNome);
 
-        if (!in_array($itemNome, $itensPermitidos, true)) {
+        if (! $isUltimaDecisao && ! in_array($itemNome, $itensPermitidos, true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Item de checklist inválido para este tipo de perícia.',
@@ -306,8 +307,9 @@ class ControlePericiasController extends Controller
         }
 
         $observacoes = trim((string) ($validated['observacoes'] ?? ''));
+        $itemNomeLegivel = $isUltimaDecisao ? 'Última decisão' : $itemNome;
         $descricaoLinhas = [
-            'Documento: ' . $itemNome,
+            'Documento: ' . $itemNomeLegivel,
             'Órgão responsável: ' . $validated['orgao_responsavel'],
             'Processo: ' . ($controlePericia->numero_processo ?: 'Não informado'),
             'Referência da perícia: #' . $controlePericia->id,
@@ -318,7 +320,7 @@ class ControlePericiasController extends Controller
         }
 
         $agenda = Agenda::create([
-            'titulo' => 'Receber documento: ' . $itemNome,
+            'titulo' => 'Receber documento: ' . $itemNomeLegivel,
             'tipo' => $tipoAguardandoDocumento->codigo,
             'data' => Carbon::parse($validated['data_prevista_entrega'])->toDateString(),
             'hora' => '00:00:00',
@@ -851,13 +853,14 @@ class ControlePericiasController extends Controller
 
     private function buildChecklistAgendaMap(ControlePericia $controlePericia, array $checklistItems): array
     {
-        if (empty($checklistItems)) {
-            return [];
-        }
+        $nomesChecklist = array_values(array_unique(array_merge(
+            $checklistItems,
+            [ChecklistDocumentoPericia::ITEM_NOME_ULTIMA_DECISAO]
+        )));
 
         $agendas = Agenda::query()
             ->where('controle_pericia_id', $controlePericia->id)
-            ->whereIn('checklist_item_nome', $checklistItems)
+            ->whereIn('checklist_item_nome', $nomesChecklist)
             ->get(['id', 'checklist_item_nome', 'data', 'tipo']);
 
         $map = [];

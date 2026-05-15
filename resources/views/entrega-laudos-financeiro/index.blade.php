@@ -25,25 +25,14 @@
                                 <div class="card card-body border-0 shadow-sm mb-3">
                                     <form action="{{ route('entrega-laudos-financeiro.index') }}" method="GET">
                                         @csrf
-                                        <div class="row align-items-end">
-                                            <div class="col-md-3">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-4 col-md-6">
                                                 <label class="form-label" for="search">Buscar</label>
-                                                <input type="text" name="search" value="{{ $search ?? '' }}"
+                                                <input type="text" name="search" id="search" value="{{ $search ?? '' }}"
                                                     placeholder="Buscar por processo, financeiro, SEI, NF..."
                                                     class="form-control">
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label" for="status">Status</label>
-                                                <select class="form-select" name="status" id="status">
-                                                    <option value="">Todos</option>
-                                                    @foreach (App\Models\EntregaLaudoFinanceiro::statusOptions() as $statusOption)
-                                                        <option value="{{ $statusOption }}"
-                                                            {{ request('status') == $statusOption ? 'selected' : '' }}>
-                                                            {{ $statusOption }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-1 col-md-2">
                                                 <label class="form-label" for="financeiro">Financeiro</label>
                                                 <select class="form-select" name="financeiro" id="financeiro">
                                                     <option value="">Todos</option>
@@ -61,7 +50,7 @@
                                                     @endif
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-1 col-md-2">
                                                 <label class="form-label" for="vara">Vara</label>
                                                 <select class="form-select" name="vara" id="vara">
                                                     <option value="">Todas</option>
@@ -72,7 +61,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-1">
+                                            <div class="col-lg-1 col-md-3">
                                                 <label class="form-label" for="upj">UPJ</label>
                                                 <select class="form-select" name="upj" id="upj">
                                                     <option value="">Todas</option>
@@ -83,7 +72,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-2 col-md-3">
                                                 <label class="form-label" for="tipo_pericia">Tipo Perícia</label>
                                                 <select class="form-select" name="tipo_pericia" id="tipo_pericia">
                                                     <option value="">Todos</option>
@@ -94,7 +83,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-2 col-md-3">
                                                 <label class="form-label" for="mes_pagamento">Mês Pagamento</label>
                                                 <select class="form-select" name="mes_pagamento" id="mes_pagamento">
                                                     <option value="">Todos</option>
@@ -105,8 +94,8 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label" for="ano_pagamento">Ano Pagamento</label>
+                                            <div class="col-lg-1 col-md-2">
+                                                <label class="form-label" for="ano_pagamento">Ano Pag.</label>
                                                 <select class="form-select" name="ano_pagamento" id="ano_pagamento">
                                                     <option value="">Todos</option>
                                                     @php
@@ -125,8 +114,30 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div class="d-flex gap-2 justify-content-center mt-3">
+                                        </div>
+                                        
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-12">
+                                                <label class="form-label d-block mb-2">Unidade <span class="text-muted fw-normal small">(marque um ou mais; vazio = todos)</span></label>
+                                                <div class="border rounded bg-white px-3 py-2 entrega-status-filter">
+                                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2">
+                                                        @foreach (App\Models\EntregaLaudoFinanceiro::statusOptions() as $statusOption)
+                                                            <div class="col">
+                                                                <div class="form-check mb-0">
+                                                                    <input class="form-check-input" type="checkbox" name="status[]"
+                                                                        value="{{ $statusOption }}" id="filtro_status_{{ $loop->index }}"
+                                                                        {{ in_array($statusOption, $status ?? [], true) ? 'checked' : '' }}>
+                                                                    <label class="form-check-label small" for="filtro_status_{{ $loop->index }}">{{ $statusOption }}</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <div class="d-flex gap-2 justify-content-center flex-wrap">
                                                     <button type="submit" class="btn" style="background: #5c58cb; color: #fff; border: 1px solid #5c58cb;"><i class="fas fa-search me-2"></i>Pesquisar</button>
                                                     <a href="{{ route('entrega-laudos-financeiro.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times me-2"></i>Limpar</a>
                                                 </div>

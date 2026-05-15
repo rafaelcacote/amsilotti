@@ -21,7 +21,12 @@ class EntregaLaudoFinanceiroController extends Controller
         }
 
         $search = $request->input('search');
-        $status = $request->input('status');
+        $allowedStatuses = EntregaLaudoFinanceiro::statusOptions();
+        $rawStatus = $request->input('status');
+        $status = array_values(array_intersect(
+            $allowedStatuses,
+            is_array($rawStatus) ? $rawStatus : array_filter([(string) $rawStatus])
+        ));
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
@@ -42,8 +47,8 @@ class EntregaLaudoFinanceiroController extends Controller
                   ->orWhere('sei', 'like', "%{$search}%")
                   ->orWhere('nf', 'like', "%{$search}%");
             })
-            ->when($status, function ($query, $status) {
-                return $query->where('status', $status);
+            ->when(count($status) > 0, function ($query) use ($status) {
+                return $query->whereIn('status', $status);
             })
             ->when($vara, function ($query, $vara) {
                 return $query->whereHas('controlePericia', function ($q) use ($vara) {
@@ -299,7 +304,12 @@ class EntregaLaudoFinanceiroController extends Controller
         }
 
         $search = $request->input('search');
-        $status = $request->input('status');
+        $allowedStatuses = EntregaLaudoFinanceiro::statusOptions();
+        $rawStatus = $request->input('status');
+        $status = array_values(array_intersect(
+            $allowedStatuses,
+            is_array($rawStatus) ? $rawStatus : array_filter([(string) $rawStatus])
+        ));
         $vara = $request->input('vara');
         $upj = $request->input('upj');
         $mesPagamento = $request->input('mes_pagamento');
@@ -322,8 +332,8 @@ class EntregaLaudoFinanceiroController extends Controller
                   ->orWhere('sei', 'like', "%{$search}%")
                   ->orWhere('nf', 'like', "%{$search}%");
             })
-            ->when($status, function ($query, $status) {
-                return $query->where('status', $status);
+            ->when(count($status) > 0, function ($query) use ($status) {
+                return $query->whereIn('status', $status);
             })
             ->when($vara, function ($query, $vara) {
                 return $query->whereHas('controlePericia', function ($q) use ($vara) {
