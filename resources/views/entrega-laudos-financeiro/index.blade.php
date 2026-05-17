@@ -208,7 +208,7 @@
                                             <th style="width: 7%;">Vara</th>
                                             <th style="width: 5%;">UPJ</th>
                                             <th style="width: 9%;">Financeiro</th>
-                                            <th style="width: 9%;">Status</th>
+                                            <th style="width: 9%;">Unidade</th>
                                             <th style="width: 7%;">Protocolo Laudo</th>
                                             <th style="width: 7%;">R$</th>
                                             <th style="width: 9%;">Proc Adm</th>
@@ -249,7 +249,7 @@
                                                     <td>{{ ucfirst($entregaLaudo->upj ?? '-') }}</td>
                                                     <!-- 4. Financeiro -->
                                                     <td>{{ ucfirst($entregaLaudo->financeiro ?? '-') }}</td>
-                                                    <!-- 5. Status -->
+                                                    <!-- 5. Unidade -->
                                                     <td>{{ ucfirst($entregaLaudo->status ?? '-') }}</td>
                                                     <!-- 7. Protocolo Laudo -->
                                                     <!-- <td>{{ $entregaLaudo->controlePericia && $entregaLaudo->controlePericia->prazo_final ? \Carbon\Carbon::parse($entregaLaudo->controlePericia->prazo_final)->format('d/m/Y') : '-' }}</td> -->
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .table thead th:nth-child(3) { width: 7%; }  /* Vara */
     .table thead th:nth-child(4) { width: 5%; }  /* UPJ */
     .table thead th:nth-child(5) { width: 8%; }  /* Financeiro */
-    .table thead th:nth-child(6) { width: 8%; }  /* Status */
+    .table thead th:nth-child(6) { width: 8%; }  /* Unidade */
     .table thead th:nth-child(7) { width: 7%; }  /* Protocolo */
     .table thead th:nth-child(8) { width: 6%; }  /* Valor */
     .table thead th:nth-child(9) { width: 8%; }  /* Proc Adm */
@@ -841,7 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .table tbody td:nth-child(5),
     .table thead th:nth-child(5) { text-align: center; } /* Financeiro */
     .table tbody td:nth-child(6),
-    .table thead th:nth-child(6) { text-align: center; } /* Status */
+    .table thead th:nth-child(6) { text-align: center; } /* Unidade */
     .table tbody td:nth-child(7),
     .table thead th:nth-child(7) { text-align: center; } /* Protocolo */
     .table tbody td:nth-child(8),
@@ -1011,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-md-6">
                             <div class="form-check">
                                 <input class="form-check-input column-checkbox" type="checkbox" value="status" id="col_status" checked>
-                                <label class="form-check-label" for="col_status">Status</label>
+                                <label class="form-check-label" for="col_status">Unidade</label>
                             </div>
                         </div>
                         

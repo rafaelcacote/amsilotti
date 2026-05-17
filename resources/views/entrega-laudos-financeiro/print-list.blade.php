@@ -239,7 +239,7 @@
             <div class="filtro-item"><strong>Busca:</strong> {{ $filtrosAplicados['search'] }}</div>
         @endif
         @if(! empty($filtrosAplicados['status']))
-            <div class="filtro-item"><strong>Status:</strong>
+            <div class="filtro-item"><strong>Unidade:</strong>
                 {{ is_array($filtrosAplicados['status']) ? implode(', ', $filtrosAplicados['status']) : $filtrosAplicados['status'] }}</div>
         @endif
         @if($filtrosAplicados['vara'])
@@ -287,7 +287,7 @@
                             <th class="col-financeiro">Financeiro</th>
                         @endif
                         @if($hasColumn('status'))
-                            <th class="col-status">Status</th>
+                            <th class="col-status">Unidade</th>
                         @endif
                         @if($hasColumn('protocolo_laudo'))
                             <th class="col-protocolo">Protocolo Laudo</th>
